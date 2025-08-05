@@ -18,13 +18,28 @@ import type {
   CallToActionBlock as CTABlockProps,
   MediaBlock as MediaBlockProps,
 } from '@/payload-types'
+
+interface ProsConsBlockProps {
+  title?: string
+  prosTitle: string
+  consTitle: string
+  pros: Array<{ point: string }>
+  cons: Array<{ point: string }>
+  bulkProsText?: string
+  bulkConsText?: string
+  style: 'default' | 'stacked' | 'cards' | 'table'
+  backgroundColor: 'none' | 'gray' | 'blue' | 'green'
+}
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
+import { ProsConsBlock } from '@/blocks/ProsConsBlock/Component'
 import { cn } from '@/utilities/ui'
 
 type NodeTypes =
   | DefaultNodeTypes
-  | SerializedBlockNode<CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps>
+  | SerializedBlockNode<
+      CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps | ProsConsBlockProps
+    >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
   const { value, relationTo } = linkNode.fields.doc!
@@ -52,6 +67,9 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     ),
     code: ({ node }) => <CodeBlock className="col-start-2" {...node.fields} />,
     cta: ({ node }) => <CallToActionBlock {...node.fields} />,
+    prosConsBlock: ({ node }: { node: SerializedBlockNode<ProsConsBlockProps> }) => (
+      <ProsConsBlock className="col-start-2" {...node.fields} disableInnerContainer={true} />
+    ),
   },
 })
 

@@ -1,0 +1,203 @@
+import React from 'react'
+import { CheckCircle, XCircle } from 'lucide-react'
+
+interface ProsConsItem {
+  point: string
+}
+
+interface ProsConsBlockProps {
+  title?: string
+  prosTitle: string
+  consTitle: string
+  pros: ProsConsItem[]
+  cons: ProsConsItem[]
+  bulkProsText?: string
+  bulkConsText?: string
+  style: 'default' | 'stacked' | 'cards' | 'table'
+  backgroundColor: 'none' | 'gray' | 'blue' | 'green'
+  disableInnerContainer?: boolean
+  className?: string
+}
+
+export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
+  title,
+  prosTitle,
+  consTitle,
+  pros,
+  cons,
+  bulkProsText,
+  bulkConsText,
+  style,
+  backgroundColor,
+  disableInnerContainer,
+  className,
+}) => {
+  // Process bulk input if provided
+  const processedPros = bulkProsText
+    ? bulkProsText
+        .split('\n')
+        .filter((line) => line.trim())
+        .map((point) => ({ point: point.trim() }))
+    : pros || []
+
+  const processedCons = bulkConsText
+    ? bulkConsText
+        .split('\n')
+        .filter((line) => line.trim())
+        .map((point) => ({ point: point.trim() }))
+    : cons || []
+  const backgroundClasses = {
+    none: '',
+    gray: 'bg-gray-50',
+    blue: 'bg-blue-50',
+    green: 'bg-green-50',
+  }
+
+  const containerClasses = {
+    default: 'grid md:grid-cols-2 gap-8',
+    stacked: 'space-y-8',
+    cards: 'grid md:grid-cols-2 gap-6',
+    table: 'overflow-hidden rounded-lg border border-gray-200',
+  }
+
+  const prosCardClasses = {
+    default: 'bg-white rounded-lg p-6 border-l-4 border-green-500',
+    stacked: 'bg-white rounded-lg p-6 border-l-4 border-green-500',
+    cards: 'bg-white rounded-xl p-6 shadow-lg border border-green-100',
+    table: '',
+  }
+
+  const consCardClasses = {
+    default: 'bg-white rounded-lg p-6 border-l-4 border-red-500',
+    stacked: 'bg-white rounded-lg p-6 border-l-4 border-red-500',
+    cards: 'bg-white rounded-xl p-6 shadow-lg border border-red-100',
+    table: '',
+  }
+
+  // Render table format
+  if (style === 'table') {
+    const maxRows = Math.max(processedPros.length, processedCons.length)
+
+    const content = (
+      <div className={containerClasses[style]}>
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-4 text-left font-semibold text-green-700 border-r border-gray-200">
+                <div className="flex items-center">
+                  <CheckCircle className="w-6 h-6 text-green-500 mr-2" />
+                  {prosTitle}
+                </div>
+              </th>
+              <th className="px-6 py-4 text-left font-semibold text-red-700">
+                <div className="flex items-center">
+                  <XCircle className="w-6 h-6 text-red-500 mr-2" />
+                  {consTitle}
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: maxRows }, (_, index) => (
+              <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <td className="px-6 py-4 border-r border-gray-200 text-gray-700">
+                  {processedPros[index] ? (
+                    <div className="flex items-start">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      {processedPros[index].point}
+                    </div>
+                  ) : (
+                    <span className="text-gray-400">—</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 text-gray-700">
+                  {processedCons[index] ? (
+                    <div className="flex items-start">
+                      <span className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      {processedCons[index].point}
+                    </div>
+                  ) : (
+                    <span className="text-gray-400">—</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+
+    if (disableInnerContainer) {
+      return (
+        <section className={`py-12 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+          {title && <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">{title}</h2>}
+          {content}
+        </section>
+      )
+    }
+
+    return (
+      <section className={`py-12 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+        <div className="max-w-6xl mx-auto">
+          {title && <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">{title}</h2>}
+          {content}
+        </div>
+      </section>
+    )
+  }
+
+  // Original content for other styles
+  const content = (
+    <div className={containerClasses[style]}>
+      {/* Pros Section */}
+      <div className={prosCardClasses[style]}>
+        <div className="flex items-center mb-6">
+          <CheckCircle className="w-8 h-8 text-green-500 mr-3" />
+          <h3 className="text-2xl font-semibold text-green-700">{prosTitle}</h3>
+        </div>
+        <ul className="space-y-4">
+          {processedPros.map((pro, index) => (
+            <li key={index} className="flex items-start">
+              <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+              <span className="text-gray-700 leading-relaxed">{pro.point}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Cons Section */}
+      <div className={consCardClasses[style]}>
+        <div className="flex items-center mb-6">
+          <XCircle className="w-8 h-8 text-red-500 mr-3" />
+          <h3 className="text-2xl font-semibold text-red-700">{consTitle}</h3>
+        </div>
+        <ul className="space-y-4">
+          {processedCons.map((con, index) => (
+            <li key={index} className="flex items-start">
+              <span className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+              <span className="text-gray-700 leading-relaxed">{con.point}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+
+  if (disableInnerContainer) {
+    return (
+      <section className={`py-12 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+        {title && <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">{title}</h2>}
+        {content}
+      </section>
+    )
+  }
+
+  return (
+    <section className={`py-12 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+      <div className="max-w-6xl mx-auto">
+        {title && <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">{title}</h2>}
+        {content}
+      </div>
+    </section>
+  )
+}
