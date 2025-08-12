@@ -12,33 +12,29 @@ import {
 } from '@payloadcms/richtext-lexical/react'
 
 import { CodeBlock, CodeBlockProps } from '@/blocks/Code/Component'
+import { BrandHighlightsTable } from '@/blocks/BrandHighlightsTable/Component'
+import { ProsConsBlock } from '@/blocks/ProsConsBlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
   CallToActionBlock as CTABlockProps,
   MediaBlock as MediaBlockProps,
+  BrandHighlightsTableBlock as BrandHighlightsTableBlockProps,
+  ProsConsBlock as ProsConsBlockProps,
 } from '@/payload-types'
-
-interface ProsConsBlockProps {
-  title?: string
-  prosTitle: string
-  consTitle: string
-  pros: Array<{ point: string }>
-  cons: Array<{ point: string }>
-  bulkProsText?: string
-  bulkConsText?: string
-  style: 'default' | 'stacked' | 'cards' | 'table'
-  backgroundColor: 'none' | 'gray' | 'blue' | 'green'
-}
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
-import { ProsConsBlock } from '@/blocks/ProsConsBlock/Component'
 import { cn } from '@/utilities/ui'
 
 type NodeTypes =
   | DefaultNodeTypes
   | SerializedBlockNode<
-      CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps | ProsConsBlockProps
+      | CTABlockProps
+      | MediaBlockProps
+      | BannerBlockProps
+      | CodeBlockProps
+      | BrandHighlightsTableBlockProps
+      | ProsConsBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -67,8 +63,42 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     ),
     code: ({ node }) => <CodeBlock className="col-start-2" {...node.fields} />,
     cta: ({ node }) => <CallToActionBlock {...node.fields} />,
-    prosConsBlock: ({ node }: { node: SerializedBlockNode<ProsConsBlockProps> }) => (
-      <ProsConsBlock className="col-start-2" {...node.fields} disableInnerContainer={true} />
+    prosConsBlock: ({ node }) => (
+      <ProsConsBlock
+        className="col-start-1 col-span-3"
+        disableInnerContainer={true}
+        title={node.fields.title || undefined}
+        prosTitle={node.fields.prosTitle || 'Pros'}
+        consTitle={node.fields.consTitle || 'Cons'}
+        pros={node.fields.pros || []}
+        cons={node.fields.cons || []}
+        bulkProsText={node.fields.bulkProsText || undefined}
+        bulkConsText={node.fields.bulkConsText || undefined}
+        style={node.fields.style || 'default'}
+        backgroundColor={node.fields.backgroundColor || 'none'}
+      />
+    ),
+    brandHighlightsTable: ({ node }) => (
+      <BrandHighlightsTable
+        className="col-start-1 col-span-3"
+        disableInnerContainer={true}
+        title={node.fields.title || undefined}
+        overallRating={node.fields.overallRating || undefined}
+        productImage={
+          node.fields.productImage && typeof node.fields.productImage === 'object'
+            ? {
+                url: node.fields.productImage.url || '',
+                alt: node.fields.productImage.alt || '',
+              }
+            : undefined
+        }
+        productName={node.fields.productName || undefined}
+        buyNowText={node.fields.buyNowText || undefined}
+        buyNowLink={node.fields.buyNowLink || undefined}
+        ratings={node.fields.ratings || []}
+        highlights={node.fields.highlights || []}
+        backgroundColor={node.fields.backgroundColor || 'gradient'}
+      />
     ),
   },
 })

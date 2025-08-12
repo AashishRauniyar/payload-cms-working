@@ -3,6 +3,7 @@ import React, { Fragment } from 'react'
 import type { Page } from '@/payload-types'
 
 import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
+import { BrandHighlightsTable } from '@/blocks/BrandHighlightsTable/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
@@ -11,6 +12,7 @@ import { ProsConsBlock } from '@/blocks/ProsConsBlock/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
+  brandHighlightsTable: BrandHighlightsTable,
   content: ContentBlock,
   cta: CallToActionBlock,
   formBlock: FormBlock,

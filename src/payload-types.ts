@@ -197,45 +197,8 @@ export interface Page {
     | MediaBlock
     | ArchiveBlock
     | FormBlock
-    | {
-        /**
-         * Optional title for the pros and cons section
-         */
-        title?: string | null;
-        prosTitle?: string | null;
-        consTitle?: string | null;
-        /**
-         * Enter each pro point on a new line or copy/paste multiple lines
-         */
-        pros?:
-          | {
-              point: string;
-              id?: string | null;
-            }[]
-          | null;
-        /**
-         * Enter each con point on a new line or copy/paste multiple lines
-         */
-        cons?:
-          | {
-              point: string;
-              id?: string | null;
-            }[]
-          | null;
-        /**
-         * Paste multiple pros here, one per line. This will override the Pros array above.
-         */
-        bulkProsText?: string | null;
-        /**
-         * Paste multiple cons here, one per line. This will override the Cons array above.
-         */
-        bulkConsText?: string | null;
-        style?: ('default' | 'table' | 'stacked' | 'cards') | null;
-        backgroundColor?: ('none' | 'gray' | 'blue' | 'green') | null;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'prosConsBlock';
-      }
+    | ProsConsBlock
+    | BrandHighlightsTableBlock
   )[];
   meta?: {
     title?: string | null;
@@ -781,6 +744,106 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProsConsBlock".
+ */
+export interface ProsConsBlock {
+  /**
+   * Optional title for the pros and cons section
+   */
+  title?: string | null;
+  prosTitle?: string | null;
+  consTitle?: string | null;
+  /**
+   * Enter each pro point on a new line or copy/paste multiple lines
+   */
+  pros?:
+    | {
+        point: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Enter each con point on a new line or copy/paste multiple lines
+   */
+  cons?:
+    | {
+        point: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Paste multiple pros here, one per line. This will override the Pros array above.
+   */
+  bulkProsText?: string | null;
+  /**
+   * Paste multiple cons here, one per line. This will override the Cons array above.
+   */
+  bulkConsText?: string | null;
+  style?: ('default' | 'table' | 'stacked' | 'cards') | null;
+  backgroundColor?: ('none' | 'gray' | 'blue' | 'green') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'prosConsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandHighlightsTableBlock".
+ */
+export interface BrandHighlightsTableBlock {
+  /**
+   * Main title for the brand highlights table. Use [Product] as placeholder for product name.
+   */
+  title?: string | null;
+  /**
+   * Overall product rating out of 5
+   */
+  overallRating?: number | null;
+  /**
+   * Upload a PNG/JPG image of the product
+   */
+  productImage?: (number | null) | Media;
+  /**
+   * Name of the product being reviewed
+   */
+  productName?: string | null;
+  /**
+   * Text displayed on the buy now button
+   */
+  buyNowText?: string | null;
+  /**
+   * URL where users will be redirected when clicking the buy now button
+   */
+  buyNowLink?: string | null;
+  /**
+   * Individual rating categories with scores
+   */
+  ratings?:
+    | {
+        label: string;
+        /**
+         * Rating score out of 5
+         */
+        score: number;
+        iconType: 'star' | 'dollar' | 'clipboard' | 'shield';
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Key highlights or features of the brand/product
+   */
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  backgroundColor?: ('none' | 'white' | 'gray' | 'blue' | 'gradient') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'brandHighlightsTable';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1070,31 +1133,8 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
-        prosConsBlock?:
-          | T
-          | {
-              title?: T;
-              prosTitle?: T;
-              consTitle?: T;
-              pros?:
-                | T
-                | {
-                    point?: T;
-                    id?: T;
-                  };
-              cons?:
-                | T
-                | {
-                    point?: T;
-                    id?: T;
-                  };
-              bulkProsText?: T;
-              bulkConsText?: T;
-              style?: T;
-              backgroundColor?: T;
-              id?: T;
-              blockName?: T;
-            };
+        prosConsBlock?: T | ProsConsBlockSelect<T>;
+        brandHighlightsTable?: T | BrandHighlightsTableBlockSelect<T>;
       };
   meta?:
     | T
@@ -1191,6 +1231,62 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProsConsBlock_select".
+ */
+export interface ProsConsBlockSelect<T extends boolean = true> {
+  title?: T;
+  prosTitle?: T;
+  consTitle?: T;
+  pros?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  cons?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  bulkProsText?: T;
+  bulkConsText?: T;
+  style?: T;
+  backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandHighlightsTableBlock_select".
+ */
+export interface BrandHighlightsTableBlockSelect<T extends boolean = true> {
+  title?: T;
+  overallRating?: T;
+  productImage?: T;
+  productName?: T;
+  buyNowText?: T;
+  buyNowLink?: T;
+  ratings?:
+    | T
+    | {
+        label?: T;
+        score?: T;
+        iconType?: T;
+        id?: T;
+      };
+  highlights?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  backgroundColor?: T;
   id?: T;
   blockName?: T;
 }
