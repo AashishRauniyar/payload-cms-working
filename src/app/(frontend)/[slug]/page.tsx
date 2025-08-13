@@ -12,6 +12,7 @@ import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import LandingPageServer from '../landing/server'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -48,6 +49,11 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { slug = 'home' } = await paramsPromise
   const url = '/' + slug
 
+  // If this is the home page, serve our custom landing page
+  if (slug === 'home') {
+    return <LandingPageServer />
+  }
+
   let page: RequiredDataFromCollectionSlug<'pages'> | null
 
   page = await queryPageBySlug({
@@ -81,6 +87,24 @@ export default async function Page({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug = 'home' } = await paramsPromise
+
+  // If this is the home page, return custom metadata
+  if (slug === 'home') {
+    return {
+      title: 'Consumer Health Digest - Trusted Reviews, Honest Ratings and Quality Advice',
+      description:
+        'Your premier source for evidence-based health and wellness information and unbiased product reviews. Get trusted advice from medical experts.',
+      keywords:
+        'health reviews, wellness, product reviews, supplements, medical advice, health information',
+      openGraph: {
+        title: 'Consumer Health Digest - Trusted Health Reviews',
+        description:
+          'Evidence-based health information and unbiased product reviews from medical experts.',
+        type: 'website',
+      },
+    }
+  }
+
   const page = await queryPageBySlug({
     slug,
   })
