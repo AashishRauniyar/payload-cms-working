@@ -199,6 +199,7 @@ export interface Page {
     | FormBlock
     | ProsConsBlock
     | BrandHighlightsTableBlock
+    | TableBlock
   )[];
   meta?: {
     title?: string | null;
@@ -754,31 +755,9 @@ export interface ProsConsBlock {
   prosTitle?: string | null;
   consTitle?: string | null;
   /**
-   * Enter each pro point on a new line or copy/paste multiple lines
+   * Paste your pros/cons table directly here in markdown format.
    */
-  pros?:
-    | {
-        point: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Enter each con point on a new line or copy/paste multiple lines
-   */
-  cons?:
-    | {
-        point: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Paste multiple pros here, one per line. This will override the Pros array above.
-   */
-  bulkProsText?: string | null;
-  /**
-   * Paste multiple cons here, one per line. This will override the Cons array above.
-   */
-  bulkConsText?: string | null;
+  tableData: string;
   style?: ('default' | 'table' | 'stacked' | 'cards') | null;
   backgroundColor?: ('none' | 'gray' | 'blue' | 'green') | null;
   id?: string | null;
@@ -841,6 +820,29 @@ export interface BrandHighlightsTableBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'brandHighlightsTable';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TableBlock".
+ */
+export interface TableBlock {
+  /**
+   * Optional title that appears above the table
+   */
+  tableTitle?: string | null;
+  /**
+   * Paste your table in markdown format. The component will automatically parse and style it.
+   */
+  tableData: string;
+  tableStyle: 'default' | 'striped' | 'bordered' | 'compact' | 'card';
+  responsive: 'scroll' | 'stack' | 'hide';
+  /**
+   * A caption that appears below the table for additional context.
+   */
+  caption?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tableBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1135,6 +1137,7 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         prosConsBlock?: T | ProsConsBlockSelect<T>;
         brandHighlightsTable?: T | BrandHighlightsTableBlockSelect<T>;
+        tableBlock?: T | TableBlockSelect<T>;
       };
   meta?:
     | T
@@ -1242,20 +1245,7 @@ export interface ProsConsBlockSelect<T extends boolean = true> {
   title?: T;
   prosTitle?: T;
   consTitle?: T;
-  pros?:
-    | T
-    | {
-        point?: T;
-        id?: T;
-      };
-  cons?:
-    | T
-    | {
-        point?: T;
-        id?: T;
-      };
-  bulkProsText?: T;
-  bulkConsText?: T;
+  tableData?: T;
   style?: T;
   backgroundColor?: T;
   id?: T;
@@ -1287,6 +1277,19 @@ export interface BrandHighlightsTableBlockSelect<T extends boolean = true> {
         id?: T;
       };
   backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TableBlock_select".
+ */
+export interface TableBlockSelect<T extends boolean = true> {
+  tableTitle?: T;
+  tableData?: T;
+  tableStyle?: T;
+  responsive?: T;
+  caption?: T;
   id?: T;
   blockName?: T;
 }

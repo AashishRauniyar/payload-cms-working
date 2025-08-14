@@ -61,7 +61,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       <PostHero post={post} />
 
-      <div className="flex flex-col items-center gap-4 pt-8">
+      <div className="flex flex-col items-center gap-4 pt-4">
         <div className="container mx-auto px-4">
           <div className="blog-content">
             <RichText className="max-w-4xl mx-auto" data={post.content} enableGutter={false} />

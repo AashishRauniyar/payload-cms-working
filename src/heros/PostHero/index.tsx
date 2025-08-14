@@ -15,7 +15,7 @@ export const PostHero: React.FC<{
     populatedAuthors && populatedAuthors.length > 0 && formatAuthors(populatedAuthors) !== ''
 
   return (
-    <div className=" text-black pt-24 pb-16">
+    <div className=" text-black pt-24 pb-6">
       <div className="container mx-auto px-4">
         {/* Breadcrumb / Category */}
         <nav className="mb-8" aria-label="Breadcrumb">

@@ -18,6 +18,7 @@ import { ProsConsBlock } from '@/blocks/ProsConsBlock/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
+import { TableBlock } from '@/blocks/TableBlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -25,6 +26,7 @@ import type {
   MediaBlock as MediaBlockProps,
   BrandHighlightsTableBlock as BrandHighlightsTableBlockProps,
   ProsConsBlock as ProsConsBlockProps,
+  TableBlock as TableBlockProps,
 } from '@/payload-types'
 
 type NodeTypes =
@@ -36,6 +38,7 @@ type NodeTypes =
       | CodeBlockProps
       | BrandHighlightsTableBlockProps
       | ProsConsBlockProps
+      | TableBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -83,10 +86,7 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
           title={node.fields.title || undefined}
           prosTitle={node.fields.prosTitle || 'Pros'}
           consTitle={node.fields.consTitle || 'Cons'}
-          pros={node.fields.pros || []}
-          cons={node.fields.cons || []}
-          bulkProsText={node.fields.bulkProsText || undefined}
-          bulkConsText={node.fields.bulkConsText || undefined}
+          tableData={node.fields.tableData || ''}
           style={node.fields.style || 'default'}
           backgroundColor={node.fields.backgroundColor || 'none'}
         />
@@ -112,6 +112,18 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
           ratings={node.fields.ratings || []}
           highlights={node.fields.highlights || []}
           backgroundColor={node.fields.backgroundColor || 'gradient'}
+        />
+      </div>
+    ),
+    tableBlock: ({ node }) => (
+      <div className="my-8">
+        <TableBlock
+          disableInnerContainer={true}
+          tableTitle={node.fields.tableTitle || undefined}
+          tableData={node.fields.tableData || ''}
+          tableStyle={node.fields.tableStyle || 'default'}
+          responsive={node.fields.responsive || 'scroll'}
+          caption={node.fields.caption || undefined}
         />
       </div>
     ),

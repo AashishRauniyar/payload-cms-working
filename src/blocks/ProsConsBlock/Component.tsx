@@ -9,10 +9,7 @@ interface ProsConsBlockProps {
   title?: string
   prosTitle: string
   consTitle: string
-  pros: ProsConsItem[]
-  cons: ProsConsItem[]
-  bulkProsText?: string
-  bulkConsText?: string
+  tableData: string
   style: 'default' | 'stacked' | 'cards' | 'table'
   backgroundColor: 'none' | 'gray' | 'blue' | 'green'
   disableInnerContainer?: boolean
@@ -23,29 +20,49 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
   title,
   prosTitle,
   consTitle,
-  pros,
-  cons,
-  bulkProsText,
-  bulkConsText,
+  tableData,
   style,
   backgroundColor,
   disableInnerContainer,
   className,
 }) => {
-  // Process bulk input if provided
-  const processedPros = bulkProsText
-    ? bulkProsText
-        .split('\n')
-        .filter((line) => line.trim())
-        .map((point) => ({ point: point.trim() }))
-    : pros || []
+  // Function to parse markdown table for pros/cons
+  const parseProsCons = (markdown: string) => {
+    const lines = markdown
+      .trim()
+      .split('\n')
+      .filter((line) => line.trim())
 
-  const processedCons = bulkConsText
-    ? bulkConsText
-        .split('\n')
-        .filter((line) => line.trim())
-        .map((point) => ({ point: point.trim() }))
-    : cons || []
+    if (lines.length < 2) return { pros: [], cons: [] }
+
+    // Skip header and separator lines
+    const dataLines = lines.slice(2)
+
+    const pros: ProsConsItem[] = []
+    const cons: ProsConsItem[] = []
+
+    dataLines.forEach((line) => {
+      const cells = line
+        .split('|')
+        .map((cell) => cell.trim())
+        .filter((cell) => cell)
+
+      if (cells.length >= 2) {
+        // First column is pros, second column is cons
+        if (cells[0] && cells[0] !== '-' && cells[0] !== '') {
+          pros.push({ point: cells[0] })
+        }
+        if (cells[1] && cells[1] !== '-' && cells[1] !== '') {
+          cons.push({ point: cells[1] })
+        }
+      }
+    })
+
+    return { pros, cons }
+  }
+
+  // Process table data to extract pros and cons
+  const { pros: processedPros, cons: processedCons } = parseProsCons(tableData || '')
   const backgroundClasses = {
     none: '',
     gray: 'bg-gray-50',

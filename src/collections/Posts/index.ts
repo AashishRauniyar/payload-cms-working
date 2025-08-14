@@ -7,6 +7,8 @@ import {
   HorizontalRuleFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  OrderedListFeature,
+  UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { authenticated } from '../../access/authenticated'
@@ -16,6 +18,7 @@ import { BrandHighlightsTableBlock } from '../../blocks/BrandHighlightsTable/con
 import { Code } from '../../blocks/Code/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { ProsConsBlock } from '../../blocks/ProsConsBlock/config'
+import { TableBlockConfig } from '../../blocks/TableBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
@@ -93,9 +96,18 @@ export const Posts: CollectionConfig<'posts'> = {
                 features: ({ rootFeatures }) => {
                   return [
                     ...rootFeatures,
+                    UnorderedListFeature(),
+                    OrderedListFeature(),
                     HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
                     BlocksFeature({
-                      blocks: [Banner, Code, MediaBlock, ProsConsBlock, BrandHighlightsTableBlock],
+                      blocks: [
+                        Banner,
+                        Code,
+                        MediaBlock,
+                        ProsConsBlock,
+                        BrandHighlightsTableBlock,
+                        TableBlockConfig,
+                      ],
                     }),
                     FixedToolbarFeature(),
                     InlineToolbarFeature(),

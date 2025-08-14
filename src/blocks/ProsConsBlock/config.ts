@@ -29,63 +29,15 @@ export const ProsConsBlock: Block = {
       defaultValue: 'Cons',
     },
     {
-      name: 'pros',
-      type: 'array',
-      label: 'Pros',
-      minRows: 1,
-      admin: {
-        description: 'Enter each pro point on a new line or copy/paste multiple lines',
-      },
-      fields: [
-        {
-          name: 'point',
-          type: 'text',
-          required: true,
-          label: 'Pro Point',
-          admin: {
-            placeholder: 'Enter a positive point...',
-          },
-        },
-      ],
-    },
-    {
-      name: 'cons',
-      type: 'array',
-      label: 'Cons',
-      minRows: 1,
-      admin: {
-        description: 'Enter each con point on a new line or copy/paste multiple lines',
-      },
-      fields: [
-        {
-          name: 'point',
-          type: 'text',
-          required: true,
-          label: 'Con Point',
-          admin: {
-            placeholder: 'Enter a negative point...',
-          },
-        },
-      ],
-    },
-    {
-      name: 'bulkProsText',
+      name: 'tableData',
       type: 'textarea',
-      label: 'Bulk Pros Input (Optional)',
+      label: 'Pros & Cons Table',
+      required: true,
       admin: {
-        description:
-          'Paste multiple pros here, one per line. This will override the Pros array above.',
-        placeholder: 'Pro 1\nPro 2\nPro 3\n...',
-      },
-    },
-    {
-      name: 'bulkConsText',
-      type: 'textarea',
-      label: 'Bulk Cons Input (Optional)',
-      admin: {
-        description:
-          'Paste multiple cons here, one per line. This will override the Cons array above.',
-        placeholder: 'Con 1\nCon 2\nCon 3\n...',
+        rows: 10,
+        description: 'Paste your pros/cons table directly here in markdown format.',
+        placeholder:
+          '| **Pros** | **Cons** |\n| --- | --- |\n| Leak-proof and pest-proof design | Compact base ideal for smaller gardens |\n| Attractive, UV-resistant build | Limited color options |\n| Easy, zero-drip cleaning | Capacity promotes regular fresh nectar refills |\n| Wide perch attracts multiple birds | Cleaning instructions encourage proper maintenance |\n| Durable for all-weather use | Buying direct ensures authentic product and support |',
       },
     },
     {
