@@ -249,6 +249,8 @@
 //   )
 // }
 
+'use client'
+
 import React from 'react'
 import { Star, DollarSign, ClipboardList, ShieldCheck, ExternalLink, Award } from 'lucide-react'
 import './styles.css'
@@ -257,10 +259,6 @@ interface RatingItem {
   label: string
   score: number
   iconType: 'star' | 'dollar' | 'clipboard' | 'shield'
-}
-
-interface HighlightItem {
-  text: string
 }
 
 interface BrandHighlightsTableProps {
@@ -274,7 +272,7 @@ interface BrandHighlightsTableProps {
   buyNowText?: string
   buyNowLink?: string
   ratings?: RatingItem[]
-  highlights?: HighlightItem[]
+  highlights?: string
   backgroundColor?: 'none' | 'white' | 'gray' | 'blue' | 'gradient'
   disableInnerContainer?: boolean
   className?: string
@@ -295,131 +293,156 @@ export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = ({
   buyNowText = 'SHOP NOW',
   buyNowLink = '#',
   ratings = [],
-  highlights = [],
+  highlights = '',
   backgroundColor = 'none',
   disableInnerContainer,
   className,
 }) => {
-  // Replace [Product] with actual product name in title
-  const displayTitle = title.replace(/\[Product\]/g, productName)
+  try {
+    // Replace [Product] with actual product name in title
+    const displayTitle = title?.replace(/\[Product\]/g, productName) || 'How Does Our Product Rate?'
 
-  const backgroundClasses = {
-    none: '',
-    white: 'bg-white',
-    gray: 'bg-gray-50',
-    blue: 'bg-blue-50',
-    gradient: 'bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50',
-  }
+    // Ensure highlights is always a string
+    const safeHighlights = typeof highlights === 'string' ? highlights : ''
 
-  const content = (
-    <div className="brand-highlights-independent-table">
-      {/* Header Section - Orange/Amber Theme */}
-      <div className="bh-header-section">
-        <div className="bh-title-container">
-          <h2 className="bh-main-title">{displayTitle}</h2>
+    // Ensure ratings is always an array
+    const safeRatings = Array.isArray(ratings) ? ratings : []
+
+    const backgroundClasses = {
+      none: '',
+      white: 'bg-white',
+      gray: 'bg-gray-50',
+      blue: 'bg-blue-50',
+      gradient: 'bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50',
+    }
+
+    const content = (
+      <div className="brand-highlights-independent-table">
+        {/* Header Section - Orange/Amber Theme */}
+        <div className="bh-header-section">
+          <div className="bh-title-container">
+            <h2 className="bh-main-title">{displayTitle}</h2>
+          </div>
+
+          {/* Overall Rating Banner - Blue Theme */}
+          <div className="bh-overall-rating">
+            <span className="bh-rating-text">Overall Rating: {overallRating}</span>
+          </div>
         </div>
 
-        {/* Overall Rating Banner - Blue Theme */}
-        <div className="bh-overall-rating">
-          <span className="bh-rating-text">Overall Rating: {overallRating}</span>
+        {/* Main Content Grid */}
+        <div className="bh-content-grid">
+          {/* Left Column - Product Image & Button */}
+          <div className="bh-product-section">
+            <div className="bh-image-container">
+              {productImage?.url ? (
+                <img
+                  src={productImage.url}
+                  alt={productImage.alt || productName}
+                  className="bh-product-image"
+                />
+              ) : (
+                <div className="bh-product-placeholder">
+                  <Award className="w-12 h-12 text-gray-400" />
+                  <span className="text-sm text-gray-500 mt-2">Product Image</span>
+                </div>
+              )}
+            </div>
+
+            <h3 className="bh-product-name">{productName}</h3>
+
+            <a
+              href={buyNowLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bh-shop-button"
+            >
+              <span>{buyNowText}</span>
+              <ExternalLink className="w-4 h-4 ml-2" />
+            </a>
+          </div>
+
+          {/* Center Column - Product Ratings */}
+          <div className="bh-ratings-section">
+            <div className="bh-section-header">
+              <Star className="w-5 h-5 text-blue-500" />
+              <h3 className="bh-section-title">Product Ratings</h3>
+            </div>
+
+            <div className="bh-ratings-list">
+              {safeRatings && safeRatings.length > 0 ? (
+                safeRatings.map((item, idx) => (
+                  <div key={idx} className="bh-rating-item">
+                    <div className="bh-rating-left">
+                      <div className="bh-rating-icon">
+                        {iconMap[item?.iconType] || iconMap.star}
+                      </div>
+                      <span className="bh-rating-label">{item?.label || 'N/A'}</span>
+                    </div>
+                    <div className="bh-rating-score">
+                      <span className="bh-score-number">{item?.score || 0}</span>
+                      <span className="bh-score-divider">/5</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="bh-empty-state">
+                  <Star className="w-8 h-8 text-gray-300 mb-2" />
+                  <p className="text-gray-500">No ratings available</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column - Brand Highlights */}
+          <div className="bh-highlights-section">
+            <div className="bh-section-header">
+              <ShieldCheck className="w-5 h-5 text-green-500" />
+              <h3 className="bh-section-title">Brand Highlights</h3>
+            </div>
+
+            <div className="bh-highlights-list">
+              {safeHighlights && safeHighlights.trim() ? (
+                safeHighlights
+                  .split('\n')
+                  .filter((line) => line.trim() !== '')
+                  .map((highlight, idx) => (
+                    <div key={idx} className="bh-highlight-item">
+                      <div className="bh-highlight-bullet"></div>
+                      <span className="bh-highlight-text">{highlight.trim()}</span>
+                    </div>
+                  ))
+              ) : (
+                <div className="bh-empty-state">
+                  <ShieldCheck className="w-8 h-8 text-gray-300 mb-2" />
+                  <p className="text-gray-500">No highlights available</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
+    )
 
-      {/* Main Content Grid */}
-      <div className="bh-content-grid">
-        {/* Left Column - Product Image & Button */}
-        <div className="bh-product-section">
-          <div className="bh-image-container">
-            {productImage?.url ? (
-              <img
-                src={productImage.url}
-                alt={productImage.alt || productName}
-                className="bh-product-image"
-              />
-            ) : (
-              <div className="bh-product-placeholder">
-                <Award className="w-12 h-12 text-gray-400" />
-                <span className="text-sm text-gray-500 mt-2">Product Image</span>
-              </div>
-            )}
-          </div>
+    if (disableInnerContainer) {
+      return (
+        <section className={`bh-wrapper ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+          {content}
+        </section>
+      )
+    }
 
-          <h3 className="bh-product-name">{productName}</h3>
-
-          <a href={buyNowLink} target="_blank" rel="noopener noreferrer" className="bh-shop-button">
-            <span>{buyNowText}</span>
-            <ExternalLink className="w-4 h-4 ml-2" />
-          </a>
-        </div>
-
-        {/* Center Column - Product Ratings */}
-        <div className="bh-ratings-section">
-          <div className="bh-section-header">
-            <Star className="w-5 h-5 text-blue-500" />
-            <h3 className="bh-section-title">Product Ratings</h3>
-          </div>
-
-          <div className="bh-ratings-list">
-            {ratings && ratings.length > 0 ? (
-              ratings.map((item, idx) => (
-                <div key={idx} className="bh-rating-item">
-                  <div className="bh-rating-left">
-                    <div className="bh-rating-icon">{iconMap[item.iconType] || iconMap.star}</div>
-                    <span className="bh-rating-label">{item.label}</span>
-                  </div>
-                  <div className="bh-rating-score">
-                    <span className="bh-score-number">{item.score}</span>
-                    <span className="bh-score-divider">/5</span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="bh-empty-state">
-                <Star className="w-8 h-8 text-gray-300 mb-2" />
-                <p className="text-gray-500">No ratings available</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right Column - Brand Highlights */}
-        <div className="bh-highlights-section">
-          <div className="bh-section-header">
-            <ShieldCheck className="w-5 h-5 text-green-500" />
-            <h3 className="bh-section-title">Brand Highlights</h3>
-          </div>
-
-          <div className="bh-highlights-list">
-            {highlights && highlights.length > 0 ? (
-              highlights.map((point, idx) => (
-                <div key={idx} className="bh-highlight-item">
-                  <div className="bh-highlight-bullet"></div>
-                  <span className="bh-highlight-text">{point.text}</span>
-                </div>
-              ))
-            ) : (
-              <div className="bh-empty-state">
-                <ShieldCheck className="w-8 h-8 text-gray-300 mb-2" />
-                <p className="text-gray-500">No highlights available</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-
-  if (disableInnerContainer) {
     return (
       <section className={`bh-wrapper ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-        {content}
+        <div className="bh-container">{content}</div>
       </section>
     )
+  } catch (error) {
+    console.error('BrandHighlightsTable Error:', error)
+    return (
+      <div className="error-fallback">
+        <p>Unable to load brand highlights table</p>
+      </div>
+    )
   }
-
-  return (
-    <section className={`bh-wrapper ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-      <div className="bh-container">{content}</div>
-    </section>
-  )
 }

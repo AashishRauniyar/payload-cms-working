@@ -115,23 +115,16 @@ export const BrandHighlightsTableBlock: Block = {
     },
     {
       name: 'highlights',
-      type: 'array',
+      type: 'textarea',
       label: 'Brand Highlights',
-      minRows: 1,
+      required: false,
       admin: {
-        description: 'Key highlights or features of the brand/product',
+        description:
+          'Enter multiple highlights, one per line. Each line will become a bullet point.',
+        placeholder:
+          'Powered by plant-based ingredients supported by clinical studies\nThird-party tested and validated\n100% performing nutrients. No pointless ingredients\nEmphasizes ultramodern, ethical manufacturing practices\nCommitted to sustainable and transparent sourcing',
+        rows: 8,
       },
-      fields: [
-        {
-          name: 'text',
-          type: 'text',
-          label: 'Highlight Text',
-          required: true,
-          admin: {
-            placeholder: 'e.g., Powered by plant-based ingredients supported by clinical studies',
-          },
-        },
-      ],
     },
     {
       name: 'backgroundColor',

@@ -808,14 +808,9 @@ export interface BrandHighlightsTableBlock {
       }[]
     | null;
   /**
-   * Key highlights or features of the brand/product
+   * Enter multiple highlights, one per line. Each line will become a bullet point.
    */
-  highlights?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
+  highlights?: string | null;
   backgroundColor?: ('none' | 'white' | 'gray' | 'blue' | 'gradient') | null;
   id?: string | null;
   blockName?: string | null;
@@ -1270,12 +1265,7 @@ export interface BrandHighlightsTableBlockSelect<T extends boolean = true> {
         iconType?: T;
         id?: T;
       };
-  highlights?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
+  highlights?: T;
   backgroundColor?: T;
   id?: T;
   blockName?: T;
