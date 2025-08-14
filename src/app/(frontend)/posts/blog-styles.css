@@ -1,7 +1,4 @@
 /* Blog-specific styles - isolated from global styles */
-.blog-content {
-  /* Reset any global heading styles within blog content */
-}
 
 .blog-content h1 {
   font-size: 1.875rem;
@@ -17,7 +14,7 @@
 .blog-content h2 {
   position: relative;
   margin: 1.5rem 0;
-  background: #f9fafb;
+  background: #eff6ff;
   border-left: 4px solid #2563eb;
   border-radius: 0 6px 6px 0;
   padding: 16px 20px;
@@ -32,7 +29,7 @@
   font-weight: 600;
   color: #1f2937;
   margin: 1.25rem 0;
-  background: #f8fafc;
+  background: #dbeafe;
   border-left: 3px solid #3b82f6;
   border-radius: 0 4px 4px 0;
   padding: 12px 16px;
@@ -43,7 +40,7 @@
   font-weight: 600;
   color: #1f2937;
   margin: 1rem 0;
-  background: #f1f5f9;
+  background: #bfdbfe;
   border-left: 2px solid #60a5fa;
   border-radius: 0 3px 3px 0;
   padding: 10px 14px;

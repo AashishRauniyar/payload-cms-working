@@ -1,0 +1,526 @@
+/* BrandHighlightsTable - Completely Independent Design with CSS Reset */
+
+/* CSS Reset and Isolation for this component */
+.brand-highlights-independent-table,
+.brand-highlights-independent-table * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  text-decoration: none;
+  list-style: none;
+}
+
+.brand-highlights-independent-table {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  background: white !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Header Section - Improved Orange/Amber Design */
+.bh-header-section {
+  /* background: linear-gradient(135deg, #f97316 0%, #f59e0b 50%, #eab308 100%) !important; */
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.bh-title-container {
+  padding: 2.5rem 2rem 1.5rem 2rem !important;
+  text-align: center !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  margin: 1rem !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.bh-main-title {
+  color: #1f2937 !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-shadow: none !important;
+  line-height: 1.3 !important;
+  font-family: inherit !important;
+  text-align: center !important;
+  letter-spacing: -0.025em !important;
+  background: none !important;
+  border: none !important;
+  text-decoration: none !important;
+}
+
+/* Overall Rating Banner - Clean Blue Design */
+.bh-overall-rating {
+  background: #3b82f6 !important;
+  /* dotted border */
+  border: 2px dashed rgba(255, 255, 255) !important;
+  color: white !important;
+  padding: 1rem 2rem !important;
+  text-align: center !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  /* border: none !important; */
+  margin: 0 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.bh-rating-text {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  color: white !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
+/* Main Content Grid - Improved Layout */
+.bh-content-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 0 !important;
+  background: #f8fafc !important;
+  min-height: 450px !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+/* Product Section - Enhanced Left Column */
+.bh-product-section {
+  /* background: linear-gradient(135deg, #fef7ed, #fef3c7, #fef9c3) !important; */
+  padding: 2.5rem 2rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 2rem !important;
+  border-right: 1px solid #e5e7eb !important;
+  position: relative !important;
+}
+
+.bh-product-section::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 3px !important;
+  /* background: linear-gradient(90deg, #f97316, #f59e0b, #eab308) !important; */
+}
+
+.bh-image-container {
+  background: white !important;
+  border-radius: 16px !important;
+  padding: 2rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  /* border: 2px solid #fed7aa !important; */
+  width: 220px !important;
+  height: 220px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.bh-image-container:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  /* border-color: #fb923c !important; */
+}
+
+.bh-product-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  border-radius: 8px !important;
+}
+
+.bh-product-placeholder {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  color: #9ca3af !important;
+  height: 100% !important;
+}
+
+.bh-product-name {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  color: #1f2937 !important;
+  margin: 0 !important;
+  padding: 1rem !important;
+  line-height: 1.3 !important;
+  background: linear-gradient(135deg, #1f2937, #4b5563) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.bh-shop-button {
+  background: #dc2626 !important;
+  color: white !important;
+  padding: 1rem 2.5rem !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+  cursor: pointer !important;
+  min-width: 160px !important;
+  box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.5) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.bh-shop-button:hover {
+  background: #b91c1c !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.5) !important;
+}
+
+.bh-shop-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent) !important;
+  transition: left 0.5s ease !important;
+}
+
+.bh-shop-button:hover::before {
+  left: 100% !important;
+}
+
+/* Ratings Section - Enhanced Center Column */
+.bh-ratings-section {
+  /* background: linear-gradient(135deg, #eff6ff, #dbeafe, #bfdbfe) !important; */
+  padding: 2.5rem 2rem !important;
+  border-right: 1px solid #e5e7eb !important;
+  position: relative !important;
+}
+
+.bh-ratings-section::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 3px !important;
+  /* background: linear-gradient(90deg, #3b82f6, #2563eb, #1d4ed8) !important; */
+}
+
+.bh-section-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  margin-bottom: 2rem !important;
+  padding: 1rem !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 12px !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* CRITICAL: Override all global heading styles */
+.bh-section-title,
+.brand-highlights-independent-table .bh-section-title,
+.brand-highlights-independent-table h3.bh-section-title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: #1f2937 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+  font-family: inherit !important;
+  background: none !important;
+  border: none !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  display: inline !important;
+  position: static !important;
+  z-index: auto !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.bh-ratings-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.25rem !important;
+}
+
+.bh-rating-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 1.25rem !important;
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e5e7eb !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.bh-rating-item:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.2) !important;
+  border-color: #3b82f6 !important;
+}
+
+.bh-rating-item::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  height: 100% !important;
+  width: 3px !important;
+  background: #3b82f6 !important;
+  transform: scaleY(0) !important;
+  transition: transform 0.3s ease !important;
+}
+
+.bh-rating-item:hover::before {
+  transform: scaleY(1) !important;
+}
+
+.bh-rating-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+
+.bh-rating-icon {
+  width: 3rem !important;
+  height: 3rem !important;
+  background: #f8fafc !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 2px solid #e2e8f0 !important;
+  transition: all 0.3s ease !important;
+}
+
+.bh-rating-item:hover .bh-rating-icon {
+  background: #eff6ff !important;
+  border-color: #3b82f6 !important;
+  transform: scale(1.05) !important;
+}
+
+.bh-rating-label {
+  font-weight: 600 !important;
+  color: #374151 !important;
+  font-size: 1rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.bh-rating-score {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.25rem !important;
+}
+
+.bh-score-number {
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.bh-score-divider {
+  font-size: 1.125rem !important;
+  color: #6b7280 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Brand Highlights Section - Enhanced Right Column */
+.bh-highlights-section {
+  /* background: linear-gradient(135deg, #f0fdf4, #dcfce7, #bbf7d0) !important; */
+  padding: 2.5rem 2rem !important;
+  position: relative !important;
+}
+
+.bh-highlights-section::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 3px !important;
+  /* background: linear-gradient(90deg, #10b981, #059669, #047857) !important; */
+}
+
+.bh-highlights-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.25rem !important;
+}
+
+.bh-highlight-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 1rem !important;
+  padding: 1.25rem !important;
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e5e7eb !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.bh-highlight-item:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.2) !important;
+  border-color: #10b981 !important;
+}
+
+.bh-highlight-item::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  height: 100% !important;
+  width: 3px !important;
+  background: #10b981 !important;
+  transform: scaleY(0) !important;
+  transition: transform 0.3s ease !important;
+}
+
+.bh-highlight-item:hover::before {
+  transform: scaleY(1) !important;
+}
+
+.bh-highlight-bullet {
+  width: 0.75rem !important;
+  height: 0.75rem !important;
+  background: #10b981 !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+  margin-top: 0.375rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.bh-highlight-item:hover .bh-highlight-bullet {
+  background: #059669 !important;
+  transform: scale(1.2) !important;
+}
+
+.bh-highlight-text {
+  color: #374151 !important;
+  line-height: 1.6 !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Empty States */
+.bh-empty-state {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 3rem 2rem !important;
+  text-align: center !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  border-radius: 12px !important;
+  border: 2px dashed #d1d5db !important;
+}
+
+/* Container and Wrapper */
+.bh-wrapper {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.bh-container {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1024px) {
+  .bh-content-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+  
+  .bh-product-section,
+  .bh-ratings-section,
+  .bh-highlights-section {
+    border-right: none !important;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+  
+  .bh-highlights-section {
+    border-bottom: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .bh-main-title {
+    font-size: 1.75rem !important;
+  }
+  
+  .bh-title-container {
+    padding: 2rem 1rem 1rem 1rem !important;
+    margin: 0.75rem !important;
+  }
+  
+  .bh-overall-rating {
+    padding: 0.875rem 1rem !important;
+    font-size: 1.125rem !important;
+  }
+  
+  .bh-product-section,
+  .bh-ratings-section,
+  .bh-highlights-section {
+    padding: 2rem 1rem !important;
+  }
+  
+  .bh-image-container {
+    width: 180px !important;
+    height: 180px !important;
+    padding: 1.5rem !important;
+  }
+  
+  .bh-product-name {
+    font-size: 1.5rem !important;
+  }
+  
+  .bh-section-title {
+    font-size: 1.125rem !important;
+  }
+}

@@ -250,7 +250,8 @@
 // }
 
 import React from 'react'
-import { Star, DollarSign, ClipboardList, ShieldCheck, ExternalLink } from 'lucide-react'
+import { Star, DollarSign, ClipboardList, ShieldCheck, ExternalLink, Award } from 'lucide-react'
+import './styles.css'
 
 interface RatingItem {
   label: string
@@ -280,7 +281,7 @@ interface BrandHighlightsTableProps {
 }
 
 const iconMap = {
-  star: <Star className="w-5 h-5 text-blue-500" />,
+  star: <Star className="w-5 h-5 text-orange-500" fill="currentColor" />,
   dollar: <DollarSign className="w-5 h-5 text-green-500" />,
   clipboard: <ClipboardList className="w-5 h-5 text-purple-500" />,
   shield: <ShieldCheck className="w-5 h-5 text-blue-500" />,
@@ -288,14 +289,14 @@ const iconMap = {
 
 export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = ({
   title = 'How Does Our Product Rate?',
-  overallRating = 4.5,
+  overallRating = 4.7,
   productImage,
   productName = 'Our Product',
   buyNowText = 'SHOP NOW',
   buyNowLink = '#',
   ratings = [],
   highlights = [],
-  backgroundColor = 'white',
+  backgroundColor = 'none',
   disableInnerContainer,
   className,
 }) => {
@@ -307,94 +308,99 @@ export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = ({
     white: 'bg-white',
     gray: 'bg-gray-50',
     blue: 'bg-blue-50',
-    gradient: 'bg-gradient-to-br from-blue-50 via-white to-purple-50',
+    gradient: 'bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50',
   }
 
   const content = (
-    <div className="max-w-6xl mx-auto bg-white">
-      {/* Overall Rating Banner */}
-      <div className="bg-blue-500 text-white text-center py-3 mb-8">
-        <div className="flex items-center justify-center space-x-2">
-          <Star className="w-5 h-5 text-white fill-current" />
-          <span className="text-lg font-semibold">Overall Rating: {overallRating}</span>
+    <div className="brand-highlights-independent-table">
+      {/* Header Section - Orange/Amber Theme */}
+      <div className="bh-header-section">
+        <div className="bh-title-container">
+          <h2 className="bh-main-title">{displayTitle}</h2>
+        </div>
+
+        {/* Overall Rating Banner - Blue Theme */}
+        <div className="bh-overall-rating">
+          <span className="bh-rating-text">Overall Rating: {overallRating}</span>
         </div>
       </div>
 
-      <div className="px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Product Image and Buy Button */}
-          <div className="flex flex-col items-center space-y-6">
-            <div className="w-full max-w-xs">
-              {productImage?.url ? (
-                <img
-                  src={productImage.url}
-                  alt={productImage.alt || productName}
-                  className="w-full h-auto object-contain"
-                />
-              ) : (
-                <div className="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-gray-400 text-sm text-center">Product Image</span>
-                </div>
-              )}
-            </div>
-
-            <h3 className="text-xl font-semibold text-center text-gray-800">{productName}</h3>
-
-            <a
-              href={buyNowLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded transition-colors duration-200 flex items-center space-x-2"
-            >
-              <span>{buyNowText}</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
-          </div>
-
-          {/* Ratings Section */}
-          <div className="space-y-4">
-            {ratings && ratings.length > 0 ? (
-              ratings.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between py-3 border-b border-gray-200 last:border-none"
-                >
-                  <div className="flex items-center space-x-3">
-                    {iconMap[item.iconType] || iconMap.star}
-                    <span className="text-gray-700 font-medium">{item.label}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl font-bold text-gray-900">{item.score}</span>
-                    <span className="text-gray-500">/5</span>
-                  </div>
-                </div>
-              ))
+      {/* Main Content Grid */}
+      <div className="bh-content-grid">
+        {/* Left Column - Product Image & Button */}
+        <div className="bh-product-section">
+          <div className="bh-image-container">
+            {productImage?.url ? (
+              <img
+                src={productImage.url}
+                alt={productImage.alt || productName}
+                className="bh-product-image"
+              />
             ) : (
-              <div className="text-center text-gray-500 py-8">
-                <p>No ratings available</p>
+              <div className="bh-product-placeholder">
+                <Award className="w-12 h-12 text-gray-400" />
+                <span className="text-sm text-gray-500 mt-2">Product Image</span>
               </div>
             )}
           </div>
 
-          {/* Brand Highlights Section */}
-          <div className="bg-gray-50 p-6 rounded">
-            <h3 className="text-xl font-semibold mb-4 text-blue-600 flex items-center space-x-2">
-              <ShieldCheck className="w-6 h-6" />
-              <span>Brand Highlights</span>
-            </h3>
+          <h3 className="bh-product-name">{productName}</h3>
 
-            {highlights && highlights.length > 0 ? (
-              <ul className="space-y-3">
-                {highlights.map((point, idx) => (
-                  <li key={idx} className="flex items-start space-x-2">
-                    <span className="text-gray-600 mt-2">-</span>
-                    <span className="text-gray-700 leading-relaxed">{point.text}</span>
-                  </li>
-                ))}
-              </ul>
+          <a href={buyNowLink} target="_blank" rel="noopener noreferrer" className="bh-shop-button">
+            <span>{buyNowText}</span>
+            <ExternalLink className="w-4 h-4 ml-2" />
+          </a>
+        </div>
+
+        {/* Center Column - Product Ratings */}
+        <div className="bh-ratings-section">
+          <div className="bh-section-header">
+            <Star className="w-5 h-5 text-blue-500" />
+            <h3 className="bh-section-title">Product Ratings</h3>
+          </div>
+
+          <div className="bh-ratings-list">
+            {ratings && ratings.length > 0 ? (
+              ratings.map((item, idx) => (
+                <div key={idx} className="bh-rating-item">
+                  <div className="bh-rating-left">
+                    <div className="bh-rating-icon">{iconMap[item.iconType] || iconMap.star}</div>
+                    <span className="bh-rating-label">{item.label}</span>
+                  </div>
+                  <div className="bh-rating-score">
+                    <span className="bh-score-number">{item.score}</span>
+                    <span className="bh-score-divider">/5</span>
+                  </div>
+                </div>
+              ))
             ) : (
-              <div className="text-center text-gray-500 py-8">
-                <p>No highlights available</p>
+              <div className="bh-empty-state">
+                <Star className="w-8 h-8 text-gray-300 mb-2" />
+                <p className="text-gray-500">No ratings available</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column - Brand Highlights */}
+        <div className="bh-highlights-section">
+          <div className="bh-section-header">
+            <ShieldCheck className="w-5 h-5 text-green-500" />
+            <h3 className="bh-section-title">Brand Highlights</h3>
+          </div>
+
+          <div className="bh-highlights-list">
+            {highlights && highlights.length > 0 ? (
+              highlights.map((point, idx) => (
+                <div key={idx} className="bh-highlight-item">
+                  <div className="bh-highlight-bullet"></div>
+                  <span className="bh-highlight-text">{point.text}</span>
+                </div>
+              ))
+            ) : (
+              <div className="bh-empty-state">
+                <ShieldCheck className="w-8 h-8 text-gray-300 mb-2" />
+                <p className="text-gray-500">No highlights available</p>
               </div>
             )}
           </div>
@@ -405,15 +411,15 @@ export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = ({
 
   if (disableInnerContainer) {
     return (
-      <section className={`py-8 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+      <section className={`bh-wrapper ${backgroundClasses[backgroundColor]} ${className || ''}`}>
         {content}
       </section>
     )
   }
 
   return (
-    <section className={`py-8 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-      {content}
+    <section className={`bh-wrapper ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+      <div className="bh-container">{content}</div>
     </section>
   )
 }
