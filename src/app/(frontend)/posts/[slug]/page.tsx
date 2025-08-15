@@ -14,6 +14,10 @@ import { PostHero } from '@/heros/PostHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import DisclaimerBox from '@/components/blog/DisclaimerBox'
+import TableOfContents from '@/components/blog/TableOfContents'
+import AuthorReviewSection from '@/components/blog/AuthorReviewSection'
+import BlogContentEnhancer from '@/components/blog/BlogContentEnhancer'
 import '../blog-styles.css'
 
 export async function generateStaticParams() {
@@ -63,7 +67,18 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       <div className="flex flex-col items-center gap-4 pt-4">
         <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            {/* Author Review Section */}
+            <AuthorReviewSection post={post} />
+
+            {/* Disclaimer Box */}
+            <DisclaimerBox />
+
+            {/* Table of Contents */}
+            <TableOfContents content={post.content} />
+          </div>{' '}
           <div className="blog-content">
+            <BlogContentEnhancer />
             <RichText className="max-w-4xl mx-auto" data={post.content} enableGutter={false} />
           </div>
           {post.relatedPosts && post.relatedPosts.length > 0 && (

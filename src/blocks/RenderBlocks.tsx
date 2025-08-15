@@ -6,6 +6,8 @@ import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
 import { BrandHighlightsTable } from '@/blocks/BrandHighlightsTable/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
+import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
+import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { ProsConsBlock } from '@/blocks/ProsConsBlock/Component'
@@ -16,6 +18,8 @@ const blockComponents = {
   brandHighlightsTable: BrandHighlightsTable,
   content: ContentBlock,
   cta: CallToActionBlock,
+  customCTABlock: CustomCTABlock,
+  faqBlock: FAQBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   prosConsBlock: ProsConsBlock,

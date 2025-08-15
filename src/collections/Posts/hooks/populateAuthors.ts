@@ -14,22 +14,72 @@ export const populateAuthors: CollectionAfterReadHook = async ({ doc, req, req: 
         const authorDoc = await payload.findByID({
           id: typeof author === 'object' ? author?.id : author,
           collection: 'users',
-          depth: 0,
+          depth: 1, // Reduced depth to avoid deep serialization issues
         })
 
         if (authorDoc) {
           authorDocs.push(authorDoc)
         }
-
-        if (authorDocs.length > 0) {
-          doc.populatedAuthors = authorDocs.map((authorDoc) => ({
-            id: authorDoc.id,
-            name: authorDoc.name,
-          }))
-        }
       } catch {
         // swallow error
       }
+    }
+
+    // Create clean serializable author objects
+    if (authorDocs.length > 0) {
+      const serializedAuthors = []
+
+      for (const authorDoc of authorDocs) {
+        try {
+          // Get avatar data if it exists
+          let avatarData = null
+          if (authorDoc.avatar) {
+            if (typeof authorDoc.avatar === 'object') {
+              avatarData = {
+                id: authorDoc.avatar.id,
+                url: authorDoc.avatar.url || null,
+                alt: authorDoc.avatar.alt || null,
+                width: authorDoc.avatar.width || null,
+                height: authorDoc.avatar.height || null,
+              }
+            } else {
+              // If avatar is just an ID, fetch the media
+              try {
+                const media = await payload.findByID({
+                  collection: 'media',
+                  id: authorDoc.avatar,
+                  depth: 0,
+                })
+
+                if (media) {
+                  avatarData = {
+                    id: media.id,
+                    url: media.url || null,
+                    alt: media.alt || null,
+                    width: media.width || null,
+                    height: media.height || null,
+                  }
+                }
+              } catch {
+                // Avatar fetch failed, use null
+              }
+            }
+          }
+
+          // Create clean author object
+          serializedAuthors.push({
+            id: authorDoc.id,
+            name: authorDoc.name || null,
+            avatar: avatarData,
+            title: authorDoc.title || null,
+            bio: authorDoc.bio || null,
+          })
+        } catch (error) {
+          console.error('Error serializing author:', error)
+        }
+      }
+
+      doc.populatedAuthors = serializedAuthors
     }
   }
 

@@ -19,6 +19,8 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { TableBlock } from '@/blocks/TableBlock/Component'
+import { FAQBlock } from '@/blocks/FAQBlock/Component'
+import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -110,7 +112,7 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
           buyNowText={node.fields.buyNowText || undefined}
           buyNowLink={node.fields.buyNowLink || undefined}
           ratings={node.fields.ratings || []}
-          highlights={node.fields.highlights || []}
+          highlights={node.fields.highlights || undefined}
           backgroundColor={node.fields.backgroundColor || 'gradient'}
         />
       </div>
@@ -124,6 +126,25 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
           tableStyle={node.fields.tableStyle || 'default'}
           responsive={node.fields.responsive || 'scroll'}
           caption={node.fields.caption || undefined}
+        />
+      </div>
+    ),
+    faqBlock: ({ node }: { node: SerializedBlockNode }) => (
+      <div className="my-8">
+        <FAQBlock
+          disableInnerContainer={true}
+          title={node.fields.title || undefined}
+          faqContent={node.fields.faqContent || ''}
+        />
+      </div>
+    ),
+    customCTABlock: ({ node }: { node: SerializedBlockNode }) => (
+      <div className="my-8">
+        <CustomCTABlock
+          disableInnerContainer={true}
+          ctaText={node.fields.ctaText || undefined}
+          buttonText={node.fields.buttonText || undefined}
+          buttonLink={node.fields.buttonLink || '#'}
         />
       </div>
     ),

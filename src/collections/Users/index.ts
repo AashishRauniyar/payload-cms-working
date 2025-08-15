@@ -21,6 +21,28 @@ export const Users: CollectionConfig = {
       name: 'name',
       type: 'text',
     },
+    {
+      name: 'avatar',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Author profile image',
+      },
+    },
+    {
+      name: 'bio',
+      type: 'textarea',
+      admin: {
+        description: 'Short author biography',
+      },
+    },
+    {
+      name: 'title',
+      type: 'text',
+      admin: {
+        description: 'Professional title (e.g., "Medical Doctor", "Registered Dietitian")',
+      },
+    },
   ],
   timestamps: true,
 }

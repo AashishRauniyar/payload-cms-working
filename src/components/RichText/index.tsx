@@ -15,6 +15,8 @@ import { CodeBlock, CodeBlockProps } from '@/blocks/Code/Component'
 import { BrandHighlightsTable } from '@/blocks/BrandHighlightsTable/Component'
 import { ProsConsBlock } from '@/blocks/ProsConsBlock/Component'
 import { TableBlock } from '@/blocks/TableBlock/Component'
+import { FAQBlock } from '@/blocks/FAQBlock/Component'
+import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -23,6 +25,8 @@ import type {
   BrandHighlightsTableBlock as BrandHighlightsTableBlockProps,
   ProsConsBlock as ProsConsBlockProps,
   TableBlock as TableBlockProps,
+  FAQBlock as FAQBlockProps,
+  CustomCTABlock as CustomCTABlockProps,
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
@@ -38,6 +42,8 @@ type NodeTypes =
       | BrandHighlightsTableBlockProps
       | ProsConsBlockProps
       | TableBlockProps
+      | FAQBlockProps
+      | CustomCTABlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -96,11 +102,11 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         buyNowText={node.fields.buyNowText || undefined}
         buyNowLink={node.fields.buyNowLink || undefined}
         ratings={node.fields.ratings || []}
-        highlights={node.fields.highlights || []}
+        highlights={node.fields.highlights || ''}
         backgroundColor={node.fields.backgroundColor || 'gradient'}
       />
     ),
-    tableBlock: ({ node }) => (
+    tableBlock: ({ node }: { node: SerializedBlockNode }) => (
       <TableBlock
         className="col-start-1 col-span-3"
         disableInnerContainer={true}
@@ -109,6 +115,23 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         tableStyle={node.fields.tableStyle || 'default'}
         responsive={node.fields.responsive || 'scroll'}
         caption={node.fields.caption || undefined}
+      />
+    ),
+    faqBlock: ({ node }: { node: SerializedBlockNode }) => (
+      <FAQBlock
+        className="col-start-1 col-span-3"
+        disableInnerContainer={true}
+        title={node.fields.title || undefined}
+        faqContent={node.fields.faqContent || ''}
+      />
+    ),
+    customCTABlock: ({ node }: { node: SerializedBlockNode }) => (
+      <CustomCTABlock
+        className="col-start-1 col-span-3"
+        disableInnerContainer={true}
+        ctaText={node.fields.ctaText || undefined}
+        buttonText={node.fields.buttonText || undefined}
+        buttonLink={node.fields.buttonLink || '#'}
       />
     ),
   },

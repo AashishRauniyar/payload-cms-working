@@ -16,6 +16,8 @@ import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { Banner } from '../../blocks/Banner/config'
 import { BrandHighlightsTableBlock } from '../../blocks/BrandHighlightsTable/config'
 import { Code } from '../../blocks/Code/config'
+import { CustomCTABlock } from '../../blocks/CustomCTABlock/config'
+import { FAQBlock } from '../../blocks/FAQBlock/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { ProsConsBlock } from '../../blocks/ProsConsBlock/config'
 import { TableBlockConfig } from '../../blocks/TableBlock/config'
@@ -107,6 +109,8 @@ export const Posts: CollectionConfig<'posts'> = {
                         ProsConsBlock,
                         BrandHighlightsTableBlock,
                         TableBlockConfig,
+                        FAQBlock,
+                        CustomCTABlock,
                       ],
                     }),
                     FixedToolbarFeature(),

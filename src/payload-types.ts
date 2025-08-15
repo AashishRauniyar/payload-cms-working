@@ -383,6 +383,18 @@ export interface Category {
 export interface User {
   id: number;
   name?: string | null;
+  /**
+   * Author profile image
+   */
+  avatar?: (number | null) | Media;
+  /**
+   * Short author biography
+   */
+  bio?: string | null;
+  /**
+   * Professional title (e.g., "Medical Doctor", "Registered Dietitian")
+   */
+  title?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1433,6 +1445,9 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  avatar?: T;
+  bio?: T;
+  title?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1866,6 +1881,44 @@ export interface CodeBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'code';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock".
+ */
+export interface FAQBlock {
+  /**
+   * Optional title for the FAQ section
+   */
+  title?: string | null;
+  /**
+   * Paste your FAQ content in markdown format. Use **Question?** for questions and regular text for answers.
+   */
+  faqContent: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faqBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CustomCTABlock".
+ */
+export interface CustomCTABlock {
+  /**
+   * Main headline text for the CTA section
+   */
+  ctaText: string;
+  /**
+   * Text that appears on the CTA button
+   */
+  buttonText: string;
+  /**
+   * URL where the button should link to (use full URL like https://example.com)
+   */
+  buttonLink: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'customCTABlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
