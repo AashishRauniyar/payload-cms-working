@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import type { Post } from '@/payload-types'
 
 interface AuthorReviewSectionProps {
@@ -22,6 +22,7 @@ interface SerializableAuthor {
 }
 
 const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
   // Safely extract author data
   const authors = (post.populatedAuthors as SerializableAuthor[]) || []
   const hasAuthors = authors && authors.length > 0
@@ -91,7 +92,9 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
 
           <div className="author-details">
             <div className="author-header">
-              <h3 className="author-name-large">{author ? author.name || 'Dev, RD' : 'Dev, RD'}</h3>
+              <h3 className="author-name-large">
+                {author ? author.name || 'Dr. Rahul' : 'Dr. Rahul'}
+              </h3>
               <div className="author-credentials-container">
                 {author && author.title ? (
                   <span className="author-credentials">{author.title}</span>
@@ -101,13 +104,19 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
               </div>
             </div>
 
-            {author && author.bio ? (
-              <p className="author-bio">{author.bio}</p>
-            ) : (
-              <p className="author-bio">
-                Experienced healthcare professional committed to providing accurate, evidence-based
-                health information to help you make informed decisions about your wellness.
-              </p>
+            {/* Description - only shown when expanded */}
+            {isExpanded && (
+              <>
+                {author && author.bio ? (
+                  <p className="author-bio">{author.bio}</p>
+                ) : (
+                  <p className="author-bio">
+                    Experienced healthcare professional committed to providing accurate,
+                    evidence-based health information to help you make informed decisions about your
+                    wellness.
+                  </p>
+                )}
+              </>
             )}
 
             <div className="author-meta">
@@ -121,7 +130,7 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span className="meta-text">Published {formatDate(publishedDate)}</span>
+                    <span className="meta-text">Published 08/15/2025</span>
                   </div>
                 )}
 
@@ -134,7 +143,7 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span className="meta-text">Updated {formatDate(updatedDate)}</span>
+                    <span className="meta-text">Updated 08/15/2025</span>
                   </div>
                 )}
               </div>
@@ -142,57 +151,82 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
           </div>
         </div>
 
-        {/* Trust & Credibility Section */}
+        {/* Trust & Quality Section */}
         <div className="credibility-section">
           <div className="trust-indicators">
-            <h4 className="credibility-title">Trust & Quality</h4>
-            <div className="trust-badges-grid">
-              <div className="trust-badge-large medically-cited">
-                <div className="badge-icon-container green">
-                  <svg className="badge-icon-lg" fill="white" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="badge-content">
-                  <span className="badge-title">Medically Cited</span>
-                  <span className="badge-description">
-                    All claims backed by scientific research
-                  </span>
-                </div>
-              </div>
-
-              <div className="trust-badge-large fact-checked">
-                <div className="badge-icon-container blue">
-                  <svg className="badge-icon-lg" fill="white" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="badge-content">
-                  <span className="badge-title">Fact Checked</span>
-                  <span className="badge-description">Verified by medical professionals</span>
-                </div>
-              </div>
-
-              <div className="trust-badge-large peer-reviewed">
-                <div className="badge-icon-container purple">
-                  <svg className="badge-icon-lg" fill="white" viewBox="0 0 20 20">
-                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <div className="badge-content">
-                  <span className="badge-title">Expert Reviewed</span>
-                  <span className="badge-description">Reviewed by healthcare experts</span>
-                </div>
-              </div>
+            <div className="trust-header-with-arrow">
+              <h4 className="credibility-title">Trust & Quality</h4>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="expand-button"
+                aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+              >
+                <svg
+                  className={`expand-arrow ${isExpanded ? 'expanded' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
             </div>
+
+            {/* Trust badges - only shown when expanded */}
+            {isExpanded && (
+              <div className="trust-badges-grid">
+                <div className="trust-badge-large medically-cited">
+                  <div className="badge-icon-container green">
+                    <svg className="badge-icon-lg" fill="white" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="badge-content">
+                    <span className="badge-title">Medically Cited</span>
+                    <span className="badge-description">
+                      All claims backed by scientific research
+                    </span>
+                  </div>
+                </div>
+
+                <div className="trust-badge-large fact-checked">
+                  <div className="badge-icon-container blue">
+                    <svg className="badge-icon-lg" fill="white" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="badge-content">
+                    <span className="badge-title">Fact Checked</span>
+                    <span className="badge-description">Verified by medical professionals</span>
+                  </div>
+                </div>
+
+                <div className="trust-badge-large peer-reviewed">
+                  <div className="badge-icon-container purple">
+                    <svg className="badge-icon-lg" fill="white" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div className="badge-content">
+                    <span className="badge-title">Expert Reviewed</span>
+                    <span className="badge-description">Reviewed by healthcare experts</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

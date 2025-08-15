@@ -55,7 +55,7 @@ export default async function Post({ params: paramsPromise }: Args) {
   if (!post) return <PayloadRedirects url={url} />
 
   return (
-    <article className="pt-16 pb-16">
+    <article className=" pb-16">
       <PageClient />
 
       {/* Allows redirects for valid pages too */}
@@ -65,7 +65,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       <PostHero post={post} />
 
-      <div className="flex flex-col items-center gap-4 pt-4">
+      <div className="flex flex-col items-center gap-4 pt-2">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Author Review Section */}
