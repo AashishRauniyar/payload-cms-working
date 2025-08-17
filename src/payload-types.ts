@@ -806,19 +806,21 @@ export interface BrandHighlightsTableBlock {
    */
   buyNowLink?: string | null;
   /**
-   * Individual rating categories with scores
+   * Rating for ingredients quality out of 5
    */
-  ratings?:
-    | {
-        label: string;
-        /**
-         * Rating score out of 5
-         */
-        score: number;
-        iconType: 'star' | 'dollar' | 'clipboard' | 'shield';
-        id?: string | null;
-      }[]
-    | null;
+  ingredientsRating?: number | null;
+  /**
+   * Rating for value proposition out of 5
+   */
+  valueForCostRating?: number | null;
+  /**
+   * Rating for manufacturer trustworthiness out of 5
+   */
+  manufacturerRating?: number | null;
+  /**
+   * Rating for product safety out of 5
+   */
+  safetyRating?: number | null;
   /**
    * Enter multiple highlights, one per line. Each line will become a bullet point.
    */
@@ -1269,14 +1271,10 @@ export interface BrandHighlightsTableBlockSelect<T extends boolean = true> {
   productName?: T;
   buyNowText?: T;
   buyNowLink?: T;
-  ratings?:
-    | T
-    | {
-        label?: T;
-        score?: T;
-        iconType?: T;
-        id?: T;
-      };
+  ingredientsRating?: T;
+  valueForCostRating?: T;
+  manufacturerRating?: T;
+  safetyRating?: T;
   highlights?: T;
   backgroundColor?: T;
   id?: T;

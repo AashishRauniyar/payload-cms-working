@@ -88,22 +88,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       <BrandHighlightsTable
         className="col-start-1 col-span-3"
         disableInnerContainer={true}
-        title={node.fields.title || undefined}
-        overallRating={node.fields.overallRating || undefined}
-        productImage={
-          node.fields.productImage && typeof node.fields.productImage === 'object'
-            ? {
-                url: node.fields.productImage.url || '',
-                alt: node.fields.productImage.alt || '',
-              }
-            : undefined
-        }
-        productName={node.fields.productName || undefined}
-        buyNowText={node.fields.buyNowText || undefined}
-        buyNowLink={node.fields.buyNowLink || undefined}
-        ratings={node.fields.ratings || []}
-        highlights={node.fields.highlights || ''}
-        backgroundColor={node.fields.backgroundColor || 'gradient'}
+        {...node.fields}
       />
     ),
     tableBlock: ({ node }: { node: SerializedBlockNode }) => (
