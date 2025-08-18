@@ -93,6 +93,17 @@ export const Posts: CollectionConfig<'posts'> = {
               relationTo: 'media',
             },
             {
+              name: 'hideHeroImageInArticle',
+              type: 'checkbox',
+              label: 'Hide hero image on article page',
+              defaultValue: false,
+              admin: {
+                description:
+                  'If checked, the hero image will be used only on listing cards and not displayed at the top of the article.',
+                position: 'sidebar',
+              },
+            },
+            {
               name: 'content',
               type: 'richText',
               editor: lexicalEditor({

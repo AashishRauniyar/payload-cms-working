@@ -21,6 +21,26 @@ export const Categories: CollectionConfig = {
       type: 'text',
       required: true,
     },
+    {
+      name: 'image',
+      label: 'Category Image',
+      type: 'upload',
+      relationTo: 'media',
+      required: false,
+      admin: {
+        description: 'Optional image for this category. Used on category pages and cards.',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'description',
+      label: 'Category Description',
+      type: 'richText',
+      required: false,
+      admin: {
+        description: 'Optional short description used on category pages and SEO.',
+      },
+    },
     ...slugField(),
   ],
 }

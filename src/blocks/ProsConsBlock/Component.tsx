@@ -71,10 +71,10 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
   }
 
   const containerClasses = {
-    default: 'grid md:grid-cols-2 gap-8',
-    stacked: 'space-y-8',
-    cards: 'grid md:grid-cols-2 gap-6',
-    table: 'overflow-hidden rounded-lg border border-gray-200',
+    default: 'grid md:grid-cols-2 gap-6',
+    stacked: 'space-y-6',
+    cards: 'grid md:grid-cols-2 gap-5',
+    table: '',
   }
 
   const prosCardClasses = {
@@ -98,26 +98,26 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
     const content = (
       <div className={containerClasses[style]}>
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-transparent">
             <tr>
-              <th className="px-6 py-4 text-left font-semibold text-green-700 border-r border-gray-200">
+              <th className="px-6 py-4 text-left font-semibold text-green-700 align-middle border-0">
                 <div className="flex items-center">
-                  <CheckCircle className="w-6 h-6 text-green-500 mr-2" />
-                  {prosTitle}
+                  <img src="/images/pros.png" alt="Pros" className="h-16 md:h-20 w-auto mr-4" />
+                  <span className="text-2xl md:text-3xl">{prosTitle}</span>
                 </div>
               </th>
-              <th className="px-6 py-4 text-left font-semibold text-red-700">
+              <th className="px-6 py-4 text-left font-semibold text-red-700 align-middle border-0">
                 <div className="flex items-center">
-                  <XCircle className="w-6 h-6 text-red-500 mr-2" />
-                  {consTitle}
+                  <img src="/images/cons.png" alt="Cons" className="h-16 md:h-20 w-auto mr-4" />
+                  <span className="text-2xl md:text-3xl">{consTitle}</span>
                 </div>
               </th>
             </tr>
           </thead>
           <tbody>
             {Array.from({ length: maxRows }, (_, index) => (
-              <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="px-6 py-4 border-r border-gray-200 text-gray-700">
+              <tr key={index} className="border-0">
+                <td className="px-6 py-3 text-gray-700 align-top border-0">
                   {processedPros[index] ? (
                     <div className="flex items-start">
                       <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
@@ -127,7 +127,7 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
                     <span className="text-gray-400">—</span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-gray-700">
+                <td className="px-6 py-3 text-gray-700 align-top border-0">
                   {processedCons[index] ? (
                     <div className="flex items-start">
                       <span className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
@@ -154,9 +154,9 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
     }
 
     return (
-      <section className={`py-12 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+      <section className={`py-0 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
         <div className="max-w-6xl mx-auto">
-          {title && <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">{title}</h2>}
+          {title && <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
           {content}
         </div>
       </section>
@@ -168,11 +168,11 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
     <div className={containerClasses[style]}>
       {/* Pros Section */}
       <div className={prosCardClasses[style]}>
-        <div className="flex items-center mb-6">
-          <CheckCircle className="w-8 h-8 text-green-500 mr-3" />
+        <div className="flex items-center mb-3">
+          <img src="/images/pros.png" alt="Pros" className="h-12 md:h-14 w-auto mr-3" />
           <h3 className="text-2xl font-semibold text-green-700">{prosTitle}</h3>
         </div>
-        <ul className="space-y-4">
+        <ul className="space-y-3">
           {processedPros.map((pro, index) => (
             <li key={index} className="flex items-start">
               <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
@@ -184,11 +184,11 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
 
       {/* Cons Section */}
       <div className={consCardClasses[style]}>
-        <div className="flex items-center mb-6">
-          <XCircle className="w-8 h-8 text-red-500 mr-3" />
+        <div className="flex items-center mb-3">
+          <img src="/images/cons.png" alt="Cons" className="h-12 md:h-14 w-auto mr-3" />
           <h3 className="text-2xl font-semibold text-red-700">{consTitle}</h3>
         </div>
-        <ul className="space-y-4">
+        <ul className="space-y-3">
           {processedCons.map((con, index) => (
             <li key={index} className="flex items-start">
               <span className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
@@ -202,17 +202,17 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
 
   if (disableInnerContainer) {
     return (
-      <section className={`py-12 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-        {title && <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">{title}</h2>}
+      <section className={`py-6 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+        {title && <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">{title}</h2>}
         {content}
       </section>
     )
   }
 
   return (
-    <section className={`py-12 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+    <section className={`py-6 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
       <div className="max-w-6xl mx-auto">
-        {title && <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">{title}</h2>}
+        {title && <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">{title}</h2>}
         {content}
       </div>
     </section>

@@ -85,7 +85,7 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
       </div>
     ),
     prosConsBlock: ({ node }) => (
-      <div className="my-8">
+      <div className="my-2">
         <ProsConsBlock
           disableInnerContainer={true}
           title={node.fields.title || undefined}

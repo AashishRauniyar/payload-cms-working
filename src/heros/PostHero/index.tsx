@@ -10,7 +10,15 @@ import { formatAuthors } from '@/utilities/formatAuthors'
 export const PostHero: React.FC<{
   post: Post
 }> = ({ post }) => {
-  const { categories, heroImage, populatedAuthors, publishedAt, updatedAt, title } = post
+  const {
+    categories,
+    heroImage,
+    populatedAuthors,
+    publishedAt,
+    updatedAt,
+    title,
+    hideHeroImageInArticle,
+  } = post
 
   const hasAuthors =
     populatedAuthors && populatedAuthors.length > 0 && formatAuthors(populatedAuthors) !== ''
@@ -191,12 +199,19 @@ export const PostHero: React.FC<{
 
               {/* Author Information */}
               {hasAuthors && (
-                <div className="flex items-center">
+                <div className="flex items-center gap-2">
                   <p className="text-sm text-gray-600">
                     by{' '}
-                    <span className="font-semibold text-blue-600">
-                      {formatAuthors(populatedAuthors)}, RD
-                    </span>
+                    {populatedAuthors?.map((a, idx) => (
+                      <Link
+                        key={a.id || idx}
+                        href={`/authors/${a.id}`}
+                        className="font-semibold text-blue-600 hover:underline hover:text-blue-700"
+                      >
+                        {a.name}
+                        {idx !== (populatedAuthors?.length || 1) - 1 ? ', ' : ''}
+                      </Link>
+                    ))}
                   </p>
                 </div>
               )}
@@ -205,7 +220,7 @@ export const PostHero: React.FC<{
         </div>
 
         {/* Featured Image */}
-        {heroImage && typeof heroImage !== 'string' && (
+        {!hideHeroImageInArticle && heroImage && typeof heroImage !== 'string' && (
           <div className="max-w-4xl mx-auto mt-12">
             <div className="relative rounded-2xl overflow-hidden shadow-xl">
               <div className="aspect-video">

@@ -44,6 +44,41 @@
   gap: 20px;
 }
 
+/* Make the whole author area clickable with subtle hover */
+.author-profile-link {
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.author-profile-link:hover {
+  transform: translateY(-1px);
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Simple tooltip prompting there's an author's page */
+.author-tooltip {
+  position: absolute;
+  right: 12px;
+  bottom: -10px;
+  transform: translateY(100%);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.author-profile-link:hover .author-tooltip {
+  opacity: 1;
+}
+
 .author-avatar-large {
   flex-shrink: 0;
   position: relative;

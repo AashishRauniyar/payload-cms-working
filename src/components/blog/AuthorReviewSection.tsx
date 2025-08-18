@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import type { Post } from '@/payload-types'
 
 interface AuthorReviewSectionProps {
@@ -49,6 +50,98 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
     })
   }
 
+  const ProfileInner = () => (
+    <>
+      <div className="author-avatar-large">
+        {author && author.avatar && getAvatarUrl(author.avatar) ? (
+          <img
+            src={getAvatarUrl(author.avatar) || ''}
+            alt={author.name || 'Author'}
+            className="author-avatar-img"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement
+              target.style.display = 'none'
+              const placeholder = target.nextElementSibling as HTMLElement
+              if (placeholder) {
+                placeholder.classList.remove('hidden')
+              }
+            }}
+          />
+        ) : null}
+        <div
+          className={`author-avatar-placeholder-large ${
+            author && author.avatar && getAvatarUrl(author.avatar) ? 'hidden' : ''
+          }`}
+        >
+          <svg className="avatar-icon-large" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div className="author-details">
+        <div className="author-header">
+          <h3 className="author-name-large">{author ? author.name || 'Dr. Rahul' : 'Dr. Rahul'}</h3>
+          <div className="author-credentials-container">
+            {author && author.title ? (
+              <span className="author-credentials">{author.title}</span>
+            ) : (
+              <span className="author-credentials">Medical Expert</span>
+            )}
+          </div>
+        </div>
+
+        {/* Description - only shown when expanded */}
+        {isExpanded && (
+          <>
+            {author && author.bio ? (
+              <p className="author-bio">{author.bio}</p>
+            ) : (
+              <p className="author-bio">
+                Experienced healthcare professional committed to providing accurate, evidence-based
+                health information to help you make informed decisions about your wellness.
+              </p>
+            )}
+          </>
+        )}
+
+        <div className="author-meta">
+          <div className="publication-info">
+            {publishedDate && (
+              <div className="meta-item">
+                <svg className="meta-icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="meta-text">Published 08/15/2025</span>
+              </div>
+            )}
+
+            {updatedDate && publishedDate && updatedDate > publishedDate && (
+              <div className="meta-item">
+                <svg className="meta-icon" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="meta-text">Updated 08/15/2025</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+
   return (
     <div className="author-review-banner">
       <div className="banner-background">
@@ -57,99 +150,20 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
 
       <div className="banner-content">
         {/* Author Profile Section */}
-        <div className="author-profile-section">
-          <div className="author-avatar-large">
-            {author && author.avatar && getAvatarUrl(author.avatar) ? (
-              <img
-                src={getAvatarUrl(author.avatar) || ''}
-                alt={author.name || 'Author'}
-                className="author-avatar-img"
-                onError={(e) => {
-                  // Fallback to placeholder if image fails to load
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                  const placeholder = target.nextElementSibling as HTMLElement
-                  if (placeholder) {
-                    placeholder.classList.remove('hidden')
-                  }
-                }}
-              />
-            ) : null}
-            <div
-              className={`author-avatar-placeholder-large ${
-                author && author.avatar && getAvatarUrl(author.avatar) ? 'hidden' : ''
-              }`}
-            >
-              <svg className="avatar-icon-large" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
+        {author ? (
+          <Link
+            href={`/authors/${String(author.id)}`}
+            className="author-profile-section author-profile-link"
+            aria-label={`View ${author.name || 'author'} profile`}
+          >
+            <ProfileInner />
+            <span className="author-tooltip">View author's page</span>
+          </Link>
+        ) : (
+          <div className="author-profile-section">
+            <ProfileInner />
           </div>
-
-          <div className="author-details">
-            <div className="author-header">
-              <h3 className="author-name-large">
-                {author ? author.name || 'Dr. Rahul' : 'Dr. Rahul'}
-              </h3>
-              <div className="author-credentials-container">
-                {author && author.title ? (
-                  <span className="author-credentials">{author.title}</span>
-                ) : (
-                  <span className="author-credentials">Medical Expert</span>
-                )}
-              </div>
-            </div>
-
-            {/* Description - only shown when expanded */}
-            {isExpanded && (
-              <>
-                {author && author.bio ? (
-                  <p className="author-bio">{author.bio}</p>
-                ) : (
-                  <p className="author-bio">
-                    Experienced healthcare professional committed to providing accurate,
-                    evidence-based health information to help you make informed decisions about your
-                    wellness.
-                  </p>
-                )}
-              </>
-            )}
-
-            <div className="author-meta">
-              <div className="publication-info">
-                {publishedDate && (
-                  <div className="meta-item">
-                    <svg className="meta-icon" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="meta-text">Published 08/15/2025</span>
-                  </div>
-                )}
-
-                {updatedDate && publishedDate && updatedDate > publishedDate && (
-                  <div className="meta-item">
-                    <svg className="meta-icon" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="meta-text">Updated 08/15/2025</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* Trust & Quality Section */}
         <div className="credibility-section">

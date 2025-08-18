@@ -225,6 +225,10 @@ export interface Post {
   id: number;
   title: string;
   heroImage?: (number | null) | Media;
+  /**
+   * If checked, the hero image will be used only on listing cards and not displayed at the top of the article.
+   */
+  hideHeroImageInArticle?: boolean | null;
   content: {
     root: {
       type: string;
@@ -363,6 +367,28 @@ export interface Media {
 export interface Category {
   id: number;
   title: string;
+  /**
+   * Optional image for this category. Used on category pages and cards.
+   */
+  image?: (number | null) | Media;
+  /**
+   * Optional short description used on category pages and SEO.
+   */
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   slug?: string | null;
   slugLock?: boolean | null;
   parent?: (number | null) | Category;
@@ -1381,6 +1407,7 @@ export interface TableBlockSelect<T extends boolean = true> {
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
   heroImage?: T;
+  hideHeroImageInArticle?: T;
   content?: T;
   relatedPosts?: T;
   categories?: T;
@@ -1504,6 +1531,8 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  image?: T;
+  description?: T;
   slug?: T;
   slugLock?: T;
   parent?: T;

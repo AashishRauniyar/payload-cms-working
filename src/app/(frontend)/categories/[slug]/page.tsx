@@ -77,10 +77,38 @@ export default async function CategoryPage({ params }: Props) {
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
+          {/* Category Image (optional) */}
+          {category.image && typeof category.image === 'object' && (
+            <div className="w-full max-w-3xl mx-auto mb-6">
+              <Image
+                src={(category.image as Media).url as string}
+                alt={(category.image as Media).alt || category.title}
+                width={1200}
+                height={400}
+                className="w-full h-56 md:h-72 object-cover rounded-xl"
+              />
+            </div>
+          )}
+
           <h1 className="text-4xl font-bold text-gray-900 mb-4">{category.title}</h1>
-          <p className="text-lg text-gray-600">
-            Articles and insights related to {category.title.toLowerCase()}
-          </p>
+
+          {/* Category Description (optional) */}
+          {category.description &&
+          typeof category.description === 'object' &&
+          'root' in category.description ? (
+            <div className="prose prose-gray max-w-3xl mx-auto text-left">
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+              {/* Render minimal Lexical JSON as plain text fallback */}
+              <p className="text-lg text-gray-600">
+                {/* @ts-expect-error generic richText shape */}
+                {category.description.root?.children?.[0]?.children?.[0]?.text ?? ''}
+              </p>
+            </div>
+          ) : (
+            <p className="text-lg text-gray-600">
+              Articles and insights related to {category.title.toLowerCase()}
+            </p>
+          )}
 
           {/* Breadcrumb */}
           <nav className="mt-6">
