@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import {
   ChevronDownIcon,
   ChevronRightIcon,
@@ -20,6 +21,31 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
   const [isOpen, setIsOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null)
+  const pathname = usePathname()
+
+  // Lock the body scroll when mobile nav is open
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
+  // Helper to highlight active links
+  const getNavLinkClass = (href: string) => {
+    const base =
+      'text-gray-700 hover:text-primary-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-primary-50'
+    const isActive = pathname === href || (href !== '/' && pathname?.startsWith(href))
+    return isActive ? `${base} bg-primary-50 text-primary-700` : base
+  }
+
+  const onKeyDownClose = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setOpenDropdown(null)
+      setIsOpen(false)
+    }
+  }
 
   const toggleDropdown = (dropdown: string) => {
     setOpenDropdown(openDropdown === dropdown ? null : dropdown)
@@ -92,10 +118,7 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {/* Home */}
-            <Link
-              href="/"
-              className="text-gray-700 hover:text-primary-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-primary-50"
-            >
+            <Link href="/" className={getNavLinkClass('/')}>
               Home
             </Link>
 
@@ -103,13 +126,20 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
             <div className="relative">
               <button
                 onClick={() => toggleDropdown('categories')}
+                onKeyDown={onKeyDownClose}
+                aria-haspopup="true"
+                aria-expanded={openDropdown === 'categories'}
+                aria-controls="nav-categories-menu"
                 className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 transition-colors py-2 px-3 rounded-lg hover:bg-primary-50 font-medium"
               >
                 <span>Categories</span>
                 <ChevronDownIcon className="w-4 h-4" />
               </button>
               {openDropdown === 'categories' && (
-                <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 py-3 z-50 max-h-96 overflow-y-auto">
+                <div
+                  id="nav-categories-menu"
+                  className="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-200 py-3 z-50 max-h-96 overflow-y-auto"
+                >
                   <div className="px-4 py-2 border-b border-gray-100 mb-2">
                     <span className="text-sm font-semibold text-gray-900">Browse by Category</span>
                   </div>
@@ -130,34 +160,22 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
             </div>
 
             {/* Blog */}
-            <Link
-              href="/posts"
-              className="text-gray-700 hover:text-primary-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-primary-50"
-            >
+            <Link href="/posts" className={getNavLinkClass('/posts')}>
               Blog
             </Link>
 
             {/* Supplements */}
-            <Link
-              href="/supplements"
-              className="text-gray-700 hover:text-primary-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-primary-50"
-            >
+            <Link href="/supplements" className={getNavLinkClass('/supplements')}>
               Supplements
             </Link>
 
             {/* Brands */}
-            <Link
-              href="/brands"
-              className="text-gray-700 hover:text-primary-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-primary-50"
-            >
+            <Link href="/brands" className={getNavLinkClass('/brands')}>
               Brands
             </Link>
 
             {/* Reviews */}
-            <Link
-              href="/reviews"
-              className="text-gray-700 hover:text-primary-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-primary-50"
-            >
+            <Link href="/reviews" className={getNavLinkClass('/reviews')}>
               Reviews
             </Link>
 
@@ -165,13 +183,20 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
             <div className="relative">
               <button
                 onClick={() => toggleDropdown('company')}
+                onKeyDown={onKeyDownClose}
+                aria-haspopup="true"
+                aria-expanded={openDropdown === 'company'}
+                aria-controls="nav-company-menu"
                 className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 transition-colors py-2 px-3 rounded-lg hover:bg-primary-50 font-medium"
               >
                 <span>Company</span>
                 <ChevronDownIcon className="w-4 h-4" />
               </button>
               {openDropdown === 'company' && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-200 py-3 z-50">
+                <div
+                  id="nav-company-menu"
+                  className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-200 py-3 z-50"
+                >
                   <Link
                     href="/about"
                     className="block px-4 py-2 text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors rounded-lg mx-2"
@@ -207,9 +232,13 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
 
           {/* Right Side Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="p-2 text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-primary-50">
+            <Link
+              href="/search"
+              aria-label="Search"
+              className="p-2 text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-primary-50"
+            >
               <MagnifyingGlassIcon className="w-5 h-5" />
-            </button>
+            </Link>
             <div className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium">
               CLAIM DISCOUNT
             </div>
@@ -220,6 +249,9 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 text-gray-600 hover:text-primary-600 transition-colors"
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
             >
               {isOpen ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
             </button>
@@ -228,12 +260,16 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
+          <div
+            id="mobile-nav"
+            className="md:hidden border-t border-gray-200 py-4"
+            onKeyDown={onKeyDownClose}
+          >
             <div className="space-y-1">
               {/* Home */}
               <Link
                 href="/"
-                className="block px-4 py-3 text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors font-medium rounded-lg mx-2"
+                className={'block px-4 py-3 rounded-lg mx-2 ' + getNavLinkClass('/')}
                 onClick={() => setIsOpen(false)}
               >
                 Home
@@ -268,7 +304,7 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
               {/* Blog */}
               <Link
                 href="/posts"
-                className="block px-4 py-3 text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors font-medium rounded-lg mx-2"
+                className={'block px-4 py-3 rounded-lg mx-2 ' + getNavLinkClass('/posts')}
                 onClick={() => setIsOpen(false)}
               >
                 Blog
@@ -277,7 +313,7 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
               {/* Supplements */}
               <Link
                 href="/supplements"
-                className="block px-4 py-3 text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors font-medium rounded-lg mx-2"
+                className={'block px-4 py-3 rounded-lg mx-2 ' + getNavLinkClass('/supplements')}
                 onClick={() => setIsOpen(false)}
               >
                 Supplements
@@ -286,7 +322,7 @@ export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) 
               {/* Reviews */}
               <Link
                 href="/reviews"
-                className="block px-4 py-3 text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors font-medium rounded-lg mx-2"
+                className={'block px-4 py-3 rounded-lg mx-2 ' + getNavLinkClass('/reviews')}
                 onClick={() => setIsOpen(false)}
               >
                 Reviews

@@ -30,8 +30,21 @@ export const generateMeta = async (args: {
     ? doc?.meta?.title + ' | Payload Website Template'
     : 'Payload Website Template'
 
+  const canonicalPath = Array.isArray(doc?.slug)
+    ? `/${doc?.slug.join('/')}`
+    : doc?.slug === 'home' || !doc?.slug
+      ? '/'
+      : `/${doc?.slug}`
+
   return {
     description: doc?.meta?.description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: mergeOpenGraph({
       description: doc?.meta?.description || '',
       images: ogImage
@@ -42,7 +55,7 @@ export const generateMeta = async (args: {
           ]
         : undefined,
       title,
-      url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
+      url: canonicalPath,
     }),
     title,
   }

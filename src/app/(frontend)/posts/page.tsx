@@ -195,5 +195,7 @@ export function generateMetadata(): Metadata {
   return {
     title: `Health Blog - HealthScopeDaily`,
     description: 'Latest health and wellness blog posts, expert insights, and product reviews.',
+    alternates: { canonical: '/posts' },
+    robots: { index: true, follow: true },
   }
 }

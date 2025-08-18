@@ -21,6 +21,7 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { TableBlock } from '@/blocks/TableBlock/Component'
 import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
+import { RatingTable } from '@/blocks/RatingTable/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -29,6 +30,7 @@ import type {
   BrandHighlightsTableBlock as BrandHighlightsTableBlockProps,
   ProsConsBlock as ProsConsBlockProps,
   TableBlock as TableBlockProps,
+  RatingTableBlock as RatingTableBlockProps,
 } from '@/payload-types'
 
 type NodeTypes =
@@ -41,6 +43,7 @@ type NodeTypes =
       | BrandHighlightsTableBlockProps
       | ProsConsBlockProps
       | TableBlockProps
+      | RatingTableBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -128,6 +131,11 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
           buttonText={node.fields.buttonText || undefined}
           buttonLink={node.fields.buttonLink || '#'}
         />
+      </div>
+    ),
+    ratingTable: ({ node }: { node: SerializedBlockNode }) => (
+      <div className="my-8">
+        <RatingTable disableInnerContainer={true} {...node.fields} />
       </div>
     ),
   },

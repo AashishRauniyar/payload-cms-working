@@ -20,6 +20,7 @@ import { CustomCTABlock } from '../../blocks/CustomCTABlock/config'
 import { FAQBlock } from '../../blocks/FAQBlock/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { ProsConsBlock } from '../../blocks/ProsConsBlock/config'
+import { RatingTableBlock } from '../../blocks/RatingTable/config'
 import { TableBlockConfig } from '../../blocks/TableBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
@@ -108,6 +109,7 @@ export const Posts: CollectionConfig<'posts'> = {
                         MediaBlock,
                         ProsConsBlock,
                         BrandHighlightsTableBlock,
+                        RatingTableBlock,
                         TableBlockConfig,
                         FAQBlock,
                         CustomCTABlock,

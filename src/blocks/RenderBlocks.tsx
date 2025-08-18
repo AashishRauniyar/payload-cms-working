@@ -11,6 +11,7 @@ import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { ProsConsBlock } from '@/blocks/ProsConsBlock/Component'
+import { RatingTable } from '@/blocks/RatingTable/Component'
 import { TableBlock } from '@/blocks/TableBlock/Component'
 
 const blockComponents = {
@@ -23,6 +24,7 @@ const blockComponents = {
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   prosConsBlock: ProsConsBlock,
+  ratingTable: RatingTable,
   tableBlock: TableBlock,
 }
 

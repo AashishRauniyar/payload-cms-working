@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 
 import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
@@ -6,6 +7,7 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
+import { getServerSideURL } from '@/utilities/getURL'
 import RichText from '@/components/RichText'
 
 import type { Post } from '@/payload-types'
@@ -54,6 +56,34 @@ export default async function Post({ params: paramsPromise }: Args) {
 
   if (!post) return <PayloadRedirects url={url} />
 
+  const siteUrl = getServerSideURL()
+
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.meta?.description || undefined,
+    author:
+      post.populatedAuthors && post.populatedAuthors.length > 0
+        ? {
+            '@type': 'Person',
+            name: post.populatedAuthors
+              .map((a) => a?.name)
+              .filter(Boolean)
+              .join(', '),
+          }
+        : undefined,
+    datePublished: post.publishedAt || post.createdAt,
+    dateModified: post.updatedAt,
+    image:
+      post.meta?.image && typeof post.meta.image === 'object' && post.meta.image.url
+        ? siteUrl + post.meta.image.url
+        : undefined,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': siteUrl + url },
+    publisher: { '@type': 'Organization', name: 'HealthScopeDaily' },
+    url: siteUrl + url,
+  }
+
   return (
     <article className=" pb-16">
       <PageClient />
@@ -62,6 +92,10 @@ export default async function Post({ params: paramsPromise }: Args) {
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
+
+      <Script id="ld-article" type="application/ld+json" strategy="afterInteractive">
+        {JSON.stringify(articleLd)}
+      </Script>
 
       <PostHero post={post} />
 

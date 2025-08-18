@@ -5,6 +5,8 @@ import configPromise from '@payload-config'
 import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
+import Script from 'next/script'
+import { getServerSideURL } from '@/utilities/getURL'
 import { homeStatic } from '@/endpoints/seed/home-static'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
@@ -70,6 +72,18 @@ export default async function Page({ params: paramsPromise }: Args) {
   }
 
   const { hero, layout } = page
+  const siteUrl = getServerSideURL()
+  const canonical = slug === 'home' ? siteUrl + '/' : siteUrl + url
+
+  const webPageLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: page.title,
+    description: page.meta?.description || undefined,
+    url: canonical,
+    datePublished: page.createdAt,
+    dateModified: page.updatedAt,
+  }
 
   return (
     <article className="pt-16 pb-24">
@@ -78,6 +92,10 @@ export default async function Page({ params: paramsPromise }: Args) {
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
+
+      <Script id="ld-webpage" type="application/ld+json" strategy="afterInteractive">
+        {JSON.stringify(webPageLd)}
+      </Script>
 
       <RenderHero {...hero} />
       <RenderBlocks blocks={layout} />

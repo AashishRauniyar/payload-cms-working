@@ -199,6 +199,7 @@ export interface Page {
     | FormBlock
     | ProsConsBlock
     | BrandHighlightsTableBlock
+    | RatingTableBlock
     | TableBlock
   )[];
   meta?: {
@@ -832,6 +833,64 @@ export interface BrandHighlightsTableBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RatingTableBlock".
+ */
+export interface RatingTableBlock {
+  /**
+   * The main title displayed above the rating table
+   */
+  title: string;
+  /**
+   * Upload the product image to display
+   */
+  productImage: number | Media;
+  /**
+   * Overall star rating out of 5 stars
+   */
+  overallRating: number;
+  /**
+   * Add rating metrics with percentage values
+   */
+  ratingMetrics: {
+    metricName: string;
+    /**
+     * Percentage value (0-100)
+     */
+    percentage: number;
+    /**
+     * Color theme for the progress bar
+     */
+    color?: ('green' | 'blue' | 'orange' | 'red' | 'purple' | 'teal') | null;
+    id?: string | null;
+  }[];
+  /**
+   * Detailed description about the product and its benefits
+   */
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Choose background color for the component
+   */
+  backgroundColor?: ('none' | 'white' | 'gray' | 'blue' | 'gradient') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ratingTable';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "TableBlock".
  */
 export interface TableBlock {
@@ -1146,6 +1205,7 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         prosConsBlock?: T | ProsConsBlockSelect<T>;
         brandHighlightsTable?: T | BrandHighlightsTableBlockSelect<T>;
+        ratingTable?: T | RatingTableBlockSelect<T>;
         tableBlock?: T | TableBlockSelect<T>;
       };
   meta?:
@@ -1276,6 +1336,27 @@ export interface BrandHighlightsTableBlockSelect<T extends boolean = true> {
   manufacturerRating?: T;
   safetyRating?: T;
   highlights?: T;
+  backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RatingTableBlock_select".
+ */
+export interface RatingTableBlockSelect<T extends boolean = true> {
+  title?: T;
+  productImage?: T;
+  overallRating?: T;
+  ratingMetrics?:
+    | T
+    | {
+        metricName?: T;
+        percentage?: T;
+        color?: T;
+        id?: T;
+      };
+  description?: T;
   backgroundColor?: T;
   id?: T;
   blockName?: T;
