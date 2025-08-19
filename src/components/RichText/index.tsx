@@ -18,6 +18,7 @@ import { TableBlock } from '@/blocks/TableBlock/Component'
 import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
+import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -29,6 +30,7 @@ import type {
   FAQBlock as FAQBlockProps,
   CustomCTABlock as CustomCTABlockProps,
   RatingTableBlock as RatingTableBlockProps,
+  ThreeBottlesBlock as ThreeBottlesBlockProps,
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
@@ -47,6 +49,7 @@ type NodeTypes =
       | FAQBlockProps
       | CustomCTABlockProps
       | RatingTableBlockProps
+      | ThreeBottlesBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -124,6 +127,13 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     ),
     ratingTable: ({ node }: { node: SerializedBlockNode }) => (
       <RatingTable
+        className="col-start-1 col-span-3"
+        disableInnerContainer={true}
+        {...node.fields}
+      />
+    ),
+    threeBottlesBlock: ({ node }: { node: SerializedBlockNode }) => (
+      <ThreeBottles
         className="col-start-1 col-span-3"
         disableInnerContainer={true}
         {...node.fields}

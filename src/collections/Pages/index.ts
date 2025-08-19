@@ -11,6 +11,7 @@ import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { ProsConsBlock } from '../../blocks/ProsConsBlock/config'
 import { RatingTableBlock } from '../../blocks/RatingTable/config'
 import { TableBlockConfig } from '../../blocks/TableBlock/config'
+import { ThreeBottlesBlock } from '../../blocks/ThreeBottles/config'
 import { hero } from '@/heros/config'
 import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -86,6 +87,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 Archive,
                 FormBlock,
                 ProsConsBlock,
+                ThreeBottlesBlock,
                 BrandHighlightsTableBlock,
                 RatingTableBlock,
                 TableBlockConfig,

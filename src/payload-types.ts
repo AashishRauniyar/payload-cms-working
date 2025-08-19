@@ -198,6 +198,7 @@ export interface Page {
     | ArchiveBlock
     | FormBlock
     | ProsConsBlock
+    | ThreeBottlesBlock
     | BrandHighlightsTableBlock
     | RatingTableBlock
     | TableBlock
@@ -805,6 +806,40 @@ export interface ProsConsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ThreeBottlesBlock".
+ */
+export interface ThreeBottlesBlock {
+  h1?: string | null;
+  h2?: string | null;
+  h3?: string | null;
+  bg?: ('white' | 'gray') | null;
+  /**
+   * Configure exactly 3 products to compare
+   */
+  products?:
+    | {
+        name: string;
+        /**
+         * 0–5, supports halves
+         */
+        rating: number;
+        /**
+         * Optional image for the bottle. If omitted, a colored placeholder bottle will be shown.
+         */
+        media?: (number | null) | Media;
+        color?: ('blue' | 'red' | 'gray') | null;
+        ing?: string | null;
+        benefits?: string | null;
+        csat?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'threeBottlesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "BrandHighlightsTableBlock".
  */
 export interface BrandHighlightsTableBlock {
@@ -1230,6 +1265,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         prosConsBlock?: T | ProsConsBlockSelect<T>;
+        threeBottlesBlock?: T | ThreeBottlesBlockSelect<T>;
         brandHighlightsTable?: T | BrandHighlightsTableBlockSelect<T>;
         ratingTable?: T | RatingTableBlockSelect<T>;
         tableBlock?: T | TableBlockSelect<T>;
@@ -1343,6 +1379,30 @@ export interface ProsConsBlockSelect<T extends boolean = true> {
   tableData?: T;
   style?: T;
   backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ThreeBottlesBlock_select".
+ */
+export interface ThreeBottlesBlockSelect<T extends boolean = true> {
+  h1?: T;
+  h2?: T;
+  h3?: T;
+  bg?: T;
+  products?:
+    | T
+    | {
+        name?: T;
+        rating?: T;
+        media?: T;
+        color?: T;
+        ing?: T;
+        benefits?: T;
+        csat?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

@@ -22,6 +22,7 @@ import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { ProsConsBlock } from '../../blocks/ProsConsBlock/config'
 import { RatingTableBlock } from '../../blocks/RatingTable/config'
 import { TableBlockConfig } from '../../blocks/TableBlock/config'
+import { ThreeBottlesBlock } from '../../blocks/ThreeBottles/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
@@ -119,6 +120,7 @@ export const Posts: CollectionConfig<'posts'> = {
                         Code,
                         MediaBlock,
                         ProsConsBlock,
+                        ThreeBottlesBlock,
                         BrandHighlightsTableBlock,
                         RatingTableBlock,
                         TableBlockConfig,

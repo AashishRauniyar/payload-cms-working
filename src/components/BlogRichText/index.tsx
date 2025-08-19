@@ -22,6 +22,7 @@ import { TableBlock } from '@/blocks/TableBlock/Component'
 import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
+import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -31,6 +32,7 @@ import type {
   ProsConsBlock as ProsConsBlockProps,
   TableBlock as TableBlockProps,
   RatingTableBlock as RatingTableBlockProps,
+  ThreeBottlesBlock as ThreeBottlesBlockProps,
 } from '@/payload-types'
 
 type NodeTypes =
@@ -44,6 +46,7 @@ type NodeTypes =
       | ProsConsBlockProps
       | TableBlockProps
       | RatingTableBlockProps
+      | ThreeBottlesBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -133,9 +136,14 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
         />
       </div>
     ),
-    ratingTable: ({ node }: { node: SerializedBlockNode }) => (
+    ratingTable: ({ node }: { node: SerializedBlockNode<RatingTableBlockProps> }) => (
       <div className="my-8">
         <RatingTable disableInnerContainer={true} {...node.fields} />
+      </div>
+    ),
+    threeBottlesBlock: ({ node }: { node: SerializedBlockNode }) => (
+      <div className="my-8">
+        <ThreeBottles disableInnerContainer={true} {...node.fields} />
       </div>
     ),
   },
