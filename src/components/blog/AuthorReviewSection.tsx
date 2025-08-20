@@ -85,12 +85,48 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
 
       <div className="author-details">
         <div className="author-header">
-          <h3 className="author-name-large">{author ? author.name || 'Dr. Rahul' : 'Dr. Rahul'}</h3>
-          <div className="author-credentials-container">
-            {author && author.title ? (
-              <span className="author-credentials">{author.title}</span>
-            ) : (
-              <span className="author-credentials">Medical Expert</span>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+            <div>
+              <h3 className="author-name-large">
+                {author ? author.name || 'Dr. Rahul' : 'Dr. Rahul'}
+              </h3>
+              <div className="author-credentials-container">
+                {author && author.title ? (
+                  <span className="author-credentials">{author.title}</span>
+                ) : (
+                  <span className="author-credentials">Medical Expert</span>
+                )}
+              </div>
+            </div>
+
+            {/* Inline dates when collapsed */}
+            {!isExpanded && (
+              <div className="flex items-center gap-4 text-sm">
+                {publishedDate && (
+                  <div className="flex items-center gap-1 text-white/80">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Published {formatDate(publishedDate)}</span>
+                  </div>
+                )}
+                {updatedDate && publishedDate && updatedDate > publishedDate && (
+                  <div className="flex items-center gap-1 text-white/80">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Updated {formatDate(updatedDate)}</span>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -106,38 +142,39 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
                 health information to help you make informed decisions about your wellness.
               </p>
             )}
+
+            {/* Expanded dates section */}
+            <div className="author-meta">
+              <div className="publication-info">
+                {publishedDate && (
+                  <div className="meta-item">
+                    <svg className="meta-icon" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="meta-text">Published {formatDate(publishedDate)}</span>
+                  </div>
+                )}
+
+                {updatedDate && publishedDate && updatedDate > publishedDate && (
+                  <div className="meta-item">
+                    <svg className="meta-icon" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="meta-text">Updated {formatDate(updatedDate)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </>
         )}
-
-        <div className="author-meta">
-          <div className="publication-info">
-            {publishedDate && (
-              <div className="meta-item">
-                <svg className="meta-icon" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="meta-text">Published 08/15/2025</span>
-              </div>
-            )}
-
-            {updatedDate && publishedDate && updatedDate > publishedDate && (
-              <div className="meta-item">
-                <svg className="meta-icon" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="meta-text">Updated 08/15/2025</span>
-              </div>
-            )}
-          </div>
-        </div>
       </div>
     </>
   )

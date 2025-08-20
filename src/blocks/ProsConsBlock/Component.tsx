@@ -1,5 +1,4 @@
 import React from 'react'
-import { CheckCircle, XCircle } from 'lucide-react'
 
 interface ProsConsItem {
   point: string
@@ -71,23 +70,29 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
   }
 
   const containerClasses = {
-    default: 'grid md:grid-cols-2 gap-6',
-    stacked: 'space-y-6',
-    cards: 'grid md:grid-cols-2 gap-5',
+    default: 'grid md:grid-cols-2 gap-4',
+    stacked: 'space-y-4',
+    cards: 'grid md:grid-cols-2 gap-4',
     table: '',
   }
 
   const prosCardClasses = {
-    default: 'bg-white rounded-lg p-6 border-l-4 border-green-500',
-    stacked: 'bg-white rounded-lg p-6 border-l-4 border-green-500',
-    cards: 'bg-white rounded-xl p-6 shadow-lg border border-green-100',
+    default:
+      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+    stacked:
+      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+    cards:
+      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
     table: '',
   }
 
   const consCardClasses = {
-    default: 'bg-white rounded-lg p-6 border-l-4 border-red-500',
-    stacked: 'bg-white rounded-lg p-6 border-l-4 border-red-500',
-    cards: 'bg-white rounded-xl p-6 shadow-lg border border-red-100',
+    default:
+      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+    stacked:
+      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+    cards:
+      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
     table: '',
   }
 
@@ -98,17 +103,17 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
     const content = (
       <div className={containerClasses[style]}>
         <table className="w-full">
-          <thead className="bg-transparent">
+          <thead className="bg-transparent border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-left font-semibold text-green-700 align-middle border-0">
+              <th className="px-0 py-2 text-left font-semibold text-green-700 align-middle border-0">
                 <div className="flex items-center">
-                  <img src="/images/pros.png" alt="Pros" className="h-16 md:h-20 w-auto mr-4" />
+                  <img src="/images/pros.png" alt="Pros" className="h-14 md:h-16 w-auto mr-3" />
                   <span className="text-2xl md:text-3xl">{prosTitle}</span>
                 </div>
               </th>
-              <th className="px-6 py-4 text-left font-semibold text-red-700 align-middle border-0">
+              <th className="px-0 py-2 text-left font-semibold text-red-700 align-middle border-0">
                 <div className="flex items-center">
-                  <img src="/images/cons.png" alt="Cons" className="h-16 md:h-20 w-auto mr-4" />
+                  <img src="/images/cons.png" alt="Cons" className="h-14 md:h-16 w-auto mr-3" />
                   <span className="text-2xl md:text-3xl">{consTitle}</span>
                 </div>
               </th>
@@ -117,20 +122,28 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
           <tbody>
             {Array.from({ length: maxRows }, (_, index) => (
               <tr key={index} className="border-0">
-                <td className="px-6 py-3 text-gray-700 align-top border-0">
+                <td className="px-0 py-2 text-gray-700 align-top border-0">
                   {processedPros[index] ? (
                     <div className="flex items-start">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <img
+                        src="/images/tick.png"
+                        alt="Tick"
+                        className="w-4 h-4 mt-1 mr-2 flex-shrink-0"
+                      />
                       {processedPros[index].point}
                     </div>
                   ) : (
                     <span className="text-gray-400">—</span>
                   )}
                 </td>
-                <td className="px-6 py-3 text-gray-700 align-top border-0">
+                <td className="px-0 py-2 text-gray-700 align-top border-0">
                   {processedCons[index] ? (
                     <div className="flex items-start">
-                      <span className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <img
+                        src="/images/cross.png"
+                        alt="Cross"
+                        className="w-4 h-4 mt-1 mr-2 flex-shrink-0"
+                      />
                       {processedCons[index].point}
                     </div>
                   ) : (
@@ -146,8 +159,8 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
 
     if (disableInnerContainer) {
       return (
-        <section className={`py-12 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-          {title && <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">{title}</h2>}
+        <section className={`py-4 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+          {title && <h2 className="text-3xl font-bold text-center mb-4 text-gray-800">{title}</h2>}
           {content}
         </section>
       )
@@ -156,7 +169,7 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
     return (
       <section className={`py-0 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
         <div className="max-w-6xl mx-auto">
-          {title && <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
+          {title && <h2 className="text-3xl font-bold text-center mb-4 text-gray-800">{title}</h2>}
           {content}
         </div>
       </section>
@@ -165,54 +178,154 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
 
   // Original content for other styles
   const content = (
-    <div className={containerClasses[style]}>
-      {/* Pros Section */}
-      <div className={prosCardClasses[style]}>
-        <div className="flex items-center mb-3">
-          <img src="/images/pros.png" alt="Pros" className="h-12 md:h-14 w-auto mr-3" />
-          <h3 className="text-2xl font-semibold text-green-700">{prosTitle}</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Pros Card */}
+      <div
+        className="relative bg-white rounded-3xl p-8 pt-16 min-h-[480px]"
+        style={{ border: '4px solid #22C55E' }}
+      >
+        {/* Circular Header Badge */}
+        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
+          <div
+            className="w-20 h-20 rounded-full flex items-center justify-center border-4 border-white shadow-sm"
+            style={{ backgroundColor: '#22C55E' }}
+          >
+            <div className="flex items-center space-x-1">
+              <span className="text-white font-bold text-sm tracking-wide">{prosTitle}</span>
+              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
-        <ul className="space-y-3">
-          {processedPros.map((pro, index) => (
-            <li key={index} className="flex items-start">
-              <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-              <span className="text-gray-700 leading-relaxed">{pro.point}</span>
-            </li>
+
+        {/* Content Rows */}
+        <div className="space-y-6">
+          {/* Render actual pros */}
+          {processedPros.slice(0, 6).map((pro, index) => (
+            <div key={index} className="flex items-center">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: '#22C55E' }}
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1 h-0.5 ml-4" style={{ backgroundColor: '#D1D5DB' }}></div>
+            </div>
           ))}
-        </ul>
+
+          {/* Fill remaining slots to ensure 6 rows */}
+          {Array.from({ length: Math.max(0, 6 - processedPros.length) }, (_, index) => (
+            <div key={`empty-pros-${index}`} className="flex items-center">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: '#22C55E' }}
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1 h-0.5 ml-4" style={{ backgroundColor: '#D1D5DB' }}></div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Cons Section */}
-      <div className={consCardClasses[style]}>
-        <div className="flex items-center mb-3">
-          <img src="/images/cons.png" alt="Cons" className="h-12 md:h-14 w-auto mr-3" />
-          <h3 className="text-2xl font-semibold text-red-700">{consTitle}</h3>
+      {/* Cons Card */}
+      <div
+        className="relative bg-white rounded-3xl p-8 pt-16 min-h-[480px]"
+        style={{ border: '4px solid #EF4444' }}
+      >
+        {/* Circular Header Badge */}
+        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
+          <div
+            className="w-20 h-20 rounded-full flex items-center justify-center border-4 border-white shadow-sm"
+            style={{ backgroundColor: '#EF4444' }}
+          >
+            <div className="flex items-center space-x-1">
+              <span className="text-white font-bold text-sm tracking-wide">{consTitle}</span>
+              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
-        <ul className="space-y-3">
-          {processedCons.map((con, index) => (
-            <li key={index} className="flex items-start">
-              <span className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-              <span className="text-gray-700 leading-relaxed">{con.point}</span>
-            </li>
+
+        {/* Content Rows */}
+        <div className="space-y-6">
+          {/* Render actual cons */}
+          {processedCons.slice(0, 6).map((con, index) => (
+            <div key={index} className="flex items-center">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: '#EF4444' }}
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1 h-0.5 ml-4" style={{ backgroundColor: '#D1D5DB' }}></div>
+            </div>
           ))}
-        </ul>
+
+          {/* Fill remaining slots to ensure 6 rows */}
+          {Array.from({ length: Math.max(0, 6 - processedCons.length) }, (_, index) => (
+            <div key={`empty-cons-${index}`} className="flex items-center">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: '#EF4444' }}
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1 h-0.5 ml-4" style={{ backgroundColor: '#D1D5DB' }}></div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
 
   if (disableInnerContainer) {
     return (
-      <section className={`py-6 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-        {title && <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">{title}</h2>}
+      <section className={`py-12 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+        {title && <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
         {content}
       </section>
     )
   }
 
   return (
-    <section className={`py-6 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+    <section className={`py-12 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
       <div className="max-w-6xl mx-auto">
-        {title && <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">{title}</h2>}
+        {title && <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
         {content}
       </div>
     </section>

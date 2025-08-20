@@ -101,7 +101,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       <div className="flex flex-col items-center gap-4 pt-2">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             {/* Author Review Section */}
             <AuthorReviewSection post={post} />
 
@@ -113,11 +113,11 @@ export default async function Post({ params: paramsPromise }: Args) {
           </div>{' '}
           <div className="blog-content">
             <BlogContentEnhancer />
-            <RichText className="max-w-4xl mx-auto" data={post.content} enableGutter={false} />
+            <RichText className="max-w-6xl mx-auto" data={post.content} enableGutter={false} />
           </div>
           {post.relatedPosts && post.relatedPosts.length > 0 && (
             <RelatedPosts
-              className="mt-12 max-w-4xl mx-auto lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
+              className="mt-12 max-w-6xl mx-auto lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
               docs={post.relatedPosts.filter((post) => typeof post === 'object')}
             />
           )}

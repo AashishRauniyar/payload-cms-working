@@ -27,7 +27,7 @@ export const PostHero: React.FC<{
     <div className=" text-black pt-8 pb-6">
       <div className="container mx-auto px-4">
         {/* Constrain header elements to the same content column */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Breadcrumb / Category */}
           <nav className="mb-2" aria-label="Breadcrumb">
             <div className="flex items-center space-x-2 text-sm">
@@ -119,7 +119,7 @@ export const PostHero: React.FC<{
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">{title}</h1>
 
           {/* Date Information, Trust Badges and Author - Single Line */}
-          <div className="mb-8">
+          <div className={hideHeroImageInArticle ? 'mb-2' : 'mb-4'}>
             <div className="flex flex-wrap items-center justify-start gap-4">
               {/* Date Information */}
               {publishedAt && (
@@ -221,7 +221,7 @@ export const PostHero: React.FC<{
 
         {/* Featured Image */}
         {!hideHeroImageInArticle && heroImage && typeof heroImage !== 'string' && (
-          <div className="max-w-4xl mx-auto mt-12">
+          <div className="max-w-6xl mx-auto mt-12">
             <div className="relative rounded-2xl overflow-hidden shadow-xl">
               <div className="aspect-video">
                 <Media fill priority imgClassName="object-cover" resource={heroImage} />

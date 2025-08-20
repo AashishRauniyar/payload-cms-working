@@ -57,7 +57,7 @@ export const FAQBlock: React.FC<FAQBlockProps> = ({
   return (
     <div className={`faq-block ${className}`}>
       <div className={disableInnerContainer ? '' : 'container mx-auto px-4'}>
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {title && (
             <div className="text-center mb-8">
               <div className="text-3xl font-bold text-gray-900 mb-2">{title}</div>
