@@ -66,9 +66,9 @@ RUN chmod +x start.sh
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 3017
 
-ENV PORT 3000
+ENV PORT 3017
 
 # Use the startup script instead of directly running server.js
 CMD ["./start.sh"]

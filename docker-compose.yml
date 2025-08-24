@@ -4,7 +4,7 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "3017:3017"
     environment:
       - DATABASE_URI=postgresql://payload:password@db:5432/payload
       - PAYLOAD_SECRET=your-secret-key-here
