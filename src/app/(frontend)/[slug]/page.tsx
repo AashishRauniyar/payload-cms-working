@@ -40,7 +40,14 @@ export async function generateStaticParams() {
 
     return params || []
   } catch (error) {
-    console.warn('Database not available during build, skipping static generation:', error.message)
+    if (error instanceof Error) {
+      console.warn(
+        'Database not available during build, skipping static generation:',
+        error.message,
+      )
+    } else {
+      console.warn('Database not available during build, skipping static generation:', error)
+    }
     // Return empty array to allow build to continue
     return []
   }
