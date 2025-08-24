@@ -96,7 +96,7 @@ const FeaturedBrands = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-2 rounded-full mb-4">
-            Editor's Choice
+            Editor&apos;s Choice
           </span>
           <h2 className="text-4xl font-bold text-gray-900 mb-6">Featured Brands</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">

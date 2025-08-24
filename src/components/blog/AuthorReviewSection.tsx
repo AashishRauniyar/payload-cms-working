@@ -194,7 +194,7 @@ const AuthorReviewSection: React.FC<AuthorReviewSectionProps> = ({ post }) => {
             aria-label={`View ${author.name || 'author'} profile`}
           >
             <ProfileInner />
-            <span className="author-tooltip">View author's page</span>
+            <span className="author-tooltip">View author&apos;s page</span>
           </Link>
         ) : (
           <div className="author-profile-section">

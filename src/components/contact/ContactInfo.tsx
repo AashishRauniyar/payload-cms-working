@@ -122,8 +122,8 @@ const ContactInfo = () => {
             Get in <span className="text-blue-600">Touch</span>
           </h2>
           <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-            We're here to help and answer any question you might have. Choose the best way to reach
-            us below.
+            We&apos;re here to help and answer any question you might have. Choose the best way to
+            reach us below.
           </p>
         </div>
 

@@ -102,7 +102,9 @@ const AboutTestimonials = () => {
               <div className="flex items-center mb-4">{renderStars(testimonial.rating)}</div>
 
               {/* Content */}
-              <p className="text-gray-600 mb-6 leading-relaxed italic">"{testimonial.content}"</p>
+              <p className="text-gray-600 mb-6 leading-relaxed italic">
+                &ldquo;{testimonial.content}&rdquo;
+              </p>
 
               {/* Author */}
               <div className="flex items-center">

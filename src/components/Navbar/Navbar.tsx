@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   ChevronDownIcon,
-  ChevronRightIcon,
   MagnifyingGlassIcon,
   Bars3Icon,
   XMarkIcon,
@@ -17,10 +16,10 @@ interface NavbarProps {
   featuredPosts?: Post[]
 }
 
-export default function Navbar({ categories, featuredPosts = [] }: NavbarProps) {
+export default function Navbar({ categories }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-  const [hoveredCategory, setHoveredCategory] = useState<number | null>(null)
+  const [_hoveredCategory, setHoveredCategory] = useState<number | null>(null)
   const pathname = usePathname()
 
   // Lock the body scroll when mobile nav is open

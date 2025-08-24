@@ -39,7 +39,7 @@ const ContactHero = () => {
             <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-4xl mx-auto">
               At HealthScopeDaily, we value your feedback and opportunities from you. Whether you
               have questions about our reviews, need personalized health guidance, or want to
-              collaborate with us, we're here to help.
+              collaborate with us, we&apos;re here to help.
             </p>
             <div className="text-sm text-gray-500 mb-8">
               <span className="font-medium">Last Updated:</span>{' '}

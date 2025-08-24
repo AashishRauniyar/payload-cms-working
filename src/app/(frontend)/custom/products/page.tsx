@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { BrandHighlightsTable } from '@/blocks/BrandHighlightsTable/Component'
@@ -9,13 +10,13 @@ export default async function ProductsPage() {
 
   // You could create a custom 'products' collection in Payload
   // For now, we'll use pages collection as example
-  const products = await payload.find({
-    collection: 'pages',
-    limit: 10,
-    where: {
-      // You could filter by a custom field like 'pageType'
-    },
-  })
+  // const products = await payload.find({
+  //   collection: 'pages',
+  //   limit: 10,
+  //   where: {
+  //     // You could filter by a custom field like 'pageType'
+  //   },
+  // })
 
   // Mock product data - in real app, this would come from Payload
   const mockProducts = [
@@ -26,19 +27,12 @@ export default async function ProductsPage() {
       productName: 'Premium Health Supplement',
       buyNowText: 'ORDER NOW',
       buyNowLink: 'https://example.com/premium',
-      ratings: [
-        { label: 'Effectiveness', score: 4.9, iconType: 'star' as const },
-        { label: 'Value for Money', score: 4.7, iconType: 'dollar' as const },
-        { label: 'Customer Service', score: 4.8, iconType: 'clipboard' as const },
-        { label: 'Quality Assurance', score: 5.0, iconType: 'shield' as const },
-      ],
-      highlights: [
-        { text: 'Clinically proven formula with 30+ essential nutrients' },
-        { text: 'Made in FDA-approved facilities' },
-        { text: '90-day money-back guarantee' },
-        { text: 'Sustainable sourcing and eco-friendly packaging' },
-        { text: 'Trusted by over 100,000+ customers worldwide' },
-      ],
+      ingredientsRating: 4.9,
+      valueForCostRating: 4.7,
+      manufacturerRating: 4.8,
+      safetyRating: 5.0,
+      highlights:
+        'Clinically proven formula with 30+ essential nutrients\nMade in FDA-approved facilities\n90-day money-back guarantee\nSustainable sourcing and eco-friendly packaging\nTrusted by over 100,000+ customers worldwide',
     },
     {
       id: 2,
@@ -47,19 +41,12 @@ export default async function ProductsPage() {
       productName: 'Fitness Pro Workout System',
       buyNowText: 'GET STARTED',
       buyNowLink: 'https://example.com/fitness-pro',
-      ratings: [
-        { label: 'Workout Variety', score: 4.8, iconType: 'star' as const },
-        { label: 'Pricing', score: 4.4, iconType: 'dollar' as const },
-        { label: 'Support System', score: 4.7, iconType: 'clipboard' as const },
-        { label: 'Safety', score: 4.5, iconType: 'shield' as const },
-      ],
-      highlights: [
-        { text: 'Over 200+ professional workout routines' },
-        { text: 'Personalized meal plans and nutrition guidance' },
-        { text: '24/7 expert support and community access' },
-        { text: 'Progress tracking and achievement system' },
-        { text: 'Compatible with all fitness levels' },
-      ],
+      ingredientsRating: 4.8,
+      valueForCostRating: 4.4,
+      manufacturerRating: 4.7,
+      safetyRating: 4.5,
+      highlights:
+        'Over 200+ professional workout routines\nPersonalized meal plans and nutrition guidance\n24/7 expert support and community access\nProgress tracking and achievement system\nCompatible with all fitness levels',
     },
   ]
 
@@ -72,15 +59,18 @@ export default async function ProductsPage() {
             <div className="flex items-center space-x-4">
               <h1 className="text-2xl font-bold text-gray-900">Products</h1>
               <nav className="hidden md:flex space-x-6">
-                <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Home
-                </a>
-                <a href="/posts" className="text-gray-600 hover:text-gray-900 transition-colors">
+                </Link>
+                <Link href="/posts" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Blog
-                </a>
-                <a href="/custom" className="text-gray-600 hover:text-gray-900 transition-colors">
+                </Link>
+                <Link
+                  href="/custom"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
                   Products
-                </a>
+                </Link>
               </nav>
             </div>
           </div>
@@ -102,12 +92,16 @@ export default async function ProductsPage() {
               <div key={product.id} className="relative">
                 {/* Product Section */}
                 <BrandHighlightsTable
+                  blockType="brandHighlightsTable"
                   title={product.title}
                   overallRating={product.overallRating}
                   productName={product.productName}
                   buyNowText={product.buyNowText}
                   buyNowLink={product.buyNowLink}
-                  ratings={product.ratings}
+                  ingredientsRating={product.ingredientsRating}
+                  valueForCostRating={product.valueForCostRating}
+                  manufacturerRating={product.manufacturerRating}
+                  safetyRating={product.safetyRating}
                   highlights={product.highlights}
                   backgroundColor="white"
                 />

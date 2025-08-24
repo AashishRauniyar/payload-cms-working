@@ -129,7 +129,13 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       <RatingTable
         className="col-start-1 col-span-3"
         disableInnerContainer={true}
-        {...node.fields}
+        blockType="ratingTable"
+        title={node.fields.title || 'Product Rating'}
+        productImage={node.fields.productImage || null}
+        overallRating={node.fields.overallRating || 4.5}
+        ratingMetrics={node.fields.ratingMetrics || []}
+        description={node.fields.description || undefined}
+        backgroundColor={node.fields.backgroundColor || 'white'}
       />
     ),
     threeBottlesBlock: ({ node }: { node: SerializedBlockNode }) => (

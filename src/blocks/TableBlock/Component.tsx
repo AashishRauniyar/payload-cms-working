@@ -147,7 +147,7 @@ const SupplementBadge = ({ type }: { type: string }) => {
 }
 
 // Style configurations
-const getTableStyles = (style: string, responsive: string) => {
+const getTableStyles = (style: string, _responsive: string) => {
   const baseStyles = {
     container: 'w-full',
     wrapper: 'overflow-hidden shadow-xl rounded-2xl',

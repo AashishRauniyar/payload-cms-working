@@ -55,12 +55,12 @@ const ContactForm = () => {
           <div>
             <div className="mb-8">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Let's Start a <span className="text-blue-600">Conversation</span>
+                Let&apos;s Start a <span className="text-blue-600">Conversation</span>
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed">
                 Whether you have questions about our health reviews, need guidance on wellness
-                products, or want to collaborate with our team, we're here to help. Fill out the
-                form below and we'll get back to you within 24 hours.
+                products, or want to collaborate with our team, we&apos;re here to help. Fill out
+                the form below and we&apos;ll get back to you within 24 hours.
               </p>
             </div>
 

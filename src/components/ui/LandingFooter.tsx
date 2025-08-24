@@ -69,7 +69,7 @@ export default function LandingFooter() {
               </li>
               <li>
                 <Link href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
-                  Men's Health
+                  Men&apos;s Health
                 </Link>
               </li>
               <li>

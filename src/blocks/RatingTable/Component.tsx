@@ -58,17 +58,17 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
   }
 
   // Get progress bar color class
-  const getProgressBarColor = (color: string) => {
-    const colorMap = {
-      green: 'linear-gradient(90deg, #27ae60, #2ecc71)',
-      blue: 'linear-gradient(90deg, #2980b9, #3498db)',
-      orange: 'linear-gradient(90deg, #e67e22, #f39c12)',
-      red: 'linear-gradient(90deg, #c0392b, #e74c3c)',
-      purple: 'linear-gradient(90deg, #8e44ad, #9b59b6)',
-      teal: 'linear-gradient(90deg, #16a085, #1abc9c)',
-    }
-    return colorMap[color as keyof typeof colorMap] || colorMap.teal
-  }
+  // const getProgressBarColor = (color: string) => {
+  //   const colorMap = {
+  //     green: 'linear-gradient(90deg, #27ae60, #2ecc71)',
+  //     blue: 'linear-gradient(90deg, #2980b9, #3498db)',
+  //     orange: 'linear-gradient(90deg, #e67e22, #f39c12)',
+  //     red: 'linear-gradient(90deg, #c0392b, #e74c3c)',
+  //     purple: 'linear-gradient(90deg, #8e44ad, #9b59b6)',
+  //     teal: 'linear-gradient(90deg, #16a085, #1abc9c)',
+  //   }
+  //   return colorMap[color as keyof typeof colorMap] || colorMap.teal
+  // }
 
   // Background classes
   const backgroundClasses = {

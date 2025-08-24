@@ -39,7 +39,7 @@ const AboutHero = () => {
                 Empowering Your <span className="text-blue-600">Health Journey</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                We're a team of healthcare professionals, researchers, and wellness experts
+                We&apos;re a team of healthcare professionals, researchers, and wellness experts
                 dedicated to providing evidence-based reviews and guidance to help you make informed
                 decisions about your health and wellness.
               </p>

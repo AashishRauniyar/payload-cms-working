@@ -49,7 +49,7 @@ export const CustomCTABlock: React.FC<CustomCTABlockProps> = ({
 
               {/* Subtext */}
               <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Join thousands who've already discovered the natural path to better health and
+                Join thousands who&apos;ve already discovered the natural path to better health and
                 vitality.
               </p>
 

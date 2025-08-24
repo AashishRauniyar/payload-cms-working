@@ -1,7 +1,6 @@
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
-import LandingPageWrapper from './wrapper'
 import type { Post } from '@/payload-types'
 
 // This needs to be a client component wrapper that receives server data

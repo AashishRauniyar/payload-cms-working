@@ -1,5 +1,5 @@
 import React from 'react'
-import { Shield, DollarSign, FlaskConical, Star, Award, CheckCircle, Check } from 'lucide-react'
+import { Shield, DollarSign, FlaskConical, Star, Award, Check } from 'lucide-react'
 
 interface ProductReviewCTABlockProps {
   title: string

@@ -1,8 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
-import ExtendedFooter from '@/components/ui/ExtendedFooter'
 import LandingFooter from '@/components/ui/LandingFooter'
 import type { Post, Media } from '@/payload-types'
 

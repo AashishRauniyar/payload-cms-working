@@ -11,7 +11,7 @@ const AboutContact = () => {
           <h2 className="text-4xl font-bold text-white mb-6">Get In Touch</h2>
           <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
             Have questions about our reviews, need personalized health guidance, or want to
-            collaborate with our team? We'd love to hear from you.
+            collaborate with our team? We&apos;d love to hear from you.
           </p>
 
           {/* Contact Methods */}

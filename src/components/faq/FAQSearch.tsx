@@ -16,8 +16,8 @@ const FAQSearch = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Search Our Knowledge Base</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Can't find what you're looking for? Use our search feature to quickly find answers to
-            your questions.
+            Can&apos;t find what you&apos;re looking for? Use our search feature to quickly find
+            answers to your questions.
           </p>
         </div>
 

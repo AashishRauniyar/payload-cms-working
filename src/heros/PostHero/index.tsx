@@ -58,7 +58,7 @@ export const PostHero: React.FC<{
                       if (typeof category === 'object' && category !== null) {
                         const { title: categoryTitle } = category
                         const titleToUse = categoryTitle || 'Untitled category'
-                        const categorySlug = (category as any).slug as string | undefined
+                        const categorySlug = (category as { slug?: string }).slug
                         const isLast = index === categories.length - 1
                         return (
                           <React.Fragment key={index}>
@@ -91,7 +91,7 @@ export const PostHero: React.FC<{
                 if (typeof category === 'object' && category !== null) {
                   const { title: categoryTitle } = category
                   const titleToUse = categoryTitle || 'Untitled category'
-                  const categorySlug = (category as any).slug as string | undefined
+                  const categorySlug = (category as { slug?: string }).slug
 
                   return categorySlug ? (
                     <Link

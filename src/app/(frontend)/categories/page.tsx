@@ -1,7 +1,6 @@
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { Metadata } from 'next'
-import Link from 'next/link'
 import type { Category } from '@/payload-types'
 import CategoriesClient from './CategoriesClient'
 

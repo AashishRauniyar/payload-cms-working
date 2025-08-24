@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { BrandHighlightsTable } from '@/blocks/BrandHighlightsTable/Component'
@@ -27,18 +28,18 @@ export default async function CustomPage() {
           <div className="flex justify-between items-center py-6">
             <h1 className="text-3xl font-bold text-gray-900">My Custom Website</h1>
             <nav className="hidden md:flex space-x-8">
-              <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Home
-              </a>
-              <a href="/posts" className="text-gray-600 hover:text-gray-900 transition-colors">
+              </Link>
+              <Link href="/posts" className="text-gray-600 hover:text-gray-900 transition-colors">
                 Blog
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/custom/products"
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Products
-              </a>
+              </Link>
             </nav>
           </div>
         </div>
@@ -77,26 +78,17 @@ export default async function CustomPage() {
 
           {/* Using our custom component without any blog styling interference */}
           <BrandHighlightsTable
+            blockType="brandHighlightsTable"
             title="How Does Mind Lab Pro Rate?"
             overallRating={4.7}
             productName="Mind Lab Pro"
             buyNowText="SHOP NOW"
             buyNowLink="https://example.com"
-            ratings={[
-              { label: 'Ingredients Quality', score: 4.8, iconType: 'star' },
-              { label: 'Value for Cost', score: 4.6, iconType: 'dollar' },
-              { label: 'Return Policy', score: 5.0, iconType: 'clipboard' },
-              { label: 'Safety', score: 4.7, iconType: 'shield' },
-            ]}
-            highlights={[
-              {
-                text: 'Powered by plant-based ingredients supported by scientific clinical studies',
-              },
-              { text: 'Third-party tested and validated' },
-              { text: '100% performing nutrients. No pointless ingredients' },
-              { text: 'Emphasizes ultramodern, ethical manufacturing practices' },
-              { text: 'Committed to sustainable and transparent sourcing' },
-            ]}
+            ingredientsRating={4.8}
+            valueForCostRating={4.6}
+            manufacturerRating={5.0}
+            safetyRating={4.7}
+            highlights="Powered by plant-based ingredients supported by scientific clinical studies\nThird-party tested and validated\n100% performing nutrients. No pointless ingredients\nEmphasizes ultramodern, ethical manufacturing practices\nCommitted to sustainable and transparent sourcing"
             backgroundColor="gradient"
           />
 
@@ -107,12 +99,12 @@ export default async function CustomPage() {
               <p className="text-lg mb-6 opacity-90">
                 Explore our full range of premium products with detailed ratings and reviews.
               </p>
-              <a
+              <Link
                 href="/custom/products"
                 className="inline-block bg-white text-blue-600 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-lg"
               >
                 View All Products
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -137,12 +129,12 @@ export default async function CustomPage() {
                   <p className="text-gray-600 mb-4">
                     {new Date(post.publishedAt || '').toLocaleDateString()}
                   </p>
-                  <a
+                  <Link
                     href={`/posts/${post.slug}`}
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
                     Read More →
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -165,19 +157,19 @@ export default async function CustomPage() {
               <h5 className="text-lg font-semibold mb-4">Quick Links</h5>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <a href="/" className="hover:text-white transition-colors">
+                  <Link href="/" className="hover:text-white transition-colors">
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/posts" className="hover:text-white transition-colors">
+                  <Link href="/posts" className="hover:text-white transition-colors">
                     Blog
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/custom" className="hover:text-white transition-colors">
+                  <Link href="/custom" className="hover:text-white transition-colors">
                     Products
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

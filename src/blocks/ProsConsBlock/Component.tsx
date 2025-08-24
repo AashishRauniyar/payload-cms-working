@@ -76,25 +76,25 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
     table: '',
   }
 
-  const prosCardClasses = {
-    default:
-      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-    stacked:
-      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-    cards:
-      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-    table: '',
-  }
+  // const prosCardClasses = {
+  //   default:
+  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+  //   stacked:
+  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+  //   cards:
+  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+  //   table: '',
+  // }
 
-  const consCardClasses = {
-    default:
-      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-    stacked:
-      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-    cards:
-      'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-    table: '',
-  }
+  // const consCardClasses = {
+  //   default:
+  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+  //   stacked:
+  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+  //   cards:
+  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
+  //   table: '',
+  // }
 
   // Render table format
   if (style === 'table') {

@@ -130,7 +130,8 @@ const ContactFAQ = () => {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Still Have Questions?</h3>
               <p className="text-gray-600 mb-6">
-                Can't find what you're looking for? We're here to help you get the answers you need.
+                Can&apos;t find what you&apos;re looking for? We&apos;re here to help you get the
+                answers you need.
               </p>
             </div>
 

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 
 interface TableOfContentsProps {
-  content: any // Rich text content from Payload CMS
+  content: unknown // Rich text content from Payload CMS
 }
 
 interface TOCItem {
@@ -16,16 +16,17 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
   const [tocItems, setTocItems] = useState<TOCItem[]>([])
   const [activeId, setActiveId] = useState<string>('')
 
-  // Extract headings from the rich text content
-  const extractHeadings = (node: any, items: TOCItem[] = []): TOCItem[] => {
-    if (node?.type === 'heading' && node?.children) {
-      const text = node.children
-        .map((child: any) => child.text || '')
+  // Extract headings from the rich text content - moved outside useEffect to avoid dependency issues
+  const extractHeadings = React.useCallback((node: unknown, items: TOCItem[] = []): TOCItem[] => {
+    const nodeObj = node as { type?: string; children?: unknown[]; tag?: string }
+    if (nodeObj?.type === 'heading' && nodeObj?.children) {
+      const text = nodeObj.children
+        .map((child: unknown) => (child as { text?: string }).text || '')
         .join('')
         .trim()
 
       if (text) {
-        const level = parseInt(node.tag?.replace('h', '') || '1')
+        const level = parseInt(nodeObj.tag?.replace('h', '') || '1')
         const id = text
           .toLowerCase()
           .replace(/[^a-z0-9\s]/g, '')
@@ -35,38 +36,57 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
       }
     }
 
-    if (node?.children) {
-      node.children.forEach((child: any) => extractHeadings(child, items))
+    if (nodeObj?.children) {
+      nodeObj.children.forEach((child: unknown) => extractHeadings(child, items))
     }
 
     return items
-  }
+  }, [])
 
   useEffect(() => {
-    if (content?.root?.children) {
-      const headings = extractHeadings(content.root)
+    const contentObj = content as { root?: { children?: unknown[] } }
+    if (contentObj?.root?.children) {
+      const headings = extractHeadings(contentObj.root)
       setTocItems(headings)
     }
-  }, [content])
+  }, [content, extractHeadings])
 
   useEffect(() => {
+    if (tocItems.length === 0) return
+
     const handleScroll = () => {
-      const headingElements = tocItems
-        .map((item) => document.getElementById(item.id))
-        .filter(Boolean)
+      try {
+        // Create array of elements with their corresponding tocItem info
+        const elementsWithInfo = tocItems
+          .map((item) => ({
+            element: document.getElementById(item.id),
+            item,
+          }))
+          .filter(({ element }) => element !== null) // Only keep items that exist in DOM
 
-      const scrollPosition = window.scrollY + 100
+        if (elementsWithInfo.length === 0) return
 
-      for (let i = headingElements.length - 1; i >= 0; i--) {
-        const element = headingElements[i]
-        if (element && element.offsetTop <= scrollPosition) {
-          setActiveId(tocItems[i].id)
-          break
+        const scrollPosition = window.scrollY + 100
+        let newActiveId = ''
+
+        // Find the active section by iterating through actual elements
+        for (let i = elementsWithInfo.length - 1; i >= 0; i--) {
+          const { element, item } = elementsWithInfo[i]
+          if (element && element.offsetTop <= scrollPosition) {
+            newActiveId = item.id
+            break
+          }
         }
+
+        // Only update if the active ID has changed
+        setActiveId((prev) => (prev !== newActiveId ? newActiveId : prev))
+      } catch (error) {
+        // Silently handle any DOM access errors during cleanup/unmounting
+        console.warn('Error in scroll handler:', error)
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [tocItems])
 

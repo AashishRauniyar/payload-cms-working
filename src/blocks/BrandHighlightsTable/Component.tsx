@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Star, DollarSign, FlaskConical, ShieldCheck, ExternalLink, Award } from 'lucide-react'
+import { DollarSign, FlaskConical, ShieldCheck, ExternalLink, Award } from 'lucide-react'
 import type { BrandHighlightsTableBlock } from '@/payload-types'
 import './styles.css'
 
@@ -71,7 +71,7 @@ export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = (props)
 
   const bgClass = backgroundClasses[dynamicValues.backgroundColor as keyof typeof backgroundClasses]
 
-  const displayTitle = dynamicValues.title.replace(/\[Product\]/g, dynamicValues.productName)
+  // const displayTitle = dynamicValues.title.replace(/\[Product\]/g, dynamicValues.productName)
 
   const content = (
     <div className="bh-simple-table">
@@ -119,22 +119,40 @@ export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = (props)
           <h4 className="bh-section-heading">Brand Highlights</h4>
 
           <div className="bh-highlights-list">
-            {dynamicValues.highlights && dynamicValues.highlights.trim() ? (
-              dynamicValues.highlights
-                .split('\n')
-                .filter((line: string) => line.trim() !== '')
-                .map((highlight: string, idx: number) => (
+            {(() => {
+              // Handle both string and array formats for highlights
+              let highlightsArray: string[] = []
+
+              if (dynamicValues.highlights) {
+                if (typeof dynamicValues.highlights === 'string') {
+                  // String format - split by newlines
+                  highlightsArray = dynamicValues.highlights
+                    .split('\n')
+                    .filter((line: string) => line.trim() !== '')
+                } else if (Array.isArray(dynamicValues.highlights)) {
+                  // Array format - extract text from objects
+                  highlightsArray = (dynamicValues.highlights as any[])
+                    .map((item: any) => item.text || item)
+                    .filter((text: string) => text && text.trim() !== '')
+                }
+              }
+
+              if (highlightsArray.length > 0) {
+                return highlightsArray.map((highlight: string, idx: number) => (
                   <div key={idx} className="bh-highlight-item">
                     <span className="bh-bullet">–</span>
                     <span className="bh-highlight-text">{highlight.trim()}</span>
                   </div>
                 ))
-            ) : (
-              <div className="bh-empty">
-                <ShieldCheck className="bh-empty-icon" />
-                <span className="bh-empty-text">No highlights available</span>
-              </div>
-            )}
+              } else {
+                return (
+                  <div className="bh-empty">
+                    <ShieldCheck className="bh-empty-icon" />
+                    <span className="bh-empty-text">No highlights available</span>
+                  </div>
+                )
+              }
+            })()}
           </div>
         </div>
 

@@ -97,12 +97,12 @@ export default function ExtendedFooter() {
               </li>
               <li>
                 <Link href="#" className="hover:text-blue-400 transition-colors">
-                  Men's Health
+                  Men&apos;s Health
                 </Link>
               </li>
               <li>
                 <Link href="#" className="hover:text-blue-400 transition-colors">
-                  Women's Health
+                  Women&apos;s Health
                 </Link>
               </li>
               <li>
