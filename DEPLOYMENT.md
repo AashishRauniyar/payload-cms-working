@@ -24,7 +24,7 @@ The Docker build process:
 1. Uses pnpm for package management
 2. Installs dependencies with `--frozen-lockfile`
 3. Builds the Next.js application
-4. Creates a standalone production image
+4. Creates a production-ready container
 
 ## Runtime Process
 
@@ -49,3 +49,11 @@ On container startup:
 The application runs on port 3017 by default. Make sure to:
 - Set the port in Coolify to 3017
 - Configure any reverse proxy to forward to port 3017
+
+## Docker Configuration
+
+This project uses a simplified single-stage Dockerfile that:
+- Installs pnpm globally
+- Installs dependencies
+- Builds the application
+- Runs migrations and starts the server on container startup
