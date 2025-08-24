@@ -13,16 +13,26 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
+  try {
+    const payload = await getPayload({ config: configPromise })
 
-  const categories = await payload.find({
-    collection: 'categories',
-    limit: 100,
-  })
+    const categories = await payload.find({
+      collection: 'categories',
+      limit: 100,
+    })
 
-  return categories.docs.map((category) => ({
-    slug: category.slug,
-  }))
+    return categories.docs.map((category) => ({
+      slug: category.slug,
+    }))
+  } catch (error) {
+    if (error instanceof Error) {
+      console.warn('Database not available during build, skipping static generation:', error.message)
+    } else {
+      console.warn('Database not available during build, skipping static generation:', error)
+    }
+    // Return empty array to allow build to continue
+    return []
+  }
 }
 
 async function getCategoryBySlug(slug: string) {
