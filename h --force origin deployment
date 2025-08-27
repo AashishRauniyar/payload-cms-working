@@ -1,0 +1,10 @@
+[33mfce245a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdeployment[m[33m)[m UPDATE: refactor Docker setup and enhance static generation error handling
+[33m985794c[m FIX: deploy issues
+[33m86aadd6[m UPDATE: enhance author and post components with improved layouts and styles
+[33m2cef076[m ADD: custom block - three bottles
+[33ma0a6268[m ADD: enhance category and post structures with new fields and styles
+[33m17f9471[m ADD: implement RatingTableBlock and integrate structured data for SEO
+[33mbd48398[m FIX: brand highlights rating fix
+[33m402d198[m Refactor Post and Author Review components for improved layout and functionality
+[33me94e978[m ADD: faq custom
+[33m7a857a6[m ADD: multiple highlights at once
