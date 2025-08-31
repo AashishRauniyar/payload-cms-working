@@ -1,5 +1,5 @@
-# Multi-stage Docker build for Payload CMS production
-# Based on official Payload documentation and Next.js with-docker example
+# To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.js file.
+# From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 
 FROM node:22.12.0-alpine AS base
 
@@ -11,30 +11,30 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then npm install --legacy-peer-deps; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
+
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
-ENV NEXT_TELEMETRY_DISABLED=1
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Build the application using regular build
-ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
+# Use database-less build for Docker deployment
 RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then npm run build; \
+  if [ -f yarn.lock ]; then yarn run build:docker; \
+  elif [ -f package-lock.json ]; then npm run build:docker; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build:docker; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -42,13 +42,14 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+# ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy public assets
+# Remove this line if you do not have this folder
 COPY --from=builder /app/public ./public
 
 # Set the correct permission for prerender cache
@@ -60,25 +61,15 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy package.json for potential migrations and payload commands
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
-COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
-COPY --from=builder --chown=nextjs:nodejs /app/src ./src
-COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
-
-# Copy node_modules with payload CLI for migrations
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+# Copy the startup script
+COPY --from=builder --chown=nextjs:nodejs /app/start-coolify.sh ./
+RUN chmod +x start-coolify.sh
 
 USER nextjs
 
 EXPOSE 3019
 
-ENV PORT=3019
-ENV HOSTNAME="0.0.0.0"
+ENV PORT 3019
 
-# Add health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD node -e "http.get('http://localhost:3019/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
-
-# server.js is created by next build from the standalone output
-CMD ["node", "server.js"]
+# Use the startup script instead of directly running server.js
+CMD ["./start-coolify.sh"]

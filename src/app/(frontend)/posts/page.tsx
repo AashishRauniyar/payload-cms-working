@@ -6,7 +6,7 @@ import React from 'react'
 import PageClient from './page.client'
 import { BlogPageClient } from './BlogPageClient'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 export const revalidate = 600
 
 export default async function Page() {

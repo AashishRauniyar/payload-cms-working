@@ -6,6 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Category, Post, Media } from '@/payload-types'
 
+export const dynamic = 'force-dynamic'
+
 type Props = {
   params: Promise<{
     slug: string
@@ -13,26 +15,8 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-  try {
-    const payload = await getPayload({ config: configPromise })
-
-    const categories = await payload.find({
-      collection: 'categories',
-      limit: 100,
-    })
-
-    return categories.docs.map((category) => ({
-      slug: category.slug,
-    }))
-  } catch (error) {
-    if (error instanceof Error) {
-      console.warn('Database not available during build, skipping static generation:', error.message)
-    } else {
-      console.warn('Database not available during build, skipping static generation:', error)
-    }
-    // Return empty array to allow build to continue
-    return []
-  }
+  // Skip static generation during Docker build
+  return []
 }
 
 async function getCategoryBySlug(slug: string) {

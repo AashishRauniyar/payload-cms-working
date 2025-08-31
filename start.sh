@@ -1,37 +1,44 @@
 #!/bin/bash
 
-# Exit on any error
+# Simple startup script for Docker container
+# Runs migrations and starts the application
+
 set -e
 
-echo "Starting application..."
+echo "🚀 Starting Payload CMS application..."
 
-# Check if database is available and migrate if needed
-echo "Checking database connection..."
-if [ -n "$DATABASE_URI" ]; then
-  echo "Database URI found, running migrations..."
-  # Wait for database to be ready
-  timeout=30
-  counter=0
-  
-  while [ $counter -lt $timeout ]; do
-    if pnpm migrate --check-only 2>/dev/null; then
-      echo "Database is ready, running migrations..."
-      pnpm migrate
-      break
-    else
-      echo "Waiting for database... ($counter/$timeout)"
-      sleep 2
-      counter=$((counter + 1))
-    fi
-  done
-  
-  if [ $counter -eq $timeout ]; then
-    echo "Warning: Database not ready after $timeout attempts, starting without migration"
-  fi
+# Environment info
+echo "📄 Node Environment: $NODE_ENV"
+echo "🌐 Server URL: $NEXT_PUBLIC_SERVER_URL"
+echo "🏠 Port: $PORT"
+
+# Check if DATABASE_URI is set
+if [ -z "$DATABASE_URI" ]; then
+  echo "❌ DATABASE_URI environment variable is not set"
+  exit 1
+fi
+
+# Check if PAYLOAD_SECRET is set
+if [ -z "$PAYLOAD_SECRET" ]; then
+  echo "❌ PAYLOAD_SECRET environment variable is not set"
+  exit 1
+fi
+
+echo "✅ Environment variables validated"
+
+# Wait a bit more for database to be fully ready
+echo "⏳ Waiting for database to be fully ready..."
+sleep 5
+
+# Try to run migrations
+echo "🔄 Running database migrations..."
+if pnpm migrate; then
+  echo "✅ Database migrations completed successfully"
 else
-  echo "No DATABASE_URI found, skipping migrations"
+  echo "⚠️  Migration failed or no migrations needed"
+  # Don't exit on migration failure as it might be the first run
 fi
 
 # Start the application
-echo "Starting Next.js application..."
+echo "🎯 Starting Next.js application..."
 exec node server.js

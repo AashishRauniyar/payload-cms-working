@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   # PostgreSQL Database
   postgres:
@@ -36,7 +38,6 @@ services:
       - NEXT_PUBLIC_SITE_NAME=Healthy Lifestyle Tips
       - NEXT_PUBLIC_SITE_DESCRIPTION=Your trusted source for evidence-based health and wellness information
       - CRON_SECRET=your-cron-secret-here-change-me
-      - PREVIEW_SECRET=your-preview-secret-here-change-me
       - NEXT_TELEMETRY_DISABLED=1
     depends_on:
       postgres:
@@ -44,13 +45,15 @@ services:
     restart: unless-stopped
     networks:
       - payload-network
-    # Run migrations then start the server
+    # Add init script to run migrations
     command: >
       sh -c "
-        echo '🚀 Starting Payload CMS application...' &&
-        node migrate.js &&
-        echo '✅ Starting server...' &&
-        exec node server.js
+        echo 'Waiting for database to be ready...' &&
+        sleep 10 &&
+        echo 'Running database migrations...' &&
+        pnpm migrate &&
+        echo 'Starting application...' &&
+        node server.js
       "
 
 volumes:

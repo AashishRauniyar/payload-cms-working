@@ -22,34 +22,11 @@ import AuthorReviewSection from '@/components/blog/AuthorReviewSection'
 import BlogContentEnhancer from '@/components/blog/BlogContentEnhancer'
 import '../blog-styles.css'
 
+export const dynamic = 'force-dynamic'
+
 export async function generateStaticParams() {
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const posts = await payload.find({
-      collection: 'posts',
-      draft: false,
-      limit: 1000,
-      overrideAccess: false,
-      pagination: false,
-      select: {
-        slug: true,
-      },
-    })
-
-    const params = posts.docs.map(({ slug }) => {
-      return { slug }
-    })
-
-    return params
-  } catch (error) {
-    if (error instanceof Error) {
-      console.warn('Database not available during build, skipping static generation:', error.message)
-    } else {
-      console.warn('Database not available during build, skipping static generation:', error)
-    }
-    // Return empty array to allow build to continue
-    return []
-  }
+  // Skip static generation during Docker build
+  return []
 }
 
 type Args = {
