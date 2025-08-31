@@ -71,20 +71,30 @@ node -e "const {Client} = require('pg'); const c = new Client({connectionString:
 
 **Build fails?**
 ```bash
-Use: pnpm build:compile
-Check: PAYLOAD_SECRET is set
+Use: ./Dockerfile (fixed version)
+Check: pnpm-lock.yaml exists
+Check: Branch is 'deployment'
+```
+
+**pnpm installation fails?**
+```bash
+Fix: Updated Dockerfile with proper pnpm setup
+Use: Dockerfile.simple as alternative
+Clear: Coolify build cache and retry
 ```
 
 **Database connection fails?**
 ```bash
 Format: postgresql://user:pass@host:5432/db
 Check: Database is running
+Check: Both services on same network
 ```
 
 **App won't start?**
 ```bash
 Check: All env vars set
 Check: PAYLOAD_SECRET > 32 chars
+Check: /api/health endpoint works
 ```
 
 ---

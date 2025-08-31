@@ -1,7 +1,11 @@
 # To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.js file.
-# From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+# Optimized for Coolify deployment
 
 FROM node:22.12.0-alpine AS base
+# Enable pnpm and install system dependencies
+RUN apk add --no-cache libc6-compat curl
+RUN corepack enable pnpm
+RUN corepack enable pnpm
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -10,13 +14,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY package.json pnpm-lock.yaml* ./
+RUN pnpm i --frozen-lockfile
 
 
 # Rebuild the source code only when needed
@@ -28,21 +27,16 @@ COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Use database-less build for Docker deployment
-RUN \
-  if [ -f yarn.lock ]; then yarn run build:docker; \
-  elif [ -f package-lock.json ]; then npm run build:docker; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build:docker; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+RUN pnpm run build:docker
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -61,6 +55,10 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copy package.json and node_modules for migrations
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
 # Copy the startup script
 COPY --from=builder --chown=nextjs:nodejs /app/start-coolify.sh ./
 RUN chmod +x start-coolify.sh
@@ -69,7 +67,11 @@ USER nextjs
 
 EXPOSE 3019
 
-ENV PORT 3019
+ENV PORT=3019
+
+# Health check for Coolify
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3019/api/health || exit 1
 
 # Use the startup script instead of directly running server.js
 CMD ["./start-coolify.sh"]
