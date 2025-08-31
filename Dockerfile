@@ -28,12 +28,13 @@ COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
 
+# Use database-less build for Docker deployment
 RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  if [ -f yarn.lock ]; then yarn run build:docker; \
+  elif [ -f package-lock.json ]; then npm run build:docker; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build:docker; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -61,14 +62,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Copy the startup script
-COPY --from=builder --chown=nextjs:nodejs /app/start.sh ./
-RUN chmod +x start.sh
+COPY --from=builder --chown=nextjs:nodejs /app/start-coolify.sh ./
+RUN chmod +x start-coolify.sh
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 3019
 
-ENV PORT 3000
+ENV PORT 3019
 
 # Use the startup script instead of directly running server.js
-CMD ["./start.sh"]
+CMD ["./start-coolify.sh"]

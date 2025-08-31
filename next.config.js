@@ -4,7 +4,7 @@ import redirects from './redirects.js'
 
 const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : undefined || process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000'
+  : undefined || process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3019'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -13,6 +13,7 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  output: 'standalone', // Required for Docker deployment
   images: {
     remotePatterns: [
       ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {

@@ -1,0 +1,34 @@
+# Copy these environment variables to your Coolify application
+
+# === REQUIRED VARIABLES ===
+
+# Database Connection (replace with your Coolify PostgreSQL connection)
+DATABASE_URI=postgresql://payload:YOUR_DB_PASSWORD@YOUR_DB_NAME:5432/payload
+
+# Security Keys (CHANGE THESE!)
+PAYLOAD_SECRET=change-this-to-a-32-character-secret-key-minimum
+CRON_SECRET=change-this-to-a-secure-cron-secret-key
+
+# Application Configuration
+NODE_ENV=production
+NEXT_PUBLIC_SERVER_URL=https://yourdomain.com
+NEXT_PUBLIC_SITE_NAME=Healthy Lifestyle Tips
+NEXT_PUBLIC_SITE_DESCRIPTION=Your trusted source for evidence-based health and wellness information
+
+# === OPTIONAL VARIABLES ===
+
+# Performance
+NODE_OPTIONS=--max-old-space-size=2048
+NEXT_TELEMETRY_DISABLED=1
+
+# Debugging (set to false in production)
+PAYLOAD_DEBUG=false
+
+# === COOLIFY SPECIFIC ===
+
+# Build settings (if using custom build commands)
+DOCKERFILE_PATH=./Dockerfile.coolify
+BUILD_COMMAND=pnpm build:compile
+START_COMMAND=./start-coolify.sh
+PORT=3019
+PORT=3019
