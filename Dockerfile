@@ -48,11 +48,15 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Create necessary directories with correct permissions BEFORE copying files
+RUN mkdir -p /app/public/media /app/.next /app/uploads
+RUN chown -R nextjs:nodejs /app
+
 # Copy public assets
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Set the correct permission for prerender cache
-RUN mkdir .next
+RUN mkdir -p .next
 RUN chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
@@ -68,6 +72,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
 
 # Copy node_modules with payload CLI for migrations
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+# Ensure media directories exist and have correct permissions
+RUN mkdir -p /app/public/media /app/uploads && \
+    chown -R nextjs:nodejs /app/public /app/uploads /app/.next && \
+    chmod -R 755 /app/public/media /app/uploads
 
 USER nextjs
 
