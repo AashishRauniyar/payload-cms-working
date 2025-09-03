@@ -24,7 +24,28 @@ const nextConfig = {
           protocol: url.protocol.replace(':', ''),
         }
       }),
+      // Add support for production domain
+      {
+        protocol: 'https',
+        hostname: 'healthylifestyletips.online',
+        port: '',
+        pathname: '/api/media/file/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.healthylifestyletips.online',
+        port: '',
+        pathname: '/api/media/file/**',
+      },
     ],
+    // Handle images with special characters better
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Increase timeout for slow loading images
+    minimumCacheTTL: 60,
+    // Add custom loader for problematic filenames
+    unoptimized: false,
   },
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {

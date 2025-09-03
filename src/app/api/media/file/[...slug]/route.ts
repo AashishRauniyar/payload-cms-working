@@ -5,7 +5,9 @@ import fs from 'fs'
 export async function GET(request: NextRequest, context: { params: Promise<{ slug: string[] }> }) {
   try {
     const params = await context.params
-    const filename = params.slug.join('/')
+    // Decode URL-encoded filename components
+    const decodedSlug = params.slug.map((part) => decodeURIComponent(part))
+    const filename = decodedSlug.join('/')
     const filePath = path.join(process.cwd(), 'public', 'media', filename)
 
     // Check if file exists
@@ -25,6 +27,9 @@ export async function GET(request: NextRequest, context: { params: Promise<{ slu
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=31536000, immutable',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Headers': 'Content-Type',
       },
     })
   } catch (error) {
