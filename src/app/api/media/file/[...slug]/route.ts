@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
     const contentType = getContentType(ext)
 
     // Return file with appropriate headers
-    return new NextResponse(fileBuffer as any, {
+    return new NextResponse(new Uint8Array(fileBuffer), {
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=31536000, immutable',
