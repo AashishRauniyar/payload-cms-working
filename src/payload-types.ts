@@ -545,7 +545,57 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
+  /**
+   * Upload an image or select from media library
+   */
   media: number | Media;
+  /**
+   * Optional caption for the image
+   */
+  caption?: string | null;
+  /**
+   * How to align the image on the page
+   */
+  alignment?: ('left' | 'center' | 'right' | 'full') | null;
+  /**
+   * Maximum width of the image
+   */
+  size?: ('small' | 'medium' | 'large' | 'xlarge' | 'full') | null;
+  /**
+   * Force a specific aspect ratio (crops image if needed)
+   */
+  aspectRatio?: ('auto' | 'square' | 'landscape' | 'portrait' | 'wide') | null;
+  /**
+   * Add rounded corners to the image
+   */
+  borderRadius?: ('none' | 'small' | 'medium' | 'large' | 'full') | null;
+  /**
+   * Add a drop shadow to the image
+   */
+  shadow?: ('none' | 'small' | 'medium' | 'large' | 'xlarge') | null;
+  /**
+   * Add a border around the image
+   */
+  border?: boolean | null;
+  /**
+   * Allow the image to be clicked to open in full size or navigate
+   */
+  enableLink?: boolean | null;
+  /**
+   * What happens when the image is clicked
+   */
+  linkType?: ('lightbox' | 'external' | 'internal') | null;
+  /**
+   * URL to navigate to when image is clicked
+   */
+  externalUrl?: string | null;
+  /**
+   * Control spacing around the image
+   */
+  spacing?: {
+    marginTop?: ('none' | 'small' | 'medium' | 'large' | 'xlarge') | null;
+    marginBottom?: ('none' | 'small' | 'medium' | 'large' | 'xlarge') | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -1380,6 +1430,22 @@ export interface ContentBlockSelect<T extends boolean = true> {
  */
 export interface MediaBlockSelect<T extends boolean = true> {
   media?: T;
+  caption?: T;
+  alignment?: T;
+  size?: T;
+  aspectRatio?: T;
+  borderRadius?: T;
+  shadow?: T;
+  border?: T;
+  enableLink?: T;
+  linkType?: T;
+  externalUrl?: T;
+  spacing?:
+    | T
+    | {
+        marginTop?: T;
+        marginBottom?: T;
+      };
   id?: T;
   blockName?: T;
 }
