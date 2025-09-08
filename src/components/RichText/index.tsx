@@ -20,6 +20,7 @@ import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
 import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
 import { ReviewsBlock } from '@/blocks/ReviewsBlock/Component'
+import { TopOurChoose } from '@/blocks/TopOurChoose/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -33,6 +34,7 @@ import type {
   RatingTableBlock as RatingTableBlockProps,
   ThreeBottlesBlock as ThreeBottlesBlockProps,
   ReviewsBlock as ReviewsBlockProps,
+  TopOurChoose as TopOurChooseProps,
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
@@ -53,6 +55,7 @@ type NodeTypes =
       | RatingTableBlockProps
       | ThreeBottlesBlockProps
       | ReviewsBlockProps
+      | TopOurChooseProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -69,16 +72,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
   ...LinkJSXConverter({ internalDocToHref }),
   blocks: {
     banner: ({ node }) => <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
-    mediaBlock: ({ node }) => (
-      <MediaBlock
-        className="col-start-1 col-span-3"
-        imgClassName="m-0"
-        {...node.fields}
-        captionClassName="mx-auto max-w-[48rem]"
-        enableGutter={false}
-        disableInnerContainer={true}
-      />
-    ),
+    mediaBlock: ({ node }) => <MediaBlock className="col-start-1 col-span-3" {...node.fields} />,
     code: ({ node }) => <CodeBlock className="col-start-2" {...node.fields} />,
     cta: ({ node }) => <CallToActionBlock {...node.fields} />,
     prosConsBlock: ({ node }) => (
@@ -89,7 +83,6 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         prosTitle={node.fields.prosTitle || 'Pros'}
         consTitle={node.fields.consTitle || 'Cons'}
         tableData={node.fields.tableData || ''}
-        style={node.fields.style || 'default'}
         backgroundColor={node.fields.backgroundColor || 'none'}
       />
     ),
@@ -153,6 +146,18 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         blockHeader={node.fields.blockHeader || undefined}
         reviews={node.fields.reviews || []}
         displayOptions={node.fields.displayOptions || undefined}
+      />
+    ),
+    topOurChoose: ({ node }: { node: SerializedBlockNode }) => (
+      <TopOurChoose
+        className="col-start-1 col-span-3"
+        disableInnerContainer={true}
+        title={node.fields.title || undefined}
+        productName={node.fields.productName || 'Product'}
+        productImage={node.fields.productImage || null}
+        overallRating={node.fields.overallRating || 4.5}
+        ratings={node.fields.ratings || []}
+        backgroundColor={node.fields.backgroundColor || 'none'}
       />
     ),
   },

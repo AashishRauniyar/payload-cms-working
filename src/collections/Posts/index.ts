@@ -27,6 +27,7 @@ import { ThreeBottlesBlock } from '../../blocks/ThreeBottles/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
+import { TopOurChoose } from '../../blocks/TopOurChoose/config'
 
 import {
   MetaDescriptionField,
@@ -128,6 +129,7 @@ export const Posts: CollectionConfig<'posts'> = {
                         TableBlockConfig,
                         FAQBlock,
                         CustomCTABlock,
+                        TopOurChoose,
                       ],
                     }),
                     FixedToolbarFeature(),

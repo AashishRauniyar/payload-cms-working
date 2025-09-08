@@ -203,6 +203,7 @@ export interface Page {
     | BrandHighlightsTableBlock
     | RatingTableBlock
     | TableBlock
+    | TopOurChoose
   )[];
   meta?: {
     title?: string | null;
@@ -1064,6 +1065,38 @@ export interface TableBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TopOurChoose".
+ */
+export interface TopOurChoose {
+  /**
+   * Optional title for the rating section
+   */
+  title?: string | null;
+  productName: string;
+  /**
+   * Main product image to display in the center
+   */
+  productImage: number | Media;
+  /**
+   * Overall rating score (0-5)
+   */
+  overallRating: number;
+  ratings: {
+    category: string;
+    /**
+     * Rating score (0-5)
+     */
+    rating: number;
+    evidence: 'Gold Star Evidence' | 'Strong Evidence' | 'Good Evidence' | 'Limited Evidence';
+    id?: string | null;
+  }[];
+  backgroundColor?: ('none' | 'gray' | 'blue' | 'green' | 'orange') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'topOurChoose';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1359,6 +1392,7 @@ export interface PagesSelect<T extends boolean = true> {
         brandHighlightsTable?: T | BrandHighlightsTableBlockSelect<T>;
         ratingTable?: T | RatingTableBlockSelect<T>;
         tableBlock?: T | TableBlockSelect<T>;
+        topOurChoose?: T | TopOurChooseSelect<T>;
       };
   meta?:
     | T
@@ -1595,6 +1629,27 @@ export interface TableBlockSelect<T extends boolean = true> {
   tableStyle?: T;
   responsive?: T;
   caption?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TopOurChoose_select".
+ */
+export interface TopOurChooseSelect<T extends boolean = true> {
+  title?: T;
+  productName?: T;
+  productImage?: T;
+  overallRating?: T;
+  ratings?:
+    | T
+    | {
+        category?: T;
+        rating?: T;
+        evidence?: T;
+        id?: T;
+      };
+  backgroundColor?: T;
   id?: T;
   blockName?: T;
 }
