@@ -21,6 +21,7 @@ import { FAQBlock } from '../../blocks/FAQBlock/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { ProsConsBlock } from '../../blocks/ProsConsBlock/config'
 import { RatingTableBlock } from '../../blocks/RatingTable/config'
+import { ReviewsBlock } from '../../blocks/ReviewsBlock/config'
 import { TableBlockConfig } from '../../blocks/TableBlock/config'
 import { ThreeBottlesBlock } from '../../blocks/ThreeBottles/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
@@ -120,6 +121,7 @@ export const Posts: CollectionConfig<'posts'> = {
                         Code,
                         MediaBlock,
                         ProsConsBlock,
+                        ReviewsBlock,
                         ThreeBottlesBlock,
                         BrandHighlightsTableBlock,
                         RatingTableBlock,

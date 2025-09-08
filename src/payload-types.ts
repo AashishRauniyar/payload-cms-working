@@ -198,6 +198,7 @@ export interface Page {
     | ArchiveBlock
     | FormBlock
     | ProsConsBlock
+    | ReviewsBlock
     | ThreeBottlesBlock
     | BrandHighlightsTableBlock
     | RatingTableBlock
@@ -806,6 +807,44 @@ export interface ProsConsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ReviewsBlock".
+ */
+export interface ReviewsBlock {
+  blockHeader?: {
+    title?: string | null;
+    subtitle?: string | null;
+  };
+  reviews?:
+    | {
+        name: string;
+        gender?: ('male' | 'female') | null;
+        age?: number | null;
+        profileImage?: ('male-1' | 'male-2' | 'male-3' | 'female-1' | 'female-2' | 'female-3') | null;
+        /**
+         * Whole numbers only (1, 2, 3, 4, or 5 stars)
+         */
+        rating: number;
+        reviewText: string;
+        id?: string | null;
+      }[]
+    | null;
+  displayOptions?: {
+    layout?: ('stacked' | 'grid') | null;
+    /**
+     * Alternate between light cream and white backgrounds
+     */
+    alternateBackground?: boolean | null;
+    /**
+     * Add dashed borders between review cards
+     */
+    showDashedBorders?: boolean | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'reviewsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ThreeBottlesBlock".
  */
 export interface ThreeBottlesBlock {
@@ -1265,6 +1304,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         prosConsBlock?: T | ProsConsBlockSelect<T>;
+        reviewsBlock?: T | ReviewsBlockSelect<T>;
         threeBottlesBlock?: T | ThreeBottlesBlockSelect<T>;
         brandHighlightsTable?: T | BrandHighlightsTableBlockSelect<T>;
         ratingTable?: T | RatingTableBlockSelect<T>;
@@ -1379,6 +1419,38 @@ export interface ProsConsBlockSelect<T extends boolean = true> {
   tableData?: T;
   style?: T;
   backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ReviewsBlock_select".
+ */
+export interface ReviewsBlockSelect<T extends boolean = true> {
+  blockHeader?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+      };
+  reviews?:
+    | T
+    | {
+        name?: T;
+        gender?: T;
+        age?: T;
+        profileImage?: T;
+        rating?: T;
+        reviewText?: T;
+        id?: T;
+      };
+  displayOptions?:
+    | T
+    | {
+        layout?: T;
+        alternateBackground?: T;
+        showDashedBorders?: T;
+      };
   id?: T;
   blockName?: T;
 }

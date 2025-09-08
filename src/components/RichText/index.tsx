@@ -19,6 +19,7 @@ import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
 import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
+import { ReviewsBlock } from '@/blocks/ReviewsBlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -31,6 +32,7 @@ import type {
   CustomCTABlock as CustomCTABlockProps,
   RatingTableBlock as RatingTableBlockProps,
   ThreeBottlesBlock as ThreeBottlesBlockProps,
+  ReviewsBlock as ReviewsBlockProps,
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
@@ -50,6 +52,7 @@ type NodeTypes =
       | CustomCTABlockProps
       | RatingTableBlockProps
       | ThreeBottlesBlockProps
+      | ReviewsBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -143,6 +146,13 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         className="col-start-1 col-span-3"
         disableInnerContainer={true}
         {...node.fields}
+      />
+    ),
+    reviewsBlock: ({ node }: { node: SerializedBlockNode }) => (
+      <ReviewsBlock
+        blockHeader={node.fields.blockHeader || undefined}
+        reviews={node.fields.reviews || []}
+        displayOptions={node.fields.displayOptions || undefined}
       />
     ),
   },

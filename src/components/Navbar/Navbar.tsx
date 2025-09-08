@@ -12,15 +12,18 @@ import {
 import { Category, Post } from '@/payload-types'
 
 interface NavbarProps {
-  categories: Category[]
+  categories?: Category[]
   featuredPosts?: Post[]
 }
 
-export default function Navbar({ categories }: NavbarProps) {
+export default function Navbar({ categories = [] }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [_hoveredCategory, setHoveredCategory] = useState<number | null>(null)
   const pathname = usePathname()
+
+  // Ensure categories is always an array
+  const safeCategories = Array.isArray(categories) ? categories : []
 
   // Lock the body scroll when mobile nav is open
   useEffect(() => {
@@ -142,7 +145,7 @@ export default function Navbar({ categories }: NavbarProps) {
                   <div className="px-4 py-2 border-b border-gray-100 mb-2">
                     <span className="text-sm font-semibold text-gray-900">Browse by Category</span>
                   </div>
-                  {categories.map((category) => (
+                  {safeCategories.map((category) => (
                     <CategoryItem key={category.id} category={category} />
                   ))}
                   <div className="border-t border-gray-100 mt-3 pt-3">
@@ -280,7 +283,7 @@ export default function Navbar({ categories }: NavbarProps) {
                   Categories
                 </div>
                 <div className="space-y-1">
-                  {categories.map((category) => (
+                  {safeCategories.map((category) => (
                     <Link
                       key={category.id}
                       href={`/categories/${category.slug}`}
