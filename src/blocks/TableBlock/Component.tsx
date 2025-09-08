@@ -150,13 +150,13 @@ const SupplementBadge = ({ type }: { type: string }) => {
 const getTableStyles = (style: string, _responsive: string) => {
   const baseStyles = {
     container: 'w-full',
-    wrapper: 'overflow-hidden shadow-xl rounded-2xl',
-    table: 'w-full border-collapse',
+    wrapper: 'overflow-hidden shadow-xl rounded-2xl border-separate border-spacing-0',
+    table: 'w-full border-separate border-spacing-0',
     header: 'bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600',
     headerCell:
-      'px-6 py-5 text-left text-sm font-bold uppercase tracking-wider text-white border-r border-blue-400/30 last:border-r-0',
+      'px-6 py-5 text-left text-sm font-bold uppercase tracking-wider text-white',
     row: 'transition-all duration-300 hover:bg-blue-50/50',
-    cell: 'px-6 py-4 text-sm text-gray-800 border-r border-gray-100 last:border-r-0 border-b border-gray-50 last:border-b-0',
+    cell: 'px-6 py-4 text-sm text-gray-800 bg-white',
   }
 
   switch (style) {
@@ -165,7 +165,7 @@ const getTableStyles = (style: string, _responsive: string) => {
         ...baseStyles,
         wrapper: `${baseStyles.wrapper} border-2 border-blue-100`,
         header: 'bg-gradient-to-r from-blue-600 to-indigo-600',
-        headerCell: `${baseStyles.headerCell} bg-gradient-to-r from-blue-600 to-indigo-600 text-white`,
+        headerCell: `${baseStyles.headerCell}`,
         row: `${baseStyles.row} hover:bg-blue-50 hover:shadow-sm`,
         cell: `${baseStyles.cell} font-medium`,
       }
@@ -175,9 +175,9 @@ const getTableStyles = (style: string, _responsive: string) => {
         ...baseStyles,
         wrapper: `${baseStyles.wrapper} border-2 border-blue-100`,
         header: 'bg-gradient-to-r from-blue-600 to-indigo-600',
-        headerCell: `${baseStyles.headerCell} bg-gradient-to-r from-blue-600 to-indigo-600`,
+        headerCell: `${baseStyles.headerCell}`,
         row: `${baseStyles.row} hover:bg-blue-50 hover:shadow-sm even:bg-blue-25`,
-        cell: `${baseStyles.cell} border-b border-blue-50`,
+        cell: `${baseStyles.cell}`,
       }
 
     case 'dosage':
@@ -185,9 +185,9 @@ const getTableStyles = (style: string, _responsive: string) => {
         ...baseStyles,
         wrapper: `${baseStyles.wrapper} border-2 border-amber-100`,
         header: 'bg-gradient-to-r from-amber-500 to-orange-500',
-        headerCell: `${baseStyles.headerCell} bg-gradient-to-r from-amber-500 to-orange-500`,
+        headerCell: `${baseStyles.headerCell}`,
         row: `${baseStyles.row} hover:bg-amber-50 hover:shadow-sm`,
-        cell: `${baseStyles.cell} border-b border-amber-50 font-mono text-center`,
+        cell: `${baseStyles.cell} font-mono text-center`,
       }
 
     case 'striped':
@@ -200,9 +200,8 @@ const getTableStyles = (style: string, _responsive: string) => {
     case 'bordered':
       return {
         ...baseStyles,
-        table: `${baseStyles.table} border border-blue-200`,
         cell: `${baseStyles.cell} border border-blue-100`,
-        headerCell: `${baseStyles.headerCell} border border-blue-400`,
+        headerCell: `${baseStyles.headerCell}`,
         wrapper: `${baseStyles.wrapper} border-2 border-blue-200`,
       }
 
@@ -219,16 +218,16 @@ const getTableStyles = (style: string, _responsive: string) => {
         ...baseStyles,
         wrapper: `${baseStyles.wrapper} border-2 border-blue-100 shadow-2xl`,
         header: 'bg-gradient-to-r from-blue-600 to-cyan-600',
-        headerCell: `${baseStyles.headerCell} border-r border-blue-400/30`,
-        row: `${baseStyles.row} border-b border-blue-50 last:border-b-0 hover:bg-blue-50`,
-        cell: `${baseStyles.cell} border-r-0`,
+        headerCell: `${baseStyles.headerCell}`,
+        row: `${baseStyles.row} hover:bg-blue-50`,
+        cell: `${baseStyles.cell}`,
       }
 
     default:
       return {
         ...baseStyles,
-        row: `${baseStyles.row} border-b border-blue-50 last:border-b-0 hover:bg-blue-50`,
-        wrapper: `${baseStyles.wrapper} border border-blue-200`,
+        row: `${baseStyles.row} hover:bg-blue-50`,
+        wrapper: `${baseStyles.wrapper}`,
       }
   }
 }
@@ -284,12 +283,9 @@ export const TableBlock: React.FC<TableBlockProps> = ({
       <div className={styles.wrapper}>
         <table className={styles.table}>
           <thead>
-            <tr className={`${styles.header} rounded-t-2xl`}>
+            <tr className={styles.header}>
               {headers.map((header, index) => (
-                <th
-                  key={index}
-                  className={`${styles.headerCell} ${index === 0 ? 'rounded-tl-2xl' : ''} ${index === headers.length - 1 ? 'rounded-tr-2xl' : ''}`}
-                >
+                <th key={index} className={styles.headerCell}>
                   <div className="flex items-center space-x-2">
                     {index === 0 && isSupplementStyle && (
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -302,13 +298,14 @@ export const TableBlock: React.FC<TableBlockProps> = ({
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-50">
+          <tbody>
             {rows.map((row, rowIndex) => (
               <tr key={rowIndex} className={styles.row}>
                 {row.map((cell, cellIndex) => {
                   // Handle empty cells or cells with just "-"
                   const cellContent = cell === '-' || cell === '' ? '—' : cell
                   const isFirstColumn = cellIndex === 0
+                  const isLastRow = rowIndex === rows.length - 1
 
                   return (
                     <td
@@ -319,6 +316,8 @@ export const TableBlock: React.FC<TableBlockProps> = ({
                           : isFirstColumn
                             ? 'font-semibold text-gray-800 bg-gray-50'
                             : ''
+                      } ${isLastRow && cellIndex === 0 ? 'rounded-bl-2xl' : ''} ${
+                        isLastRow && cellIndex === row.length - 1 ? 'rounded-br-2xl' : ''
                       }`}
                     >
                       <div className="flex items-center space-x-2">
@@ -356,7 +355,7 @@ export const TableBlock: React.FC<TableBlockProps> = ({
 
       {/* Enhanced mobile responsive helper */}
       {responsive === 'scroll' && (
-        <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200 md:hidden">
+        <div className="mt-4 p-3 bg-blue-50 rounded-lg md:hidden">
           <div className="flex items-center justify-center space-x-2 text-blue-700">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path
