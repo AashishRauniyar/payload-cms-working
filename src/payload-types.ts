@@ -871,7 +871,10 @@ export interface ReviewsBlock {
         name: string;
         gender?: ('male' | 'female') | null;
         age?: number | null;
-        profileImage?: ('male-1' | 'male-2' | 'male-3' | 'female-1' | 'female-2' | 'female-3') | null;
+        /**
+         * Upload a profile image for this reviewer (optional)
+         */
+        profileImage?: (number | null) | Media;
         /**
          * Whole numbers only (1, 2, 3, 4, or 5 stars)
          */

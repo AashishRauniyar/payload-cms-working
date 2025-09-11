@@ -20,6 +20,7 @@ import DisclaimerBox from '@/components/blog/DisclaimerBox'
 import TableOfContents from '@/components/blog/TableOfContents'
 import AuthorReviewSection from '@/components/blog/AuthorReviewSection'
 import BlogContentEnhancer from '@/components/blog/BlogContentEnhancer'
+import CustomerReviewForm from '@/components/blog/CustomerReviewForm'
 import '../blog-styles.css'
 
 export const dynamic = 'force-dynamic'
@@ -101,6 +102,10 @@ export default async function Post({ params: paramsPromise }: Args) {
           <div className="blog-content">
             <BlogContentEnhancer />
             <RichText className="max-w-6xl mx-auto" data={post.content} enableGutter={false} />
+          </div>
+          {/* Customer Review Form */}
+          <div className="max-w-6xl mx-auto">
+            <CustomerReviewForm />
           </div>
           {post.relatedPosts && post.relatedPosts.length > 0 && (
             <RelatedPosts

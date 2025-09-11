@@ -67,35 +67,12 @@ export const ReviewsBlock: Block = {
         },
         {
           name: 'profileImage',
-          type: 'select',
+          type: 'upload',
           label: 'Profile Image',
-          options: [
-            {
-              label: 'Male Profile 1',
-              value: 'male-1',
-            },
-            {
-              label: 'Male Profile 2',
-              value: 'male-2',
-            },
-            {
-              label: 'Male Profile 3',
-              value: 'male-3',
-            },
-            {
-              label: 'Female Profile 1',
-              value: 'female-1',
-            },
-            {
-              label: 'Female Profile 2',
-              value: 'female-2',
-            },
-            {
-              label: 'Female Profile 3',
-              value: 'female-3',
-            },
-          ],
-          defaultValue: 'male-1',
+          relationTo: 'media',
+          admin: {
+            description: 'Upload a profile image for this reviewer (optional)',
+          },
         },
         {
           name: 'rating',

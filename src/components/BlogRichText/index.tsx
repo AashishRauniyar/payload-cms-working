@@ -24,6 +24,7 @@ import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
 import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
 import { IngredientsBlock } from '@/blocks/IngredientsBlock/Component'
+import { ReviewsBlock } from '@/blocks/ReviewsBlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -35,6 +36,7 @@ import type {
   RatingTableBlock as RatingTableBlockProps,
   ThreeBottlesBlock as ThreeBottlesBlockProps,
   IngredientsBlock as IngredientsBlockProps,
+  ReviewsBlock as ReviewsBlockProps,
 } from '@/payload-types'
 
 type NodeTypes =
@@ -50,6 +52,7 @@ type NodeTypes =
       | RatingTableBlockProps
       | ThreeBottlesBlockProps
       | IngredientsBlockProps
+      | ReviewsBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -72,12 +75,7 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
     ),
     mediaBlock: ({ node }) => (
       <div className="my-8">
-        <MediaBlock
-          imgClassName="m-0"
-          {...node.fields}
-          enableGutter={false}
-          disableInnerContainer={true}
-        />
+        <MediaBlock {...node.fields} className="m-0" />
       </div>
     ),
     code: ({ node }) => (
@@ -98,7 +96,6 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
           prosTitle={node.fields.prosTitle || 'Pros'}
           consTitle={node.fields.consTitle || 'Cons'}
           tableData={node.fields.tableData || ''}
-          style={node.fields.style || 'default'}
           backgroundColor={node.fields.backgroundColor || 'none'}
         />
       </div>
@@ -158,6 +155,11 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
           layout={node.fields.layout || 'stacked'}
           backgroundColor={node.fields.backgroundColor || 'none'}
         />
+      </div>
+    ),
+    reviewsBlock: ({ node }: { node: SerializedBlockNode<ReviewsBlockProps> }) => (
+      <div className="my-8">
+        <ReviewsBlock {...node.fields} />
       </div>
     ),
   },

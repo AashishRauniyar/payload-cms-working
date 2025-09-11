@@ -1,4 +1,6 @@
 import React from 'react'
+import { Media } from '@/components/Media'
+import type { Media as MediaType } from '@/payload-types'
 
 // Define the types for the new simplified structure
 interface ReviewsBlockType {
@@ -21,7 +23,7 @@ interface ReviewItem {
   name?: string | null
   gender?: string | null
   age?: number | null
-  profileImage?: string | null
+  profileImage?: MediaType | number | null
   rating?: number | null
   reviewText?: string | null
 }
@@ -44,12 +46,14 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
 
 // Profile Image Component
 const ProfileImage: React.FC<{
-  profileImage?: string | null
+  profileImage?: MediaType | number | null
   gender?: string | null
   name?: string | null
 }> = ({ profileImage, gender, name }) => {
-  const getImageUrl = () => {
-    // For now, always use UI Avatars to avoid timeout issues
+  // Check if we have uploaded media
+  const hasUploadedImage = profileImage && typeof profileImage === 'object'
+
+  const getFallbackImageUrl = () => {
     const initials =
       name
         ?.split(' ')
@@ -60,15 +64,21 @@ const ProfileImage: React.FC<{
   }
 
   return (
-    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-100">
-      <img
-        src={getImageUrl()}
-        alt={name || 'Reviewer'}
-        className="w-full h-full object-cover object-center scale-110"
-        style={{
-          objectPosition: 'center center',
-        }}
-      />
+    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+      {hasUploadedImage ? (
+        <Media
+          resource={profileImage}
+          alt={name || 'Reviewer'}
+          className="w-full h-full object-cover rounded-full"
+          imgClassName="w-full h-full object-cover rounded-full"
+        />
+      ) : (
+        <img
+          src={getFallbackImageUrl()}
+          alt={name || 'Reviewer'}
+          className="w-full h-full object-cover rounded-full"
+        />
+      )}
     </div>
   )
 }
