@@ -11,6 +11,7 @@
     "build:generate-env": "cross-env NODE_OPTIONS=--no-deprecation next build --experimental-build-mode generate-env",
     "build:with-migrate": "cross-env NODE_OPTIONS=--no-deprecation pnpm migrate && next build",
     "build:docker": "cross-env NODE_OPTIONS=--no-deprecation next build --experimental-build-mode compile",
+    "build:safe": "cross-env NODE_OPTIONS=--no-deprecation SKIP_MIGRATIONS=true next build",
     "postbuild": "next-sitemap --config next-sitemap.config.cjs",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "dev:prod": "cross-env NODE_OPTIONS=--no-deprecation rm -rf .next && pnpm build && pnpm start",
@@ -28,7 +29,8 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
-    "migrate:fresh": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:fresh"
+    "migrate:fresh": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:fresh",
+    "migrate:safe": "cross-env NODE_OPTIONS=--no-deprecation payload migrate || echo 'Migration failed, but continuing...'"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
