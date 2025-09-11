@@ -21,6 +21,7 @@ import { RatingTable } from '@/blocks/RatingTable/Component'
 import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
 import { ReviewsBlock } from '@/blocks/ReviewsBlock/Component'
 import { TopOurChoose } from '@/blocks/TopOurChoose/Component'
+import { IngredientsBlock } from '@/blocks/IngredientsBlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -35,6 +36,7 @@ import type {
   ThreeBottlesBlock as ThreeBottlesBlockProps,
   ReviewsBlock as ReviewsBlockProps,
   TopOurChoose as TopOurChooseProps,
+  IngredientsBlock as IngredientsBlockProps,
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
@@ -56,6 +58,7 @@ type NodeTypes =
       | ThreeBottlesBlockProps
       | ReviewsBlockProps
       | TopOurChooseProps
+      | IngredientsBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -157,6 +160,17 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         productImage={node.fields.productImage || null}
         overallRating={node.fields.overallRating || 4.5}
         ratings={node.fields.ratings || []}
+        buttons={node.fields.buttons || []}
+        backgroundColor={node.fields.backgroundColor || 'none'}
+      />
+    ),
+    ingredientsBlock: ({ node }: { node: SerializedBlockNode }) => (
+      <IngredientsBlock
+        className="col-start-1 col-span-3"
+        disableInnerContainer={true}
+        title={node.fields.title || undefined}
+        ingredients={node.fields.ingredients || []}
+        layout={node.fields.layout || 'stacked'}
         backgroundColor={node.fields.backgroundColor || 'none'}
       />
     ),

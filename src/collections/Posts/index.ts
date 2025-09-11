@@ -24,6 +24,7 @@ import { RatingTableBlock } from '../../blocks/RatingTable/config'
 import { ReviewsBlock } from '../../blocks/ReviewsBlock/config'
 import { TableBlockConfig } from '../../blocks/TableBlock/config'
 import { ThreeBottlesBlock } from '../../blocks/ThreeBottles/config'
+import { IngredientsBlock } from '../../blocks/IngredientsBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
@@ -130,6 +131,7 @@ export const Posts: CollectionConfig<'posts'> = {
                         FAQBlock,
                         CustomCTABlock,
                         TopOurChoose,
+                        IngredientsBlock,
                       ],
                     }),
                     FixedToolbarFeature(),

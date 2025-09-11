@@ -204,6 +204,7 @@ export interface Page {
     | RatingTableBlock
     | TableBlock
     | TopOurChoose
+    | IngredientsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -1090,10 +1091,65 @@ export interface TopOurChoose {
     evidence: 'Gold Star Evidence' | 'Strong Evidence' | 'Good Evidence' | 'Limited Evidence';
     id?: string | null;
   }[];
+  buttons?:
+    | {
+        label: string;
+        style: 'primary' | 'secondary' | 'success' | 'warning' | 'outline';
+        /**
+         * Choose where this button should link to
+         */
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
   backgroundColor?: ('none' | 'gray' | 'blue' | 'green' | 'orange') | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'topOurChoose';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IngredientsBlock".
+ */
+export interface IngredientsBlock {
+  /**
+   * Optional title for the ingredients section
+   */
+  title?: string | null;
+  ingredients: {
+    name: string;
+    /**
+     * Circular image showing the ingredient
+     */
+    image: number | Media;
+    /**
+     * Brief description of the ingredient and its benefits
+     */
+    description: string;
+    id?: string | null;
+  }[];
+  /**
+   * Choose how to display the ingredient cards
+   */
+  layout?: ('stacked' | 'grid-2' | 'grid-3') | null;
+  backgroundColor?: ('none' | 'gray' | 'blue' | 'green') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ingredientsBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1393,6 +1449,7 @@ export interface PagesSelect<T extends boolean = true> {
         ratingTable?: T | RatingTableBlockSelect<T>;
         tableBlock?: T | TableBlockSelect<T>;
         topOurChoose?: T | TopOurChooseSelect<T>;
+        ingredientsBlock?: T | IngredientsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1649,6 +1706,41 @@ export interface TopOurChooseSelect<T extends boolean = true> {
         evidence?: T;
         id?: T;
       };
+  buttons?:
+    | T
+    | {
+        label?: T;
+        style?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IngredientsBlock_select".
+ */
+export interface IngredientsBlockSelect<T extends boolean = true> {
+  title?: T;
+  ingredients?:
+    | T
+    | {
+        name?: T;
+        image?: T;
+        description?: T;
+        id?: T;
+      };
+  layout?: T;
   backgroundColor?: T;
   id?: T;
   blockName?: T;

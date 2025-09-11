@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { link } from '@/fields/link'
 
 export const TopOurChoose: Block = {
   slug: 'topOurChoose',
@@ -109,6 +110,70 @@ export const TopOurChoose: Block = {
           category: 'Projected Efficacy',
           rating: 4,
           evidence: 'Strong Evidence',
+        },
+      ],
+    },
+    {
+      name: 'buttons',
+      type: 'array',
+      label: 'Action Buttons',
+      minRows: 1,
+      maxRows: 3,
+      fields: [
+        {
+          name: 'label',
+          type: 'text',
+          label: 'Button Text',
+          required: true,
+          admin: {
+            placeholder: 'e.g., Shop Now',
+          },
+        },
+        {
+          name: 'style',
+          type: 'select',
+          label: 'Button Style',
+          required: true,
+          options: [
+            { label: 'Primary (Orange)', value: 'primary' },
+            { label: 'Secondary (Blue)', value: 'secondary' },
+            { label: 'Success (Green)', value: 'success' },
+            { label: 'Warning (Yellow)', value: 'warning' },
+            { label: 'Outline', value: 'outline' },
+          ],
+          defaultValue: 'primary',
+        },
+        link({
+          appearances: false,
+          overrides: {
+            name: 'link',
+            label: 'Button Link',
+            admin: {
+              description: 'Choose where this button should link to',
+            },
+          },
+        }),
+      ],
+      defaultValue: [
+        {
+          label: 'Shop Now',
+          style: 'primary',
+          link: {
+            type: 'custom',
+            url: '#',
+            label: 'Shop Now',
+            newTab: false,
+          },
+        },
+        {
+          label: 'Read Review',
+          style: 'secondary',
+          link: {
+            type: 'custom',
+            url: '#',
+            label: 'Read Review',
+            newTab: false,
+          },
         },
       ],
     },

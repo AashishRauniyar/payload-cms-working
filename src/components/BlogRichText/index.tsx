@@ -23,6 +23,7 @@ import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
 import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
+import { IngredientsBlock } from '@/blocks/IngredientsBlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -33,6 +34,7 @@ import type {
   TableBlock as TableBlockProps,
   RatingTableBlock as RatingTableBlockProps,
   ThreeBottlesBlock as ThreeBottlesBlockProps,
+  IngredientsBlock as IngredientsBlockProps,
 } from '@/payload-types'
 
 type NodeTypes =
@@ -47,6 +49,7 @@ type NodeTypes =
       | TableBlockProps
       | RatingTableBlockProps
       | ThreeBottlesBlockProps
+      | IngredientsBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -144,6 +147,17 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
     threeBottlesBlock: ({ node }: { node: SerializedBlockNode }) => (
       <div className="my-8">
         <ThreeBottles disableInnerContainer={true} {...node.fields} />
+      </div>
+    ),
+    ingredientsBlock: ({ node }: { node: SerializedBlockNode<IngredientsBlockProps> }) => (
+      <div className="my-8">
+        <IngredientsBlock
+          disableInnerContainer={true}
+          title={node.fields.title || undefined}
+          ingredients={node.fields.ingredients || []}
+          layout={node.fields.layout || 'stacked'}
+          backgroundColor={node.fields.backgroundColor || 'none'}
+        />
       </div>
     ),
   },

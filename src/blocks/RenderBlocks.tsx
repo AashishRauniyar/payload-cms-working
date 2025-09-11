@@ -16,6 +16,7 @@ import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
 import { TableBlock } from '@/blocks/TableBlock/Component'
 import { TopOurChoose } from '@/blocks/TopOurChoose/Component'
+import { IngredientsBlock } from '@/blocks/IngredientsBlock/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -29,6 +30,7 @@ const blockComponents = {
   prosConsBlock: ProsConsBlock,
   reviewsBlock: ReviewsBlock,
   topOurChoose: TopOurChoose,
+  ingredientsBlock: IngredientsBlock,
   threeBottlesBlock: ThreeBottles,
   ratingTable: RatingTable,
   tableBlock: TableBlock,

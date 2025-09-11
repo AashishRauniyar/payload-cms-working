@@ -14,6 +14,7 @@ import { ReviewsBlock } from '../../blocks/ReviewsBlock/config'
 import { TableBlockConfig } from '../../blocks/TableBlock/config'
 import { ThreeBottlesBlock } from '../../blocks/ThreeBottles/config'
 import { TopOurChoose } from '../../blocks/TopOurChoose/config'
+import { IngredientsBlock } from '../../blocks/IngredientsBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -95,6 +96,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 RatingTableBlock,
                 TableBlockConfig,
                 TopOurChoose,
+                IngredientsBlock,
               ],
               required: true,
               admin: {

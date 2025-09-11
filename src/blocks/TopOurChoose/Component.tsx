@@ -2,6 +2,8 @@
 
 import React from 'react'
 import { Media } from '../../components/Media'
+import { CMSLink } from '../../components/Link'
+import type { TopOurChoose as TopOurChooseType } from '@/payload-types'
 
 // Robust image component with timeout and retry handling
 const RobustMedia: React.FC<{ resource: any; className: string }> = ({ resource, className }) => {
@@ -62,19 +64,7 @@ const RobustMedia: React.FC<{ resource: any; className: string }> = ({ resource,
   )
 }
 
-interface RatingItem {
-  category: string
-  rating: number
-  evidence: string
-}
-
-interface TopOurChooseBlockProps {
-  title?: string
-  productName: string
-  productImage: any
-  overallRating: number
-  ratings: RatingItem[]
-  backgroundColor: 'none' | 'gray' | 'blue' | 'green' | 'orange'
+interface TopOurChooseBlockProps extends Omit<TopOurChooseType, 'blockType' | 'id' | 'blockName'> {
   disableInnerContainer?: boolean
   className?: string
 }
@@ -152,16 +142,37 @@ const EvidenceIndicator: React.FC<{ evidence: string }> = ({ evidence }) => {
   )
 }
 
+const getButtonStyles = (style: string) => {
+  switch (style) {
+    case 'primary':
+      return 'bg-orange-500 text-white hover:bg-orange-600'
+    case 'secondary':
+      return 'bg-blue-500 text-white hover:bg-blue-600'
+    case 'success':
+      return 'bg-green-500 text-white hover:bg-green-600'
+    case 'warning':
+      return 'bg-yellow-500 text-white hover:bg-yellow-600'
+    case 'outline':
+      return 'bg-transparent text-gray-700 border-2 border-gray-300 hover:bg-gray-50'
+    default:
+      return 'bg-orange-500 text-white hover:bg-orange-600'
+  }
+}
+
 export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   title,
   productName,
   productImage,
   overallRating,
   ratings,
+  buttons = [],
   backgroundColor,
   disableInnerContainer,
   className,
 }) => {
+  // Debug logging
+  console.log('TopOurChoose - buttons:', buttons)
+  console.log('TopOurChoose - buttons length:', buttons?.length)
   const backgroundClasses = {
     none: '',
     gray: 'bg-gray-50',
@@ -169,6 +180,8 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
     green: 'bg-green-50',
     orange: 'bg-orange-50',
   }
+
+  const bgClass = backgroundColor ? backgroundClasses[backgroundColor] || '' : ''
 
   const content = (
     <div className="max-w-5xl mx-auto">
@@ -194,13 +207,31 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex mt-8 space-x-4">
-              <button className="bg-orange-500 text-white px-8 py-4 text-base rounded-lg font-semibold hover:bg-orange-600 transition-colors shadow-md">
-                Shop Now
-              </button>
-              <button className="bg-blue-500 text-white px-8 py-4 text-base rounded-lg font-semibold hover:bg-blue-600 transition-colors shadow-md">
-                Read Review
-              </button>
+            <div className="flex mt-8 space-x-4 flex-wrap gap-y-3">
+              {buttons && buttons.length > 0 ? (
+                buttons.map((button, index) => (
+                  <CMSLink
+                    key={index}
+                    type={button.link.type}
+                    reference={button.link.reference}
+                    url={button.link.url}
+                    newTab={button.link.newTab}
+                    className={`px-8 py-4 text-base rounded-lg font-semibold transition-colors shadow-md ${getButtonStyles(button.style)}`}
+                  >
+                    {button.label}
+                  </CMSLink>
+                ))
+              ) : (
+                // Fallback default buttons when no buttons are configured
+                <>
+                  <button className="bg-orange-500 text-white px-8 py-4 text-base rounded-lg font-semibold hover:bg-orange-600 transition-colors shadow-md">
+                    Shop Now
+                  </button>
+                  <button className="bg-blue-500 text-white px-8 py-4 text-base rounded-lg font-semibold hover:bg-blue-600 transition-colors shadow-md">
+                    Read Review
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
@@ -256,15 +287,11 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   )
 
   if (disableInnerContainer) {
-    return (
-      <section className={`py-16 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-        {content}
-      </section>
-    )
+    return <section className={`py-16 px-4 ${bgClass} ${className || ''}`}>{content}</section>
   }
 
   return (
-    <section className={`py-16 px-4 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
+    <section className={`py-16 px-4 ${bgClass} ${className || ''}`}>
       <div className="max-w-7xl mx-auto">{content}</div>
     </section>
   )
