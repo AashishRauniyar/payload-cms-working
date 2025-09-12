@@ -15,7 +15,7 @@ async function getAuthors() {
 export default async function AuthorsPage() {
   const authors = await getAuthors()
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Authors</h1>

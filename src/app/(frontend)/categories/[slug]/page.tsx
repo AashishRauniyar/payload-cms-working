@@ -67,7 +67,7 @@ export default async function CategoryPage({ params }: Props) {
   const posts = await getPostsByCategory(Number(category.id))
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">

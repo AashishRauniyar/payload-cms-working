@@ -15,7 +15,7 @@ export default async function Page() {
   const posts = await payload.find({
     collection: 'posts',
     depth: 2,
-    limit: 20,
+    limit: 100, // Increased limit for better browsing
     overrideAccess: false,
     where: {
       _status: {
@@ -26,7 +26,7 @@ export default async function Page() {
   })
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
       <PageClient />
       <BlogPageClient posts={posts.docs} />
     </div>
@@ -35,8 +35,9 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Health Blog - HealthScopeDaily`,
-    description: 'Latest health and wellness blog posts, expert insights, and product reviews.',
+    title: `Health Articles - HealthScopeDaily`,
+    description:
+      'Browse our comprehensive collection of health articles, expert insights, research-backed guides, and wellness tips from healthcare professionals.',
     alternates: { canonical: '/posts' },
     robots: { index: true, follow: true },
   }
