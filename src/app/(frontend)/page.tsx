@@ -1,4 +1,3 @@
-
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -7,9 +6,7 @@ import type { Post, Media } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
 
-// Props interface removed - page component doesn't need props
-
-// Counter component for animating numbers
+// Enhanced Counter component with better animations
 const AnimatedCounter = ({
   end,
   duration = 2000,
@@ -54,7 +51,7 @@ const AnimatedCounter = ({
       const now = Date.now()
       const progress = Math.min((now - startTime) / duration, 1)
 
-      // Easing function for smooth animation
+      // Enhanced easing function for smoother animation
       const easeOutCubic = 1 - Math.pow(1 - progress, 3)
       const currentCount = Math.floor(easeOutCubic * endValue)
 
@@ -69,7 +66,7 @@ const AnimatedCounter = ({
   }, [isVisible, end, duration])
 
   return (
-    <span id={`counter-${end}`}>
+    <span id={`counter-${end}`} className="inline-block">
       {count.toLocaleString()}
       {suffix}
     </span>
@@ -299,6 +296,9 @@ const featuredTopics = [
 ]
 
 export default function LandingPage() {
+  // State for advertisement visibility
+  const [isAdVisible, setIsAdVisible] = useState(true)
+
   // Static data for best guides - could be fetched from API in the future
   const bestGuides = [
     {
@@ -324,20 +324,49 @@ export default function LandingPage() {
   return (
     <div className="bg-white min-h-screen font-sans w-full overflow-x-hidden">
       {/* Advertisement Banner */}
-      <div className="bg-gray-100 text-right px-4 py-1">
-        <span className="text-xs text-gray-500">Advertisement</span>
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 text-right px-6 py-2 border-b border-gray-200 relative">
+        <span className="text-xs text-gray-500 font-medium">Advertisement</span>
+        <button
+          onClick={() => setIsAdVisible(!isAdVisible)}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          aria-label={isAdVisible ? 'Close advertisement' : 'Show advertisement'}
+        >
+          {isAdVisible ? (
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          ) : (
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          )}
+        </button>
       </div>
 
-      {/* HealthScopeDaily Promotional Banner */}
-      <div className="bg-gradient-to-r from-orange-100 via-yellow-50 to-blue-50 py-4">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between">
-            {/* Removed logo and HealthScopeDaily text */}
-            <div className="text-center w-full flex flex-col items-center justify-center">
-              <h2 className="text-3xl font-bold text-red-600">GET UP TO 50% OFF</h2>
-              <p className="text-lg text-gray-700">HEALTH-BOOSTING BUNDLES*</p>
+      {/* Promotional Banner */}
+      <div
+        className={`bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 py-6 relative overflow-hidden transition-all duration-500 ease-in-out ${
+          isAdVisible ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 py-0'
+        }`}
+      >
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="max-w-7xl mx-auto px-6 relative">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div className="text-center lg:text-left">
+              <h2 className="text-4xl lg:text-5xl font-black text-white mb-2 tracking-tight">
+                GET UP TO 50% OFF
+              </h2>
+              <p className="text-xl text-white/90 font-semibold">HEALTH-BOOSTING BUNDLES*</p>
             </div>
-            <button className="bg-gray-800 text-yellow-300 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-700 transition shadow-lg ml-8">
+            <button className="bg-white text-gray-900 px-10 py-4 rounded-2xl font-black text-lg hover:bg-gray-100 transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:scale-105 border-2 border-white/20">
               CLAIM YOUR DISCOUNT TODAY
             </button>
           </div>
@@ -345,211 +374,201 @@ export default function LandingPage() {
       </div>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 via-white to-green-50 py-20 relative overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-64 h-64 bg-blue-400 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-green-400 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-300 rounded-full blur-3xl animate-pulse delay-500"></div>
+      <section className="relative bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-24 lg:pt-32 overflow-hidden">
+        {/* Enhanced Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-green-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-orange-300/15 rounded-full blur-2xl animate-pulse delay-700"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left Column - Main Content */}
-            <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="text-center space-y-12">
+            {/* Trust Badge */}
+            <div className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm text-blue-800 px-6 py-3 rounded-full text-sm font-bold shadow-lg border border-blue-200/50">
+              <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                     clipRule="evenodd"
                   />
                 </svg>
-                #1 Trusted Supplement Review Platform
               </div>
+              #1 Trusted Supplement Review Platform
+            </div>
 
-              <h1 className="text-6xl font-bold text-gray-900 leading-tight">
+            {/* Main Headline */}
+            <div className="space-y-6">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-[1.1] tracking-tight">
                 Expert-Tested
                 <br />
-                <span className="text-blue-600">Supplement Reviews</span>
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Supplement Reviews
+                </span>
                 <br />
-                <span className="text-green-600">You Can Trust</span>
+                <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                  You Can Trust
+                </span>
               </h1>
 
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-4xl mx-auto font-medium">
                 Discover the most effective supplements with our science-backed reviews, clinical
                 research analysis, and real user testimonials. Make informed decisions for your
                 health journey.
               </p>
+            </div>
 
-              {/* Key Benefits */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center gap-3 bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <span className="font-semibold text-gray-800">Lab Tested</span>
-                </div>
-                <div className="flex items-center gap-3 bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <span className="font-semibold text-gray-800">Doctor Reviewed</span>
-                </div>
-                <div className="flex items-center gap-3 bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                    <svg
-                      className="w-4 h-4 text-purple-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
-                    </svg>
-                  </div>
-                  <span className="font-semibold text-gray-800">User Verified</span>
-                </div>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/posts"
-                  className="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-all duration-300 text-center flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
-                >
-                  Browse Reviews
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            {/* Trust Indicators */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              <div className="group bg-gradient-to-br from-blue-500 to-blue-600 text-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
-                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                       clipRule="evenodd"
                     />
                   </svg>
-                </Link>
-                <button className="bg-white border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-50 transition-all duration-300 flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                </div>
+                <h3 className="font-bold text-lg mb-2">FDA Guidelines</h3>
+                <p className="text-sm opacity-90">Compliant Reviews</p>
+              </div>
+
+              <div className="group bg-gradient-to-br from-green-500 to-green-600 text-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
                   </svg>
-                  Watch How It Works
-                </button>
+                </div>
+                <h3 className="font-bold text-lg mb-2">3rd Party Testing</h3>
+                <p className="text-sm opacity-90">Verified Results</p>
+              </div>
+
+              <div className="group bg-gradient-to-br from-purple-500 to-purple-600 text-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Real Users</h3>
+                <p className="text-sm opacity-90">Authentic Reviews</p>
+              </div>
+
+              <div className="group bg-gradient-to-br from-orange-500 to-orange-600 text-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Money Back</h3>
+                <p className="text-sm opacity-90">Guarantee Info</p>
               </div>
             </div>
 
-            {/* Right Column - Interactive Stats & Features */}
-            <div className="text-center space-y-8">
-              {/* Main Stats */}
-              <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-                <div className="mb-6">
-                  <h2 className="text-4xl font-bold text-gray-900 mb-2">
-                    <AnimatedCounter end={5000} suffix="+" />
-                  </h2>
-                  <p className="text-lg text-gray-600">Supplements Tested & Reviewed</p>
+            {/* Key Benefits */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                 </div>
-
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">
-                      <AnimatedCounter end={98} suffix="%" />
-                    </div>
-                    <div className="text-sm text-gray-600">Accuracy Rate</div>
-                  </div>
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">
-                      <AnimatedCounter end={150} suffix="+" />
-                    </div>
-                    <div className="text-sm text-gray-600">Expert Reviewers</div>
-                  </div>
-                </div>
+                <span className="font-bold text-gray-800 text-lg">Lab Tested</span>
               </div>
-
-              {/* Trust Indicators */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <h3 className="font-bold text-sm">FDA Guidelines</h3>
-                  <p className="text-xs opacity-90">Compliant Reviews</p>
+              <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                  </svg>
                 </div>
-
-                <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-bold text-sm">3rd Party Testing</h3>
-                  <p className="text-xs opacity-90">Verified Results</p>
-                </div>
-
-                <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-bold text-sm">Real Users</h3>
-                  <p className="text-xs opacity-90">Authentic Reviews</p>
-                </div>
-
-                <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-bold text-sm">Money Back</h3>
-                  <p className="text-xs opacity-90">Guarantee Info</p>
-                </div>
+                <span className="font-bold text-gray-800 text-lg">Doctor Reviewed</span>
               </div>
+              <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                  </svg>
+                </div>
+                <span className="font-bold text-gray-800 text-lg">User Verified</span>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Link
+                href="/posts"
+                className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-5 rounded-2xl font-black text-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 text-center flex items-center justify-center gap-3 shadow-2xl hover:shadow-3xl transform hover:scale-105 border-2 border-blue-500/20"
+              >
+                Browse Reviews
+                <svg
+                  className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </Link>
+              <button className="group bg-white/90 backdrop-blur-sm border-2 border-blue-600 text-blue-600 px-10 py-5 rounded-2xl font-black text-xl hover:bg-blue-50 transition-all duration-300 flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transform hover:scale-105">
+                <svg
+                  className="w-6 h-6 group-hover:scale-110 transition-transform duration-300"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                </svg>
+                Watch How It Works
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Trust Bar */}
-        <div className="bg-white bg-opacity-80 backdrop-blur-sm mt-16 py-6">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center justify-center gap-8 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Medical Board Certified</span>
+        {/* Enhanced Trust Bar */}
+        <div className="bg-white/90 backdrop-blur-md mt-20 py-8 border border-gray-200">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-gray-600">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <span className="font-semibold">Medical Board Certified</span>
               </div>
-              <div className="w-1 h-4 bg-gray-300"></div>
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>SSL Secured</span>
+              <div className="w-1 h-6 bg-gray-300 rounded-full"></div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <span className="font-semibold">SSL Secured</span>
               </div>
-              <div className="w-1 h-4 bg-gray-300"></div>
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>5M+ Happy Users</span>
+              <div className="w-1 h-6 bg-gray-300 rounded-full"></div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                  </svg>
+                </div>
+                <span className="font-semibold">5M+ Happy Users</span>
               </div>
             </div>
           </div>
@@ -557,39 +576,66 @@ export default function LandingPage() {
       </section>
 
       {/* Product Categories Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+      <section className="py-24 bg-gradient-to-br from-white via-gray-50 to-blue-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 right-20 w-64 h-64 bg-blue-300 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-green-300 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg border border-blue-200/50">
+              <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                </svg>
+              </div>
               Expert Reviewed Categories
             </div>
-            <h2 className="text-5xl font-bold text-gray-900 mb-6">
-              Find The Perfect <span className="text-blue-600">Supplement</span>
+            <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight">
+              Find The Perfect{' '}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Supplement
+              </span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-medium">
               Browse our comprehensive reviews across the most popular supplement categories. Each
               product is rigorously tested and reviewed by our medical experts.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
             {productCategories.map((category, index) => (
-              <Link key={index} href="/posts" className="block">
-                <div className="text-center group cursor-pointer h-full">
-                  <div className="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl border border-gray-200 group-hover:border-blue-300 group-hover:shadow-2xl transition-all duration-300 transform group-hover:scale-105 h-full flex flex-col items-center justify-center">
-                    <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-100 transition-all duration-300">
-                      <div className="text-blue-600 group-hover:scale-110 transition-all duration-300">
-                        {category.icon}
+              <Link key={index} href="/posts" className="block group">
+                <div className="relative h-full">
+                  <div className="bg-white/80 backdrop-blur-sm p-10 rounded-3xl border border-gray-200/50 group-hover:border-blue-300/50 group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-105 group-hover:-translate-y-2 h-full flex flex-col items-center justify-center text-center relative overflow-hidden">
+                    {/* Background gradient on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/50 group-hover:to-indigo-50/50 transition-all duration-500"></div>
+
+                    <div className="relative z-10">
+                      <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:from-blue-100 group-hover:to-indigo-200 transition-all duration-500 shadow-lg group-hover:shadow-xl">
+                        <div className="text-blue-600 group-hover:text-indigo-600 group-hover:scale-110 transition-all duration-500">
+                          {category.icon}
+                        </div>
                       </div>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300 mb-2">
-                      {category.name}
-                    </h3>
-                    <div className="text-sm text-gray-500 group-hover:text-blue-500 transition-colors duration-300">
-                      View Reviews →
+                      <h3 className="text-xl font-black text-gray-800 group-hover:text-blue-600 transition-colors duration-500 mb-3">
+                        {category.name}
+                      </h3>
+                      <div className="text-sm text-gray-500 group-hover:text-blue-500 transition-colors duration-500 font-semibold flex items-center justify-center gap-2">
+                        View Reviews
+                        <svg
+                          className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -597,32 +643,38 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Category Stats */}
-          <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8 text-center">
-            <div className="grid md:grid-cols-4 gap-6">
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-blue-600">
-                  <AnimatedCounter end={2500} suffix="+" />
+          {/* Enhanced Category Stats */}
+          <div className="bg-gradient-to-br from-white via-blue-50 to-indigo-100 rounded-3xl p-12 text-center shadow-2xl border border-blue-200/30 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+            <div className="relative z-10">
+              <h3 className="text-3xl font-black text-gray-900 mb-8">Our Review Database</h3>
+              <div className="grid md:grid-cols-4 gap-8">
+                <div className="space-y-3 group">
+                  <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    <AnimatedCounter end={2500} suffix="+" />
+                  </div>
+                  <div className="text-lg text-gray-600 font-semibold">Weight Loss Products</div>
                 </div>
-                <div className="text-sm text-gray-600">Weight Loss Products</div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-green-600">
-                  <AnimatedCounter end={1200} suffix="+" />
+                <div className="space-y-3 group">
+                  <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    <AnimatedCounter end={1200} suffix="+" />
+                  </div>
+                  <div className="text-lg text-gray-600 font-semibold">
+                    Men's Health Supplements
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600">Men's Health Supplements</div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-purple-600">
-                  <AnimatedCounter end={800} suffix="+" />
+                <div className="space-y-3 group">
+                  <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    <AnimatedCounter end={800} suffix="+" />
+                  </div>
+                  <div className="text-lg text-gray-600 font-semibold">Brain Health Products</div>
                 </div>
-                <div className="text-sm text-gray-600">Brain Health Products</div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-orange-600">
-                  <AnimatedCounter end={1500} suffix="+" />
+                <div className="space-y-3 group">
+                  <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-orange-600 to-orange-700 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    <AnimatedCounter end={1500} suffix="+" />
+                  </div>
+                  <div className="text-lg text-gray-600 font-semibold">Joint Support Options</div>
                 </div>
-                <div className="text-sm text-gray-600">Joint Support Options</div>
               </div>
             </div>
           </div>
@@ -630,56 +682,95 @@ export default function LandingPage() {
       </section>
 
       {/* Brands Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+      <section className="py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-blue-300 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-green-300 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-20 items-start">
             {/* Left Column - Content */}
-            <div className="space-y-6">
-              <h2 className="text-5xl font-bold text-blue-600 mb-8">BRANDS</h2>
+            <div className="space-y-8">
+              <div>
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg border border-blue-200/50">
+                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                    </svg>
+                  </div>
+                  Trusted Brand Reviews
+                </div>
+                <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight">
+                  <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    BRANDS
+                  </span>
+                </h2>
+              </div>
 
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Looking for a particular brand? This Brands A-Z page is a near comprehensive listing
-                of brands reviewed, including skin care, weight management, vitamins and
-                supplements.
-              </p>
+              <div className="space-y-6">
+                <p className="text-xl text-gray-700 leading-relaxed font-medium">
+                  Looking for a particular brand? This Brands A-Z page is a near comprehensive
+                  listing of brands reviewed, including skin care, weight management, vitamins and
+                  supplements.
+                </p>
 
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Our team of experts objectively review a wide range of products and services across
-                the best health and wellness brands. Whether it&apos;s a well-known brand or a new
-                company, if it&apos;s out there, we&apos;re reviewing it for you.
-              </p>
+                <p className="text-xl text-gray-700 leading-relaxed font-medium">
+                  Our team of experts objectively review a wide range of products and services
+                  across the best health and wellness brands. Whether it&apos;s a well-known brand
+                  or a new company, if it&apos;s out there, we&apos;re reviewing it for you.
+                </p>
 
-              <p className="text-lg text-gray-700 leading-relaxed">
-                See how some of your favorite brands rank in our rigorous, unbiased reviews! Click
-                any of the brands to go straight to the reviews. If you have a specific question
-                about any brand, leave us a comment or send us an email!
-              </p>
+                <p className="text-xl text-gray-700 leading-relaxed font-medium">
+                  See how some of your favorite brands rank in our rigorous, unbiased reviews! Click
+                  any of the brands to go straight to the reviews. If you have a specific question
+                  about any brand, leave us a comment or send us an email!
+                </p>
+              </div>
 
-              <div className="pt-6">
-                <a href="#" className="text-red-600 font-bold text-lg hover:underline">
+              <div className="pt-8">
+                <a
+                  href="#"
+                  className="group inline-flex items-center gap-3 bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-4 rounded-2xl font-black text-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
+                >
                   VIEW ALL BRANDS
+                  <svg
+                    className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
                 </a>
               </div>
             </div>
 
             {/* Right Column - Brand Logos */}
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-2 gap-6">
               {brands.map((brand, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group border border-gray-100 min-h-[120px] flex flex-col justify-center"
+                  className="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-200/50 min-h-[140px] flex flex-col justify-center relative overflow-hidden transform hover:scale-105 hover:-translate-y-2"
                 >
-                  <div className="group-hover:scale-105 transition-transform duration-300">
+                  {/* Background gradient on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/50 group-hover:to-indigo-50/50 transition-all duration-500"></div>
+
+                  <div className="relative z-10 group-hover:scale-105 transition-transform duration-500">
                     {/* Brand Logo/Name */}
                     <h3
-                      className={`font-bold text-xl mb-2 ${brand.color} group-hover:opacity-80 transition-opacity`}
+                      className={`font-black text-xl mb-3 ${brand.color} group-hover:opacity-80 transition-opacity duration-300`}
                     >
                       {brand.logo}
                     </h3>
 
                     {/* Subtitle if exists */}
                     {brand.subtitle && (
-                      <p className="text-xs text-gray-500 font-medium tracking-wider">
+                      <p className="text-xs text-gray-500 font-semibold tracking-wider mb-3">
                         {brand.subtitle}
                       </p>
                     )}
@@ -687,16 +778,16 @@ export default function LandingPage() {
                     {/* Special styling for specific brands */}
                     {brand.name === 'Beverly Hills MD' && (
                       <div className="flex items-center justify-center gap-1 mt-2">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-blue-600 rounded-full group-hover:scale-125 transition-transform duration-300"></div>
+                        <div className="w-2 h-2 bg-blue-600 rounded-full group-hover:scale-125 transition-transform duration-300 delay-75"></div>
+                        <div className="w-2 h-2 bg-blue-600 rounded-full group-hover:scale-125 transition-transform duration-300 delay-150"></div>
+                        <div className="w-2 h-2 bg-blue-600 rounded-full group-hover:scale-125 transition-transform duration-300 delay-200"></div>
                       </div>
                     )}
 
                     {brand.name === 'Gundry MD' && (
                       <div className="flex items-center justify-center mt-2">
-                        <div className="w-6 h-6 text-green-500">
+                        <div className="w-6 h-6 text-green-500 group-hover:scale-110 transition-transform duration-300">
                           <svg viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" />
                           </svg>
@@ -706,7 +797,7 @@ export default function LandingPage() {
 
                     {brand.name === 'ActivatedYou' && (
                       <div className="flex items-center justify-center mt-2">
-                        <div className="w-5 h-5 text-orange-500">
+                        <div className="w-5 h-5 text-orange-500 group-hover:scale-110 transition-transform duration-300">
                           <svg viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z" />
                           </svg>
@@ -722,18 +813,28 @@ export default function LandingPage() {
       </section>
 
       {/* Best Guide Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-blue-600 mb-6">BEST GUIDE</h2>
-            <div className="flex justify-end">
-              <a
-                href="#"
-                className="text-red-600 font-bold text-lg hover:underline flex items-center gap-2"
-              >
-                VIEW ALL →
-              </a>
+      <section className="py-24 bg-gradient-to-br from-white via-gray-50 to-blue-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 right-20 w-64 h-64 bg-blue-300 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-green-300 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg border border-orange-200/50">
+              <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
+              Editor's Choice
             </div>
+            <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                BEST GUIDE
+              </span>
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -741,24 +842,29 @@ export default function LandingPage() {
               <Link
                 key={index}
                 href={guide.slug !== '#' ? `/posts/${guide.slug}` : '#'}
-                className="block"
+                className="block group"
               >
-                <article className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 group cursor-pointer border border-gray-100">
-                  <div className="overflow-hidden">
+                <article className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer border border-gray-200/50 transform hover:scale-105 hover:-translate-y-2 relative">
+                  <div className="overflow-hidden relative">
                     <img
                       src={guide.image}
                       alt={guide.title}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    {/* Ranking badge */}
+                    <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-black text-lg shadow-lg">
+                      #{index + 1}
+                    </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="font-bold text-lg mb-3 leading-tight text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                  <div className="p-8">
+                    <h3 className="font-black text-xl mb-4 leading-tight text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
                       {guide.title}
                     </h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <div className="flex items-center gap-3 text-sm text-gray-500 font-semibold">
                       <span>Read more</span>
                       <svg
-                        className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
+                        className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -775,30 +881,71 @@ export default function LandingPage() {
             ))}
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Looking for more?</h3>
-            <p className="text-gray-600 mb-6">
-              Browse our list of best articles on vitamins and supplements, skincare products and
-              more. Find the original content, including expert recommended products, guides, and
-              evidence-based research.
-            </p>
-            <Link
-              href="/posts"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+          {/* VIEW ALL Button */}
+          <div className="text-center mb-16">
+            <a
+              href="#"
+              className="group inline-flex items-center gap-3 bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-4 rounded-2xl font-black text-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
             >
-              See Our Best Guide
-            </Link>
+              VIEW ALL
+              <svg
+                className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <div className="bg-gradient-to-br from-white via-gray-50 to-blue-50 rounded-3xl p-12 text-center shadow-2xl border border-gray-200/30 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+            <div className="relative z-10">
+              <h3 className="text-4xl font-black text-gray-900 mb-6">Looking for more?</h3>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed font-medium max-w-3xl mx-auto">
+                Browse our list of best articles on vitamins and supplements, skincare products and
+                more. Find the original content, including expert recommended products, guides, and
+                evidence-based research.
+              </p>
+              <Link
+                href="/posts"
+                className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-5 rounded-2xl font-black text-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:scale-105"
+              >
+                See Our Best Guide
+                <svg
+                  className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 bg-gray-50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div className="grid lg:grid-cols-2 min-h-[500px]">
+      <section className="py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-blue-300 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-green-300 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-gray-200/50">
+            <div className="grid lg:grid-cols-2 min-h-[600px]">
               {/* Left Column - Hero Image */}
-              <div className="relative">
+              <div className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 to-blue-600/20"></div>
                 <img
                   src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80"
@@ -807,35 +954,53 @@ export default function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
 
-                {/* Floating elements for visual interest */}
-                <div className="absolute top-8 left-8 w-16 h-16 bg-white/20 rounded-full backdrop-blur-sm flex items-center justify-center">
-                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                {/* Enhanced floating elements */}
+                <div className="absolute top-8 left-8 w-20 h-20 bg-white/20 rounded-full backdrop-blur-sm flex items-center justify-center shadow-xl">
+                  <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                   </svg>
                 </div>
 
-                <div className="absolute bottom-8 right-8 w-12 h-12 bg-blue-600/30 rounded-full backdrop-blur-sm animate-pulse"></div>
-                <div className="absolute top-1/2 right-12 w-8 h-8 bg-orange-400/40 rounded-full backdrop-blur-sm animate-bounce delay-1000"></div>
+                <div className="absolute bottom-8 right-8 w-16 h-16 bg-blue-600/30 rounded-full backdrop-blur-sm animate-pulse shadow-lg"></div>
+                <div className="absolute top-1/2 right-12 w-12 h-12 bg-orange-400/40 rounded-full backdrop-blur-sm animate-bounce delay-1000 shadow-lg"></div>
+                <div className="absolute top-1/4 left-1/2 w-8 h-8 bg-green-400/30 rounded-full backdrop-blur-sm animate-pulse delay-500 shadow-lg"></div>
               </div>
 
               {/* Right Column - Newsletter Form */}
-              <div className="p-12 flex flex-col justify-center bg-gradient-to-br from-gray-50 to-white">
+              <div className="p-12 lg:p-16 flex flex-col justify-center bg-gradient-to-br from-gray-50 to-white relative">
                 <div className="max-w-md mx-auto w-full">
-                  <h2 className="text-5xl font-bold text-blue-600 mb-8 leading-tight">
-                    SUBSCRIBE TO OUR NEWSLETTER
-                  </h2>
+                  <div className="text-center mb-8">
+                    <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg border border-blue-200/50">
+                      <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                          <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                        </svg>
+                      </div>
+                      Stay Updated
+                    </div>
+                    <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
+                      <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        SUBSCRIBE TO OUR
+                      </span>
+                      <br />
+                      <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                        NEWSLETTER
+                      </span>
+                    </h2>
+                  </div>
 
                   <form className="space-y-6">
                     <div className="relative group">
                       <input
                         type="email"
-                        placeholder="Email Address..."
-                        className="w-full px-6 py-4 text-lg text-gray-700 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 group-hover:border-gray-300"
+                        placeholder="Enter your email address..."
+                        className="w-full px-6 py-5 text-lg text-gray-700 bg-white border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 group-hover:border-gray-300 shadow-lg"
                       />
                       <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                         <svg
-                          className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"
+                          className="w-6 h-6 text-gray-400 group-focus-within:text-blue-500 transition-colors"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -847,32 +1012,34 @@ export default function LandingPage() {
 
                     <button
                       type="submit"
-                      className="w-full bg-blue-600 text-white py-4 px-8 rounded-xl font-bold text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-5 px-8 rounded-2xl font-black text-xl hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transform hover:scale-[1.02] transition-all duration-300 shadow-2xl hover:shadow-3xl"
                     >
-                      Submit
+                      Subscribe Now
                     </button>
                   </form>
 
-                  <div className="mt-8 space-y-4">
-                    <p className="text-gray-700 text-center leading-relaxed">
+                  <div className="mt-8 space-y-6">
+                    <p className="text-gray-700 text-center leading-relaxed text-lg font-medium">
                       Spam-free newsletters directly from our health experts and professionals.
                     </p>
 
-                    <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                      <svg
-                        className="w-4 h-4 text-blue-600"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>
+                    <div className="flex items-center justify-center gap-3 text-sm text-gray-600">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4 text-green-600"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <span className="font-semibold">
                         Your{' '}
-                        <a href="#" className="text-blue-600 hover:underline font-medium">
+                        <a href="#" className="text-blue-600 hover:underline font-bold">
                           privacy
                         </a>{' '}
                         is important to us
@@ -880,20 +1047,20 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  {/* Trust indicators */}
+                  {/* Enhanced trust indicators */}
                   <div className="mt-8 pt-6 border-t border-gray-200">
                     <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span>No Spam</span>
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 bg-green-500 rounded-full shadow-lg"></div>
+                        <span className="font-semibold">No Spam</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <span>Expert Content</span>
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 bg-blue-500 rounded-full shadow-lg"></div>
+                        <span className="font-semibold">Expert Content</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                        <span>Unsubscribe Anytime</span>
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 bg-purple-500 rounded-full shadow-lg"></div>
+                        <span className="font-semibold">Unsubscribe Anytime</span>
                       </div>
                     </div>
                   </div>
@@ -905,106 +1072,127 @@ export default function LandingPage() {
       </section>
 
       {/* Editor's Choice - Top Picks */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
+      <section className="py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 right-20 w-64 h-64 bg-orange-300 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-300 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg border border-orange-200/50">
+              <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
               Editor's Choice
             </div>
-            <h2 className="text-5xl font-bold text-gray-900 mb-6">
-              Top-Rated <span className="text-orange-600">Supplements</span> This Month
+            <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight">
+              Top-Rated{' '}
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                Supplements
+              </span>{' '}
+              This Month
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-medium">
               Our medical experts have tested and ranked these supplements based on efficacy,
               safety, and value. Updated monthly with the latest research.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {topPicks.map((pick, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100 relative overflow-hidden group"
+                className="group bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 border border-gray-200/50 relative overflow-hidden"
               >
+                {/* Background gradient on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-50/0 to-red-50/0 group-hover:from-orange-50/50 group-hover:to-red-50/50 transition-all duration-500"></div>
+
                 {/* Ranking Badge */}
-                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-lg">
+                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-orange-500 to-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center font-black text-xl shadow-2xl group-hover:scale-110 transition-transform duration-300">
                   #{index + 1}
                 </div>
 
                 {/* Product Image */}
-                <div className="relative mb-6">
-                  <div className="w-24 h-24 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-4 group-hover:from-blue-50 group-hover:to-blue-100 transition-all duration-300">
+                <div className="relative mb-8">
+                  <div className="w-32 h-32 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl p-6 group-hover:from-orange-50 group-hover:to-red-50 transition-all duration-500 shadow-lg group-hover:shadow-xl">
                     <img
                       src={pick.image}
                       alt={pick.name}
-                      className="w-full h-full object-contain rounded-lg"
+                      className="w-full h-full object-contain rounded-2xl"
                     />
                   </div>
                   {/* Trust Badge */}
                   {index === 0 && (
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                    <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm px-4 py-2 rounded-full font-black shadow-lg">
                       #1 CHOICE
                     </div>
                   )}
                 </div>
 
-                <div className="text-center space-y-3">
-                  <h3 className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                <div className="text-center space-y-4 relative z-10">
+                  <h3 className="font-black text-xl text-gray-900 group-hover:text-orange-600 transition-colors duration-300">
                     {pick.name}
                   </h3>
 
-                  <p className="text-gray-600 text-sm leading-relaxed">{pick.description}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed font-medium">
+                    {pick.description}
+                  </p>
 
                   {/* Rating */}
-                  <div className="flex items-center justify-center gap-2 py-2">
+                  <div className="flex items-center justify-center gap-3 py-3">
                     <div className="flex text-yellow-500">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                        <svg key={i} className="w-5 h-5 fill-current" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       ))}
                     </div>
-                    <span className="font-bold text-gray-800">{pick.rating}</span>
-                    <span className="text-gray-500 text-sm">(2.1k reviews)</span>
+                    <span className="font-black text-gray-800 text-lg">{pick.rating}</span>
+                    <span className="text-gray-500 text-sm font-semibold">(2.1k reviews)</span>
                   </div>
 
                   {/* Features */}
-                  <div className="space-y-2 text-xs text-gray-600">
-                    <div className="flex items-center gap-2 justify-center">
-                      <svg
-                        className="w-3 h-3 text-green-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>3rd Party Tested</span>
+                  <div className="space-y-3 text-sm text-gray-600">
+                    <div className="flex items-center gap-3 justify-center">
+                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4 text-green-600"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <span className="font-semibold">3rd Party Tested</span>
                     </div>
-                    <div className="flex items-center gap-2 justify-center">
-                      <svg
-                        className="w-3 h-3 text-green-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>Money Back Guarantee</span>
+                    <div className="flex items-center gap-3 justify-center">
+                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4 text-green-600"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <span className="font-semibold">Money Back Guarantee</span>
                     </div>
                   </div>
 
                   {/* CTA Button */}
-                  <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 px-4 rounded-lg font-bold text-sm hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-6 rounded-2xl font-black text-lg hover:from-orange-600 hover:to-red-600 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
                     View Full Review
                   </button>
                 </div>
@@ -1012,25 +1200,28 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Bottom CTA */}
-          <div className="text-center mt-16">
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Can't Find What You're Looking For?
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Our supplement database contains over 5,000 reviewed products. Use our smart search
-                to find the perfect match for your health goals.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input
-                  type="text"
-                  placeholder="Search supplements..."
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
-                  Search
-                </button>
+          {/* Enhanced Bottom CTA */}
+          <div className="text-center">
+            <div className="bg-gradient-to-br from-white via-gray-50 to-blue-50 p-12 rounded-3xl shadow-2xl border border-gray-200/30 max-w-4xl mx-auto relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
+              <div className="relative z-10">
+                <h3 className="text-3xl font-black text-gray-900 mb-6">
+                  Can't Find What You're Looking For?
+                </h3>
+                <p className="text-xl text-gray-600 mb-8 leading-relaxed font-medium">
+                  Our supplement database contains over 5,000 reviewed products. Use our smart
+                  search to find the perfect match for your health goals.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                  <input
+                    type="text"
+                    placeholder="Search supplements..."
+                    className="flex-1 px-6 py-4 border-2 border-gray-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 text-lg font-medium shadow-lg"
+                  />
+                  <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-black text-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105">
+                    Search
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1038,71 +1229,97 @@ export default function LandingPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-20 w-64 h-64 bg-blue-300 rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-20 w-96 h-96 bg-green-300 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-300 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
             {/* Left Column - Content */}
-            <div>
-              <h2 className="text-5xl font-bold text-blue-600 mb-6 leading-tight">
-                Feel nourished, live your best life.
-              </h2>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Trustworthy and Empathetic Health Information.
-              </p>
+            <div className="space-y-8">
+              <div>
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg border border-blue-200/50">
+                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                    </svg>
+                  </div>
+                  Trusted by Millions
+                </div>
+                <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight">
+                  <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    Feel nourished,
+                  </span>
+                  <br />
+                  <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    live your best life.
+                  </span>
+                </h2>
+                <p className="text-xl lg:text-2xl text-gray-700 leading-relaxed font-medium">
+                  Trustworthy and Empathetic Health Information.
+                </p>
+              </div>
             </div>
 
-            {/* Right Column - Stats with chevron design */}
+            {/* Right Column - Clean Horizontal Stats */}
             <div className="flex items-center justify-center">
-              <div className="flex items-center">
+              <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
                 {/* Stat 1 */}
-                <div className="bg-white rounded-2xl p-8 text-center shadow-xl border border-gray-100 min-w-[200px] group hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                  <div className="text-5xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
-                    <AnimatedCounter end={400} suffix=" K+" />
+                <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden min-w-[200px]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-indigo-50/0 group-hover:from-blue-50/50 group-hover:to-indigo-50/50 transition-all duration-300"></div>
+                  <div className="relative z-10">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                      </svg>
+                    </div>
+                    <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                      <AnimatedCounter end={400} suffix=" K+" />
+                    </div>
+                    <div className="text-sm lg:text-base text-gray-600 font-semibold">
+                      Monthly Readers
+                    </div>
                   </div>
-                  <div className="text-lg text-gray-600 font-medium">Monthly Readers</div>
-                </div>
-
-                {/* Chevron Arrow 1 */}
-                <div className="mx-4">
-                  <svg className="w-6 h-12 text-green-500" fill="currentColor" viewBox="0 0 12 24">
-                    <path d="M0 0 L8 12 L0 24 L4 24 L12 12 L4 0 Z" />
-                  </svg>
                 </div>
 
                 {/* Stat 2 */}
-                <div className="bg-white rounded-2xl p-8 text-center shadow-xl border border-gray-100 min-w-[200px] group hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                  <div className="text-5xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
-                    <AnimatedCounter end={100} suffix=" K+" />
+                <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden min-w-[200px]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-50/0 to-emerald-50/0 group-hover:from-green-50/50 group-hover:to-emerald-50/50 transition-all duration-300"></div>
+                  <div className="relative z-10">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                      </svg>
+                    </div>
+                    <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                      <AnimatedCounter end={100} suffix=" K+" />
+                    </div>
+                    <div className="text-sm lg:text-base text-gray-600 font-semibold">
+                      Medical Reviewers
+                    </div>
                   </div>
-                  <div className="text-lg text-gray-600 font-medium">Medical Reviewers</div>
-                </div>
-
-                {/* Chevron Arrow 2 */}
-                <div className="mx-4">
-                  <svg className="w-6 h-12 text-blue-500" fill="currentColor" viewBox="0 0 12 24">
-                    <path d="M0 0 L8 12 L0 24 L4 24 L12 12 L4 0 Z" />
-                  </svg>
                 </div>
 
                 {/* Stat 3 */}
-                <div className="bg-white rounded-2xl p-8 text-center shadow-xl border border-gray-100 min-w-[200px] group hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                  <div className="text-5xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
-                    <AnimatedCounter end={5} suffix=" K+" />
+                <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden min-w-[200px]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-50/0 to-indigo-50/0 group-hover:from-purple-50/50 group-hover:to-indigo-50/50 transition-all duration-300"></div>
+                  <div className="relative z-10">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </div>
+                    <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                      <AnimatedCounter end={5} suffix=" K+" />
+                    </div>
+                    <div className="text-sm lg:text-base text-gray-600 font-semibold">
+                      Wellness Topics
+                    </div>
                   </div>
-                  <div className="text-lg text-gray-600 font-medium">Wellness Topics</div>
-                </div>
-
-                {/* Final Chevron Arrow */}
-                <div className="mx-4">
-                  <svg className="w-6 h-12 text-green-500" fill="currentColor" viewBox="0 0 12 24">
-                    <path d="M0 0 L8 12 L0 24 L4 24 L12 12 L4 0 Z" />
-                  </svg>
                 </div>
               </div>
             </div>
@@ -1111,95 +1328,106 @@ export default function LandingPage() {
       </section>
 
       {/* Our Review Process & Medical Board */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16">
+      <section className="py-24 bg-gradient-to-br from-white via-gray-50 to-blue-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 right-20 w-64 h-64 bg-blue-300 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-green-300 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-20">
             {/* Review Process */}
-            <div className="space-y-8">
+            <div className="space-y-10">
               <div>
-                <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg border border-blue-200/50">
+                  <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
                   Our Review Standards
                 </div>
-                <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                  Science-Backed <span className="text-blue-600">Review Process</span>
+                <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-8 leading-tight">
+                  Science-Backed{' '}
+                  <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    Review Process
+                  </span>
                 </h2>
-                <p className="text-lg text-gray-600 mb-8">
+                <p className="text-xl text-gray-600 mb-10 leading-relaxed font-medium">
                   Every supplement review follows our rigorous 6-step process to ensure you get
                   accurate, unbiased information backed by clinical research.
                 </p>
               </div>
 
-              <div className="space-y-6">
-                <div className="flex items-start gap-4 p-6 bg-gradient-to-r from-blue-50 to-white rounded-2xl border border-blue-100 group hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-lg">
+              <div className="space-y-8">
+                <div className="group flex items-start gap-6 p-8 bg-white/80 backdrop-blur-sm rounded-3xl border border-blue-100/50 hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
                     1
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                    <h3 className="font-black text-gray-900 mb-3 text-xl">
                       Laboratory Testing & Analysis
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 leading-relaxed font-medium">
                       Independent 3rd party testing for purity, potency, and contamination
                       screening.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-gradient-to-r from-green-50 to-white rounded-2xl border border-green-100 group hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-lg">
+                <div className="group flex items-start gap-6 p-8 bg-white/80 backdrop-blur-sm rounded-3xl border border-green-100/50 hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
                     2
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                    <h3 className="font-black text-gray-900 mb-3 text-xl">
                       Clinical Research Review
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 leading-relaxed font-medium">
                       Comprehensive analysis of peer-reviewed studies and clinical trial data.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-gradient-to-r from-purple-50 to-white rounded-2xl border border-purple-100 group hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-lg">
+                <div className="group flex items-start gap-6 p-8 bg-white/80 backdrop-blur-sm rounded-3xl border border-purple-100/50 hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
                     3
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                    <h3 className="font-black text-gray-900 mb-3 text-xl">
                       Medical Expert Validation
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 leading-relaxed font-medium">
                       Board-certified physicians and specialists review all findings and
                       recommendations.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-gradient-to-r from-orange-50 to-white rounded-2xl border border-orange-100 group hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 bg-orange-600 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-lg">
+                <div className="group flex items-start gap-6 p-8 bg-white/80 backdrop-blur-sm rounded-3xl border border-orange-100/50 hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1">
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center flex-shrink-0 text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
                     4
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                    <h3 className="font-black text-gray-900 mb-3 text-xl">
                       Real User Testing Program
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 leading-relaxed font-medium">
                       60-day user trials with verified participants tracking real-world results.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-6 rounded-2xl">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="bg-gradient-to-br from-white via-gray-50 to-blue-50 p-8 rounded-3xl shadow-xl border border-gray-200/50">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fillRule="evenodd"
                         d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1207,9 +1435,9 @@ export default function LandingPage() {
                       />
                     </svg>
                   </div>
-                  <span className="font-bold text-gray-900">Transparency Guarantee</span>
+                  <span className="font-black text-gray-900 text-xl">Transparency Guarantee</span>
                 </div>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 leading-relaxed font-medium">
                   We maintain complete editorial independence. Our reviews are never influenced by
                   manufacturers or advertisers. Learn more about our editorial process.
                 </p>
@@ -1263,7 +1491,7 @@ export default function LandingPage() {
                           </div>
                           <div className="flex items-center gap-1">
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
                             </svg>
                             <span>15+ Years Experience</span>
                           </div>
@@ -1412,9 +1640,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Main Footer */}
-      <LandingFooter />
     </div>
   )
 }
