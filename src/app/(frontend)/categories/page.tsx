@@ -45,9 +45,6 @@ export default async function CategoriesPage() {
             </svg>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Browse by Category</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-2">
-            Explore our comprehensive collection of health and wellness articles organized by topic.
-          </p>
           <p className="text-sm text-gray-500 max-w-2xl mx-auto">
             From supplements and fitness to mental health and nutrition - find expert insights in
             your area of interest.

@@ -1,6 +1,7 @@
-import * as migration_20250824_075935 from './20250824_075935'
-// Temporarily disabled problematic migration
-// import * as migration_20250911_070814_fix_reviews_media from './20250911_070814_fix_reviews_media';
+import * as migration_20250824_075935 from './20250824_075935';
+import * as migration_20250911_070814_fix_reviews_media from './20250911_070814_fix_reviews_media';
+import * as migration_20250915_081004 from './20250915_081004';
+import * as migration_20250915_081133_add_experience_to_users from './20250915_081133_add_experience_to_users';
 
 export const migrations = [
   {
@@ -8,10 +9,19 @@ export const migrations = [
     down: migration_20250824_075935.down,
     name: '20250824_075935',
   },
-  // Re-enable this migration after fixing database connectivity issues
-  // {
-  //   up: migration_20250911_070814_fix_reviews_media.up,
-  //   down: migration_20250911_070814_fix_reviews_media.down,
-  //   name: '20250911_070814_fix_reviews_media'
-  // },
-]
+  {
+    up: migration_20250911_070814_fix_reviews_media.up,
+    down: migration_20250911_070814_fix_reviews_media.down,
+    name: '20250911_070814_fix_reviews_media',
+  },
+  {
+    up: migration_20250915_081004.up,
+    down: migration_20250915_081004.down,
+    name: '20250915_081004',
+  },
+  {
+    up: migration_20250915_081133_add_experience_to_users.up,
+    down: migration_20250915_081133_add_experience_to_users.down,
+    name: '20250915_081133_add_experience_to_users'
+  },
+];

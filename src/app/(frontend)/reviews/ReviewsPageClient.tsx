@@ -55,10 +55,6 @@ export default function ReviewsPageClient({ categories, posts }: Props) {
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">Health Articles</h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Stay informed with our latest research-backed articles, expert insights, and comprehensive
-          health guides.
-        </p>
       </div>
 
       {/* Category Grid */}
@@ -79,7 +75,7 @@ export default function ReviewsPageClient({ categories, posts }: Props) {
               setSelectedCategory(null)
               setSearchQuery('')
             }}
-            className="px-4 py-2 text-teal-600 hover:text-teal-700 border border-teal-200 rounded-lg text-sm font-medium hover:bg-teal-50 transition-colors"
+            className="px-4 py-2 text-blue-600 hover:text-blue-700 border border-blue-200 rounded-lg text-sm font-medium hover:bg-blue-50 transition-colors"
           >
             Clear filters
           </button>
@@ -115,14 +111,14 @@ function CategoryGrid({
               onClick={() => category.slug && onCategoryClick(category.slug)}
               className={`group flex flex-col items-center p-3 rounded-xl transition-all duration-300 hover:-translate-y-1 ${
                 isSelected
-                  ? 'bg-teal-500 text-white shadow-lg scale-105'
+                  ? 'bg-blue-500 text-white shadow-lg scale-105'
                   : 'bg-white text-gray-700 shadow-sm hover:shadow-md border border-gray-100'
               }`}
             >
               {/* Category Image/Icon */}
               <div
                 className={`w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden mb-2 flex items-center justify-center ${
-                  isSelected ? 'bg-white/20' : 'bg-teal-50'
+                  isSelected ? 'bg-white/20' : 'bg-blue-50'
                 }`}
               >
                 {categoryImage?.url ? (
@@ -135,7 +131,7 @@ function CategoryGrid({
                   />
                 ) : (
                   <div
-                    className={`text-xl md:text-2xl ${isSelected ? 'text-white' : 'text-teal-500'}`}
+                    className={`text-xl md:text-2xl ${isSelected ? 'text-white' : 'text-blue-500'}`}
                   >
                     {getCategoryIcon(category.title)}
                   </div>
@@ -145,7 +141,7 @@ function CategoryGrid({
               {/* Category Title */}
               <h3
                 className={`text-xs md:text-sm font-semibold text-center leading-tight ${
-                  isSelected ? 'text-white' : 'text-gray-900 group-hover:text-teal-600'
+                  isSelected ? 'text-white' : 'text-gray-900 group-hover:text-blue-600'
                 }`}
               >
                 {category.title.toUpperCase()}
@@ -174,7 +170,7 @@ function SearchBar({
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search for reviews and articles..."
-          className="w-full px-5 py-3 text-base border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent shadow-sm"
+          className="w-full px-5 py-3 text-base border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
         />
         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,8 +234,8 @@ function ArticleCard({ post }: { post: Post }) {
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-teal-100 to-teal-200 flex items-center justify-center">
-            <div className="text-4xl text-teal-400">📋</div>
+          <div className="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+            <div className="text-4xl text-blue-400">📋</div>
           </div>
         )}
       </div>
@@ -253,7 +249,7 @@ function ArticleCard({ post }: { post: Post }) {
               categories.slice(0, 2).map((category) => (
                 <span
                   key={category.id}
-                  className="px-3 py-1 bg-teal-100 text-teal-700 text-xs font-medium rounded-full"
+                  className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full"
                 >
                   {category.title}
                 </span>
@@ -263,7 +259,7 @@ function ArticleCard({ post }: { post: Post }) {
         </div>
 
         {/* Title */}
-        <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-teal-600 transition-colors line-clamp-2">
+        <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
           <Link href={`/posts/${post.slug}`} className="hover:underline">
             {post.title}
           </Link>
@@ -291,7 +287,7 @@ function ArticleCard({ post }: { post: Post }) {
         {/* Read Review Button */}
         <Link
           href={`/posts/${post.slug}`}
-          className="inline-flex items-center justify-center w-full px-4 py-3 bg-teal-500 text-white font-medium rounded-xl hover:bg-teal-600 transition-colors group"
+          className="inline-flex items-center justify-center w-full px-4 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors group"
         >
           <span>Read Review</span>
           <svg
