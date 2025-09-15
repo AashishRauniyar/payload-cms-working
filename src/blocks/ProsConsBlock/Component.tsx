@@ -1,5 +1,5 @@
 import React from 'react'
-import { Check, AlertTriangle } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 
 interface ProsConsItem {
   point: string
@@ -17,10 +17,10 @@ interface ProsConsTableProps {
 
 export function ProsConsBlock({
   title,
-  prosTitle = 'What We Love',
-  consTitle = 'Minor Drawbacks',
+  prosTitle = 'PROS',
+  consTitle = 'CONS',
   tableData,
-  backgroundColor = 'gray',
+  backgroundColor = 'none',
   disableInnerContainer = false,
   className = '',
 }: ProsConsTableProps) {
@@ -63,29 +63,17 @@ export function ProsConsBlock({
 
   // Default data if no tableData provided
   const defaultPros = [
-    {
-      point:
-        'Exceptional Audio Quality - Crystal clear highs, rich mids, and deep bass that rivals $400+ headphones',
-    },
-    { point: 'Incredible Comfort - Wore for 8+ hours without discomfort during work sessions' },
-    {
-      point:
-        'Outstanding Battery Life - Actually delivers 40+ hours with ANC on - exceeded expectations',
-    },
+    { point: 'Supports liver detox, digestion, and energy in one formula.' },
+    { point: 'Made with 14 plant-based ingredients backed by science.' },
+    { point: 'Only two capsules are needed per day.' },
+    { point: 'Vegan, non-GMO, and free from major allergens.' },
+    { point: 'Third-party tested for quality and purity.' },
+    { point: 'Backed with a 90-day satisfaction guarantee.' },
   ]
 
   const defaultCons = [
-    {
-      point:
-        'Slightly Bulky for Travel - Larger than ultra-portable options, but case helps with storage',
-    },
-    {
-      point:
-        'App Could Be Better - Mobile app works but interface feels dated compared to competitors',
-    },
-    {
-      point: 'Limited Color Options - Only available in black and silver - would love more variety',
-    },
+    { point: 'Only sold through the official Snap Supplements website.' },
+    { point: 'It goes out of stock fast, due to high demand.' },
   ]
 
   // Process table data to extract pros and cons, or use defaults
@@ -96,89 +84,72 @@ export function ProsConsBlock({
   const consData = parsedCons.length > 0 ? parsedCons : defaultCons
 
   const backgroundClasses = {
-    none: '',
+    none: 'bg-white',
     gray: 'bg-gray-50',
     blue: 'bg-blue-50',
     green: 'bg-green-50',
   }
 
-  // Split point into title and description
-  const formatPoint = (point: string) => {
-    const parts = point.split(' - ')
-    if (parts.length > 1) {
-      return {
-        title: parts[0],
-        description: parts.slice(1).join(' - '),
-      }
-    }
-    return {
-      title: point,
-      description: '',
-    }
-  }
-
   const content = (
-    <div className="w-full">
-      <div className="grid grid-cols-2 gap-6">
-        {/* What We Love Section */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-              <Check className="w-4 h-4 text-white" />
-            </div>
-            <div className="text-lg font-bold text-green-600">{prosTitle}</div>
-          </div>
-
-          <div className="space-y-4">
-            {prosData.map((item, index) => {
-              const formatted = formatPoint(item.point)
-              return (
-                <div key={index} className="flex gap-2 items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <Check className="w-4 h-4 text-green-500" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-gray-900 text-sm">{formatted.title}</div>
-                    {formatted.description && (
-                      <p className="text-gray-600 text-xs leading-relaxed mt-1">
-                        {formatted.description}
-                      </p>
-                    )}
-                  </div>
+    <div className="max-w-7xl w-full mx-auto">
+      <div className="grid grid-cols-2 gap-8">
+        {/* PROS Card */}
+        <div className="relative">
+          {/* Card Container */}
+          <div className="bg-gray-50 border-2 border-blue-400 rounded-xl p-8 pt-16 relative">
+            {/* Header Circle */}
+            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+              <div className="w-20 h-20 bg-white border-4 border-blue-400 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                  <Check className="w-7 h-7 text-white" strokeWidth={3} />
                 </div>
-              )
-            })}
+              </div>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+                {prosTitle}
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-6 mt-4 flex-1 overflow-y-auto">
+              {prosData.map((item, index) => (
+                <div key={index} className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mt-1">
+                    <Check className="w-5 h-5 text-white" strokeWidth={2.5} />
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-base">{item.point}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Minor Drawbacks Section */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
-              <AlertTriangle className="w-4 h-4 text-white" />
-            </div>
-            <div className="text-lg font-bold text-orange-600">{consTitle}</div>
-          </div>
-
-          <div className="space-y-4">
-            {consData.map((item, index) => {
-              const formatted = formatPoint(item.point)
-              return (
-                <div key={index} className="flex gap-2 items-start">
-                  <div className="flex-shrink-0 mt-1">
-                    <AlertTriangle className="w-4 h-4 text-orange-500" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-gray-900 text-sm">{formatted.title}</div>
-                    {formatted.description && (
-                      <p className="text-gray-600 text-xs leading-relaxed mt-1">
-                        {formatted.description}
-                      </p>
-                    )}
-                  </div>
+        {/* CONS Card */}
+        <div className="relative">
+          {/* Card Container */}
+          <div className="bg-gray-50 border-2 border-red-400 rounded-xl p-8 pt-16 relative">
+            {/* Header Circle */}
+            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+              <div className="w-20 h-20 bg-white border-4 border-red-500 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                  <X className="w-7 h-7 text-white" strokeWidth={3} />
                 </div>
-              )
-            })}
+              </div>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+                {consTitle}
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-6 mt-4">
+              {consData.map((item, index) => (
+                <div key={index} className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mt-1">
+                    <X className="w-5 h-5 text-white" strokeWidth={2.5} />
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-base">{item.point}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -187,16 +158,20 @@ export function ProsConsBlock({
 
   if (disableInnerContainer) {
     return (
-      <section className={`${backgroundClasses[backgroundColor]} ${className}`}>
-        {title && <h2 className="text-2xl font-bold text-center mb-4 text-gray-800">{title}</h2>}
+      <section
+        className={`${backgroundClasses[backgroundColor]} p-8 flex items-center justify-center ${className}`}
+      >
+        {title && <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
         {content}
       </section>
     )
   }
 
   return (
-    <section className={`${backgroundClasses[backgroundColor]} ${className}`}>
-      {title && <h2 className="text-2xl font-bold text-center mb-4 text-gray-800">{title}</h2>}
+    <section
+      className={`${backgroundClasses[backgroundColor]} p-8 flex items-center justify-center ${className}`}
+    >
+      {title && <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
       {content}
     </section>
   )
