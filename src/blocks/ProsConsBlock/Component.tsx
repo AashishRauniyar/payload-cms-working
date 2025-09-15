@@ -10,7 +10,7 @@ interface ProsConsTableProps {
   prosTitle?: string
   consTitle?: string
   tableData?: string
-  backgroundColor?: 'none' | 'gray' | 'blue' | 'green'
+  backgroundColor?: 'none' | 'gray' | 'green' | 'green'
   disableInnerContainer?: boolean
   className?: string
 }
@@ -86,8 +86,8 @@ export function ProsConsBlock({
   const backgroundClasses = {
     none: 'bg-white',
     gray: 'bg-gray-50',
-    blue: 'bg-blue-50',
     green: 'bg-green-50',
+   
   }
 
   const content = (
@@ -96,15 +96,15 @@ export function ProsConsBlock({
         {/* PROS Card */}
         <div className="relative">
           {/* Card Container */}
-          <div className="bg-gray-50 border-2 border-blue-400 rounded-xl p-8 pt-16 relative">
+          <div className="bg-gray-50 border-2 border-green-400 rounded-xl p-8 pt-16 relative">
             {/* Header Circle */}
             <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div className="w-20 h-20 bg-white border-4 border-blue-400 rounded-full flex items-center justify-center">
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+              <div className="w-20 h-20 bg-white border-4 border-green-400 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
                   <Check className="w-7 h-7 text-white" strokeWidth={3} />
                 </div>
               </div>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-1 rounded-full text-sm font-bold">
                 {prosTitle}
               </div>
             </div>
@@ -113,7 +113,7 @@ export function ProsConsBlock({
             <div className="space-y-6 mt-4 flex-1 overflow-y-auto">
               {prosData.map((item, index) => (
                 <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mt-1">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mt-1">
                     <Check className="w-5 h-5 text-white" strokeWidth={2.5} />
                   </div>
                   <p className="text-gray-700 leading-relaxed text-base">{item.point}</p>
