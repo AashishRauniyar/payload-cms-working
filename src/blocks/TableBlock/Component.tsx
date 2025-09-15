@@ -1,6 +1,5 @@
 'use client'
-import React, { useState, useMemo } from 'react'
-import { ChevronUp, ChevronDown } from 'lucide-react'
+import React, { useState } from 'react'
 import { cn } from '@/utilities/ui'
 
 interface TableBlockProps {
@@ -85,59 +84,7 @@ export const TableBlock: React.FC<TableBlockProps> = ({
 }) => {
   const { headers, rows } = parseMarkdownTable(tableData || '')
 
-  const [sortConfig, setSortConfig] = useState<{
-    key: string
-    direction: 'asc' | 'desc'
-  } | null>(null)
-
   const [hoveredRow, setHoveredRow] = useState<number | null>(null)
-
-  const handleSort = (key: string) => {
-    let direction: 'asc' | 'desc' = 'asc'
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc'
-    }
-    setSortConfig({ key, direction })
-  }
-
-  const sortedRows = useMemo(() => {
-    if (!sortConfig) return rows
-
-    return [...rows].sort((a, b) => {
-      const aValue = a[sortConfig.key]
-      const bValue = b[sortConfig.key]
-
-      // Handle different data types
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue
-      }
-
-      // String comparison
-      const aStr = String(aValue || '').toLowerCase()
-      const bStr = String(bValue || '').toLowerCase()
-
-      if (aStr < bStr) return sortConfig.direction === 'asc' ? -1 : 1
-      if (aStr > bStr) return sortConfig.direction === 'asc' ? 1 : -1
-      return 0
-    })
-  }, [rows, sortConfig])
-
-  const getSortIcon = (header: string) => {
-    if (!sortConfig || sortConfig.key !== header) {
-      return (
-        <div className="w-4 h-4 flex flex-col">
-          <ChevronUp className="h-2 w-2 text-blue-200" />
-          <ChevronDown className="h-2 w-2 text-blue-200" />
-        </div>
-      )
-    }
-
-    return sortConfig.direction === 'asc' ? (
-      <ChevronUp className="h-4 w-4 text-white" />
-    ) : (
-      <ChevronDown className="h-4 w-4 text-white" />
-    )
-  }
 
   const formatCellValue = (value: string | number, header: string) => {
     if (typeof value === 'number') {
@@ -195,21 +142,14 @@ export const TableBlock: React.FC<TableBlockProps> = ({
             <thead>
               <tr className="bg-gradient-to-r from-blue-600 to-blue-700">
                 {headers.map((header, index) => (
-                  <th
-                    key={index}
-                    className="px-6 py-4 text-left text-white font-semibold cursor-pointer hover:bg-blue-800 transition-colors select-none"
-                    onClick={() => handleSort(header)}
-                  >
-                    <div className="flex items-center gap-2">
-                      {header}
-                      {getSortIcon(header)}
-                    </div>
+                  <th key={index} className="px-6 py-4 text-left text-white font-semibold">
+                    {header}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {sortedRows.map((row, index) => (
+              {rows.map((row, index) => (
                 <tr
                   key={index}
                   className={`
@@ -261,7 +201,7 @@ export const TableBlock: React.FC<TableBlockProps> = ({
         {/* Table Footer */}
         <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
           <div className="flex justify-between items-center text-sm text-gray-600">
-            <span>Showing {sortedRows.length} rows</span>
+            <span>Showing {rows.length} rows</span>
             {headers.some(
               (h) => h.toLowerCase().includes('total') || h.toLowerCase().includes('price'),
             ) && (
@@ -273,7 +213,7 @@ export const TableBlock: React.FC<TableBlockProps> = ({
                       headers.find((h) => h.toLowerCase().includes('total')) ||
                       headers.find((h) => h.toLowerCase().includes('price'))
                     if (totalHeader) {
-                      const sum = sortedRows.reduce((acc, row) => {
+                      const sum = rows.reduce((acc, row) => {
                         const val = row[totalHeader]
                         return acc + (typeof val === 'number' ? val : 0)
                       }, 0)
