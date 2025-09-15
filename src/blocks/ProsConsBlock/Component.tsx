@@ -10,7 +10,7 @@ interface ProsConsTableProps {
   prosTitle?: string
   consTitle?: string
   tableData?: string
-  backgroundColor?: 'none' | 'gray' | 'green' | 'green'
+  backgroundColor?: 'none' | 'gray' | 'blue' | 'green'
   disableInnerContainer?: boolean
   className?: string
 }
@@ -86,8 +86,8 @@ export function ProsConsBlock({
   const backgroundClasses = {
     none: 'bg-white',
     gray: 'bg-gray-50',
+    blue: 'bg-blue-50',
     green: 'bg-green-50',
-   
   }
 
   const content = (
