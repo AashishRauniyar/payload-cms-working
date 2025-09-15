@@ -420,27 +420,6 @@ export default function Navbar({ categories }: NavbarProps) {
     setHoveredCategory(null)
   }
 
-  // Component to render category dropdown items
-  const CategoryItem = ({ category }: { category: Category }) => (
-    <div key={category.id} className="relative">
-      <div
-        onMouseEnter={() => setHoveredCategory(Number(category.id))}
-        onMouseLeave={() => setHoveredCategory(null)}
-      >
-        <Link
-          href={`/categories/${category.slug}`}
-          className={getDropdownLinkClass()}
-          onClick={closeDropdown}
-        >
-          <div className="flex items-center space-x-3 w-full">
-            <div className="w-2 h-2 bg-blue-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-200"></div>
-            <span className="flex-1">{category.title}</span>
-          </div>
-        </Link>
-      </div>
-    </div>
-  )
-
   return (
     <>
       {/* Top notification bar */}
@@ -507,16 +486,29 @@ export default function Navbar({ categories }: NavbarProps) {
                 {openDropdown === 'categories' && (
                   <div
                     id="nav-categories-menu"
-                    className="absolute top-full left-0 mt-3 w-80 bg-white rounded-xl shadow-xl border border-gray-200 py-4 z-50 max-h-96 overflow-y-auto animate-in slide-in-from-top-2 duration-200"
+                    className="absolute top-full left-0 mt-3 w-[32rem] bg-white rounded-xl shadow-xl border border-gray-200 py-4 z-50 animate-in slide-in-from-top-2 duration-200"
                   >
-                    <div className="px-4 py-2 border-b border-gray-100 mb-2">
+                    <div className="px-4 py-2 border-b border-gray-100 mb-3">
                       <h3 className="text-sm font-semibold text-gray-900">Browse Categories</h3>
                       <p className="text-xs text-gray-500 mt-1">Explore our health topics</p>
                     </div>
-                    {(categories || []).map((category) => (
-                      <CategoryItem key={category.id} category={category} />
-                    ))}
-                    <div className="border-t border-gray-100 mt-3 pt-3">
+
+                    {/* Categories Grid - 2 rows x 4 columns */}
+                    <div className="grid grid-cols-2 gap-2 px-3 mb-4">
+                      {(categories || []).slice(0, 8).map((category) => (
+                        <Link
+                          key={category.id}
+                          href={`/categories/${category.slug}`}
+                          className="flex items-center space-x-3 px-3 py-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 font-medium rounded-lg group"
+                          onClick={closeDropdown}
+                        >
+                          <div className="w-2 h-2 bg-blue-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-200"></div>
+                          <span className="flex-1">{category.title}</span>
+                        </Link>
+                      ))}
+                    </div>
+
+                    <div className="border-t border-gray-100 pt-3">
                       <Link
                         href="/categories"
                         className="flex items-center justify-center mx-2 px-4 py-3 text-blue-600 hover:text-blue-700 font-semibold hover:bg-blue-50 transition-all duration-200 rounded-lg border border-blue-200 hover:border-blue-300"
@@ -578,6 +570,13 @@ export default function Navbar({ categories }: NavbarProps) {
               <Link href="/reviews" className={getNavLinkClass('/reviews')}>
                 <span>Reviews</span>
                 {pathname.startsWith('/reviews') && (
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
+                )}
+              </Link>
+
+              <Link href="/authors" className={getNavLinkClass('/authors')}>
+                <span>Our Experts</span>
+                {pathname.startsWith('/authors') && (
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
                 )}
               </Link>
@@ -746,6 +745,19 @@ export default function Navbar({ categories }: NavbarProps) {
                     <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                     <span className="font-medium">Reviews</span>
                   </Link>
+
+                  <Link
+                    href="/authors"
+                    className={`flex items-center space-x-3 py-3 px-4 rounded-xl transition-all duration-200 ${
+                      pathname.startsWith('/authors')
+                        ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                    <span className="font-medium">Our Experts</span>
+                  </Link>
                 </div>
 
                 {/* Categories Section */}
@@ -754,8 +766,8 @@ export default function Navbar({ categories }: NavbarProps) {
                     <h3 className="text-sm font-semibold text-gray-900">Categories</h3>
                     <div className="flex-1 h-px bg-gray-200"></div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {(categories || []).slice(0, 6).map((category) => (
+                  <div className="grid grid-cols-1 gap-2">
+                    {(categories || []).slice(0, 8).map((category) => (
                       <Link
                         key={category.id}
                         href={`/categories/${category.slug}`}

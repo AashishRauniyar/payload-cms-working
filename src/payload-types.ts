@@ -426,6 +426,89 @@ export interface User {
    * Professional title (e.g., "Medical Doctor", "Registered Dietitian")
    */
   title?: string | null;
+  /**
+   * Years of experience
+   */
+  experience?: number | null;
+  /**
+   * Add your social media profiles to display on your author page
+   */
+  socialMedia?: {
+    linkedin?: {
+      /**
+       * Your LinkedIn profile URL
+       */
+      url?: string | null;
+      /**
+       * LinkedIn logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    twitter?: {
+      /**
+       * Your Twitter/X profile URL
+       */
+      url?: string | null;
+      /**
+       * Twitter/X logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    facebook?: {
+      /**
+       * Your Facebook profile URL
+       */
+      url?: string | null;
+      /**
+       * Facebook logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    instagram?: {
+      /**
+       * Your Instagram profile URL
+       */
+      url?: string | null;
+      /**
+       * Instagram logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    youtube?: {
+      /**
+       * Your YouTube channel URL
+       */
+      url?: string | null;
+      /**
+       * YouTube logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    website?: {
+      /**
+       * Your personal or professional website URL
+       */
+      url?: string | null;
+      /**
+       * Website favicon or logo (optional)
+       */
+      logo?: (number | null) | Media;
+    };
+    /**
+     * Add other social media platforms not listed above
+     */
+    other?:
+      | {
+          platform: string;
+          url: string;
+          /**
+           * Platform logo or icon
+           */
+          logo?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1904,6 +1987,55 @@ export interface UsersSelect<T extends boolean = true> {
   avatar?: T;
   bio?: T;
   title?: T;
+  experience?: T;
+  socialMedia?:
+    | T
+    | {
+        linkedin?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        twitter?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        facebook?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        instagram?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        youtube?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        website?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        other?:
+          | T
+          | {
+              platform?: T;
+              url?: T;
+              logo?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
