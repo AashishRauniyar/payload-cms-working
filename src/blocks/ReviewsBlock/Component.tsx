@@ -338,9 +338,8 @@ export const ReviewsBlock: React.FC<ReviewsBlockType> = () => {
         {/* Main Form Card */}
         <div className="bg-white rounded-lg shadow-md border border-gray-200">
           {/* Header */}
-          <div className="text-center py-2 px-3 border-b border-gray-100">
+          <div className="text-center py-2 px-3">
             <div className="text-base font-bold text-gray-900">Write a Review</div>
-            <div className="text-xs text-gray-600">Share your experience</div>
           </div>
 
           {/* Form */}
