@@ -286,15 +286,15 @@ const FloatingLabelTextarea: React.FC<{
         onChange={handleChange}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all duration-300 bg-white shadow-sm hover:shadow-md resize-none min-h-[60px] max-h-[100px]"
+        className="w-full px-2 py-1.5 border border-gray-200 rounded-md focus:border-blue-500 focus:outline-none transition-all duration-300 bg-white shadow-sm hover:shadow-md resize-none min-h-[50px] max-h-[80px] text-sm"
         placeholder=""
       />
       <label
         htmlFor={id}
-        className={`absolute left-3 transition-all duration-300 pointer-events-none ${
+        className={`absolute left-2 transition-all duration-300 pointer-events-none ${
           labelFloated
-            ? 'top-0 -translate-y-1/2 bg-white px-2 text-xs text-blue-600 font-medium'
-            : 'top-5 text-gray-500 text-sm'
+            ? 'top-0 -translate-y-1/2 bg-white px-1 text-xs text-blue-600 font-medium'
+            : 'top-4 text-gray-500 text-xs'
         }`}
       >
         {label}
