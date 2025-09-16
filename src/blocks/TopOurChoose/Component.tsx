@@ -125,173 +125,160 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   title,
   productName,
   productImage,
-  overallRating = 4.3,
+  overallRating = 4.8,
   ratings = [],
   buttons = [],
   backgroundColor,
   disableInnerContainer,
   className,
 }) => {
-  const backgroundClasses = {
-    none: '',
-    gray: 'bg-gradient-to-br from-gray-50 to-gray-100',
-    blue: 'bg-gradient-to-br from-blue-50 to-blue-100',
-    green: 'bg-gradient-to-br from-green-50 to-green-100',
-    orange: 'bg-gradient-to-br from-orange-50 to-orange-100',
-  }
+  // Default ratings data to match the image
+  const defaultRatings = [
+    { title: 'Boosts Memory and Learning Abilities*', rating: 5, evidence: 'Strong Evidence' },
+    { title: 'Enhances Focus and Mental Clarity*', rating: 4.5, evidence: 'Strong Evidence' },
+    { title: 'Supports Brain Health and Function*', rating: 5, evidence: 'Gold Star Evidence' },
+    { title: 'Reduces Mental Fatigue and Stress*', rating: 4.5, evidence: 'Strong Evidence' },
+  ]
 
-  const bgClass = backgroundColor ? backgroundClasses[backgroundColor] || '' : ''
+  const ratingsData = ratings.length > 0 ? ratings : defaultRatings
 
   const content = (
-    <div className="max-w-6xl mx-auto">
-      {/* Main Card */}
-      <div className="bg-white rounded-3xl shadow-2xl shadow-gray-200/50 overflow-hidden border border-gray-300">
-        {/* Hero Header with Gradient */}
-        <div className="relative bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 px-8 py-6 ">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-bold text-white mb-1">{productName}</div>
-                {title && <div className="text-indigo-100 text-sm font-medium">{title}</div>}
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-2 border border-white/30">
-                <div className="flex items-center space-x-2">
-                  <StarRating rating={overallRating} size="sm" />
-                  <span className="text-white font-bold text-lg">{overallRating.toFixed(1)}</span>
+    <div className="bg-white border border-gray-300 rounded-lg shadow-sm max-w-5xl mx-auto">
+      {/* Header - Green Bar */}
+      <div className="bg-green-700 text-white px-6 py-3 rounded-t-lg">
+        <div className="text-base font-semibold">
+          {productName ||
+            title ||
+            'Neuro Plus Brain and Focus Formula | Cognitive Performance Enhancer'}
+        </div>
+      </div>
+
+      <div className="flex">
+        {/* Left Side - Benefits List */}
+        <div className="flex-1 p-6">
+          <div className="space-y-4">
+            {ratingsData.map((rating, index) => (
+              <div key={index} className="flex items-center justify-between py-2">
+                <div className="flex items-center">
+                  <div className="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center mr-3">
+                    {rating.evidence?.toLowerCase().includes('gold star') ? (
+                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    ) : rating.evidence?.toLowerCase().includes('strong') ? (
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    ) : (
+                      <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                    )}
+                  </div>
+                  <span className="text-sm text-gray-700 font-medium">{rating.title}</span>
+                </div>
+                <div className="text-sm text-gray-600 font-medium">
+                  {rating.evidence || 'Strong Evidence'}
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex mt-6 space-x-3">
+            {buttons && buttons.length > 0 ? (
+              buttons.map((button) => (
+                <CMSLink
+                  key={button.label || 'button'}
+                  type={button.link.type}
+                  reference={button.link.reference}
+                  url={button.link.url}
+                  newTab={button.link.newTab}
+                  className={`px-6 py-2 text-sm rounded font-semibold transition-colors ${
+                    button.style === 'primary' || button.label?.toLowerCase().includes('shop')
+                      ? 'bg-orange-500 text-white hover:bg-orange-600'
+                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                  }`}
+                >
+                  {button.label}
+                </CMSLink>
+              ))
+            ) : (
+              <>
+                <button className="bg-orange-500 text-white px-6 py-2 text-sm rounded font-semibold hover:bg-orange-600 transition-colors">
+                  Shop Now
+                </button>
+                <button className="bg-blue-500 text-white px-6 py-2 text-sm rounded font-semibold hover:bg-blue-600 transition-colors">
+                  Read Review
+                </button>
+              </>
+            )}
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-0">
-          {/* Left Side - Features with animations */}
-          <div className="lg:col-span-2 p-8">
-            <div className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-              <div className="w-1 h-6 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-3"></div>
-              Key Features & Evidence
+        {/* Center - Product Image */}
+        <div className="w-40 flex items-center justify-center p-6">
+          {productImage ? (
+            <div className="w-32 h-40">
+              <Media resource={productImage} className="w-full h-full object-contain" />
+            </div>
+          ) : (
+            <div className="w-32 h-40 bg-gray-100 rounded-lg flex items-center justify-center">
+              <div className="w-24 h-32 bg-white rounded border border-gray-300 flex items-center justify-center shadow-sm">
+                <div className="text-center">
+                  <div className="text-xs font-bold text-gray-600 mb-1">WOW MD</div>
+                  <div className="text-xs text-blue-600 font-semibold">NEURO PLUS</div>
+                  <div className="text-xs text-gray-500 mt-1">BRAIN & FOCUS FORMULA</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right Side - Rating Breakdown */}
+        <div className="w-80 p-6 bg-gray-50 rounded-r-lg border-l border-gray-200">
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-800">Rating Breakdown</h3>
+              <button className="text-gray-400 hover:text-gray-600">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
             </div>
 
-            <div className="grid gap-4 mb-8">
-              {ratings && ratings.length > 0
-                ? ratings.slice(0, 4).map((rating, index) => (
-                    <div
-                      key={rating.title || `rating-${index}`}
-                      className="group p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:shadow-lg hover:border-indigo-200 transition-all duration-300"
-                      style={{
-                        animationDelay: `${index * 100}ms`,
-                      }}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-lg font-semibold text-gray-800 group-hover:text-indigo-700 transition-colors">
-                          {rating.title || rating.category}
-                        </span>
-                        <StarRating rating={rating.rating} size="sm" />
-                      </div>
-                      <EvidenceIndicator evidence={rating.evidence || 'Limited Evidence'} />
-                    </div>
-                  ))
-                : // Default ratings if none provided
-                  [
-                    {
-                      title: 'Supports Maximum Pleasure*',
-                      rating: 4,
-                      evidence: 'Good Site Evidence',
-                    },
-                    { title: 'Increase Staying Power*', rating: 5, evidence: 'Good Site Evidence' },
-                    {
-                      title: 'Increased Peak Performance*',
-                      rating: 4.5,
-                      evidence: 'Strong Evidence',
-                    },
-                    { title: 'Boost Blood Circulation*', rating: 4, evidence: 'Strong Evidence' },
-                  ].map((rating, index) => (
-                    <div
-                      key={rating.title}
-                      className="group p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:shadow-lg hover:border-indigo-200 transition-all duration-300"
-                      style={{
-                        animationDelay: `${index * 100}ms`,
-                      }}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-lg font-semibold text-gray-800 group-hover:text-indigo-700 transition-colors">
-                          {rating.title}
-                        </span>
-                        <StarRating rating={rating.rating} size="sm" />
-                      </div>
-                      <EvidenceIndicator evidence={rating.evidence} />
-                    </div>
-                  ))}
-            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-600">Support for Claims:</span>
+                <StarRating rating={5} color="text-blue-500" size="sm" />
+              </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-4">
-              {buttons && buttons.length > 0 ? (
-                buttons.map((button) => (
-                  <CMSLink
-                    key={button.label || 'button'}
-                    type={button.link.type}
-                    reference={button.link.reference}
-                    url={button.link.url}
-                    newTab={button.link.newTab}
-                    className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles(button.style)} shadow-lg text-white`}
-                  >
-                    <span className="relative z-10 text-white">{button.label}</span>
-                    <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-2xl"></div>
-                  </CMSLink>
-                ))
-              ) : (
-                <>
-                  <button
-                    className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles('primary')} shadow-lg text-white`}
-                  >
-                    <span className="relative z-10 text-white">Shop Now</span>
-                    <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-2xl"></div>
-                  </button>
-                  <button
-                    className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles('secondary')} shadow-lg text-white`}
-                  >
-                    <span className="relative z-10 text-white">Read Review</span>
-                    <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-2xl"></div>
-                  </button>
-                </>
-              )}
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-600">Ingredient Safety:</span>
+                <StarRating rating={4.5} color="text-blue-500" size="sm" />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-600">Value for the Price:</span>
+                <StarRating rating={5} color="text-blue-500" size="sm" />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-600">Brand Transparency:</span>
+                <StarRating rating={4.5} color="text-blue-500" size="sm" />
+              </div>
             </div>
           </div>
 
-          {/* Right Side - Product Image & Overall Rating */}
-          <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-8 flex flex-col items-center justify-center relative">
-            {/* Decorative circles */}
-            <div className="absolute top-4 right-4 w-20 h-20 bg-blue-100 rounded-full opacity-30"></div>
-            <div className="absolute bottom-4 left-4 w-16 h-16 bg-blue-200 rounded-full opacity-20"></div>
-
-            {/* Product Image */}
-            <div className="relative mb-8">
-              <div className="absolute -inset-4 bg-blue-500 rounded-3xl opacity-20 blur-xl"></div>
-              {productImage ? (
-                <div className="relative w-48 h-56 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                  <Media resource={productImage} className="w-full h-full object-cover" />
-                </div>
-              ) : (
-                <div className="relative bg-gradient-to-br from-blue-200 to-blue-300 rounded-3xl p-8 w-48 h-56 flex items-center justify-center shadow-2xl border-4 border-white">
-                  <div className="bg-blue-600 text-white text-lg font-bold px-6 py-3 rounded-xl transform -rotate-12 shadow-lg">
-                    PRODUCT
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Overall Rating Display */}
-            <div className="text-center">
-              <div className="text-sm font-semibold text-gray-600 mb-2">OVERALL RATING</div>
-              <div className="flex items-center justify-center mb-2">
-                <StarRating rating={overallRating} size="lg" />
+          {/* Overall Rating */}
+          <div className="border-t border-gray-300 pt-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold text-gray-800">Overall Rating:</span>
+              <div className="flex items-center">
+                <StarRating rating={overallRating} color="text-yellow-500" size="sm" />
+                <span className="ml-2 text-lg font-bold text-gray-800">
+                  {overallRating.toFixed(1)}
+                </span>
               </div>
-              <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                {overallRating.toFixed(1)}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">out of 5 stars</div>
             </div>
           </div>
         </div>
@@ -299,12 +286,22 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
     </div>
   )
 
+  const backgroundClasses = {
+    none: '',
+    gray: 'bg-gray-50',
+    blue: 'bg-blue-50',
+    green: 'bg-green-50',
+    orange: 'bg-orange-50',
+  }
+
+  const bgClass = backgroundColor ? backgroundClasses[backgroundColor] || '' : ''
+
   if (disableInnerContainer) {
-    return <section className={`py-20 px-4 ${bgClass} ${className || ''}`}>{content}</section>
+    return <section className={`py-8 px-4 ${bgClass} ${className || ''}`}>{content}</section>
   }
 
   return (
-    <section className={`py-20 px-4 ${bgClass} ${className || ''}`}>
+    <section className={`py-8 px-4 ${bgClass} ${className || ''}`}>
       <div className="max-w-7xl mx-auto">{content}</div>
     </section>
   )
