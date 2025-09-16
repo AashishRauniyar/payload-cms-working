@@ -240,11 +240,8 @@ const CustomerReviewForm: React.FC = () => {
                       onChange={handleInputChange}
                       required
                       className={`form-input ${errors.name ? 'border-red-500 focus:border-red-500' : ''}`}
-                      placeholder="Enter your full name"
+                      placeholder="fullname"
                     />
-                    <label htmlFor="name" className="form-label">
-                      Full Name
-                    </label>
                     {errors.name && <p className="error-message">{errors.name}</p>}
                   </div>
 
@@ -257,11 +254,8 @@ const CustomerReviewForm: React.FC = () => {
                       onChange={handleInputChange}
                       required
                       className={`form-input ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
-                      placeholder="Enter your email address"
+                      placeholder="email"
                     />
-                    <label htmlFor="email" className="form-label">
-                      Email Address
-                    </label>
                     {errors.email && <p className="error-message">{errors.email}</p>}
                   </div>
                 </div>
@@ -269,7 +263,7 @@ const CustomerReviewForm: React.FC = () => {
                 {/* Rating */}
                 <div className="form-group">
                   <div className="rating-container">
-                    <span className="rating-label">Rate your experience</span>
+                    <span className="rating-label">review star</span>
                     {renderStarRating(true)}
                   </div>
                 </div>
@@ -284,11 +278,8 @@ const CustomerReviewForm: React.FC = () => {
                     required
                     rows={6}
                     className={`form-textarea ${errors.review ? 'border-red-500 focus:border-red-500' : ''}`}
-                    placeholder="Share your thoughts and experience..."
+                    placeholder="write a review"
                   />
-                  <label htmlFor="review" className="form-label">
-                    Your Review
-                  </label>
                   {errors.review && <p className="error-message">{errors.review}</p>}
                   <div
                     className={`character-count ${formData.review.length > 900 ? 'text-red-500' : ''}`}
@@ -318,16 +309,7 @@ const CustomerReviewForm: React.FC = () => {
                       Submitting...
                     </>
                   ) : (
-                    <>
-                      Submit Review
-                      <svg className="submit-arrow" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                          fillRule="evenodd"
-                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </>
+                    'summit button'
                   )}
                 </button>
               </form>
