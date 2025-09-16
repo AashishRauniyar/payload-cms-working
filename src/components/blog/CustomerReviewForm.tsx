@@ -223,15 +223,15 @@ const CustomerReviewForm: React.FC = () => {
             <p className="form-subtitle">
               Share your experience and help others make informed decisions
             </p>
+            <p className="privacy-note">
+              Your email will not be published. Required fields are marked *
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="review-form">
             {/* Name and Email Row */}
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="name" className="form-label">
-                  Your Name *
-                </label>
                 <input
                   type="text"
                   id="name"
@@ -242,13 +242,13 @@ const CustomerReviewForm: React.FC = () => {
                   className={`form-input ${errors.name ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="Enter your full name"
                 />
+                <label htmlFor="name" className="form-label">
+                  Your Name *
+                </label>
                 {errors.name && <p className="error-message">{errors.name}</p>}
               </div>
 
               <div className="form-group">
-                <label htmlFor="email" className="form-label">
-                  Email Address *
-                </label>
                 <input
                   type="email"
                   id="email"
@@ -259,21 +259,33 @@ const CustomerReviewForm: React.FC = () => {
                   className={`form-input ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="your@email.com"
                 />
+                <label htmlFor="email" className="form-label">
+                  Email Address *
+                </label>
                 {errors.email && <p className="error-message">{errors.email}</p>}
               </div>
             </div>
 
             {/* Rating */}
             <div className="form-group">
-              <label className="form-label">Rating *</label>
+              <label
+                className="form-label"
+                style={{
+                  position: 'static',
+                  color: '#374151',
+                  fontWeight: '700',
+                  fontSize: '1rem',
+                  marginBottom: '0.75rem',
+                  display: 'block',
+                }}
+              >
+                Rating *
+              </label>
               <div className="rating-container">{renderStarRating(true)}</div>
             </div>
 
             {/* Review Text */}
             <div className="form-group">
-              <label htmlFor="review" className="form-label">
-                Your Review *
-              </label>
               <textarea
                 id="review"
                 name="review"
@@ -284,6 +296,9 @@ const CustomerReviewForm: React.FC = () => {
                 className={`form-textarea ${errors.review ? 'border-red-500 focus:border-red-500' : ''}`}
                 placeholder="Share your thoughts about this article or product. What did you find most helpful?"
               />
+              <label htmlFor="review" className="form-label">
+                Your Review *
+              </label>
               {errors.review && <p className="error-message">{errors.review}</p>}
               <div
                 className={`character-count ${formData.review.length > 900 ? 'text-red-500' : ''}`}
