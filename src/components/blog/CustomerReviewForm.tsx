@@ -218,135 +218,103 @@ const CustomerReviewForm: React.FC = () => {
         </div>
 
         <div className="form-content">
-          <div className="form-header">
-            <h3 className="form-title">Write a Review</h3>
-            <p className="form-subtitle">
-              Share your experience and help others make informed decisions
-            </p>
-            <p className="privacy-note">
-              Your email will not be published. Required fields are marked *
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="review-form">
-            {/* Name and Email Row */}
-            <div className="form-row">
-              <div className="form-group">
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className={`form-input ${errors.name ? 'border-red-500 focus:border-red-500' : ''}`}
-                  placeholder="Enter your full name"
-                />
-                <label htmlFor="name" className="form-label">
-                  Your Name *
-                </label>
-                {errors.name && <p className="error-message">{errors.name}</p>}
-              </div>
-
-              <div className="form-group">
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className={`form-input ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
-                  placeholder="your@email.com"
-                />
-                <label htmlFor="email" className="form-label">
-                  Email Address *
-                </label>
-                {errors.email && <p className="error-message">{errors.email}</p>}
-              </div>
+          {/* Split Layout: Left side heading, Right side form */}
+          <div className="form-split-layout">
+            {/* Left Side - Heading Section */}
+            <div className="form-left-section">
+              <h3 className="form-main-title">write a review</h3>
+              <p className="form-description">hgghigfhigskfjkhsgdjfgsdghjfg</p>
             </div>
 
-            {/* Rating */}
-            <div className="form-group">
-              <label
-                className="form-label"
-                style={{
-                  position: 'static',
-                  color: '#374151',
-                  fontWeight: '700',
-                  fontSize: '1rem',
-                  marginBottom: '0.75rem',
-                  display: 'block',
-                }}
-              >
-                Rating *
-              </label>
-              <div className="rating-container">{renderStarRating(true)}</div>
-            </div>
-
-            {/* Review Text */}
-            <div className="form-group">
-              <textarea
-                id="review"
-                name="review"
-                value={formData.review}
-                onChange={handleInputChange}
-                required
-                rows={4}
-                className={`form-textarea ${errors.review ? 'border-red-500 focus:border-red-500' : ''}`}
-                placeholder="Share your thoughts about this article or product. What did you find most helpful?"
-              />
-              <label htmlFor="review" className="form-label">
-                Your Review *
-              </label>
-              {errors.review && <p className="error-message">{errors.review}</p>}
-              <div
-                className={`character-count ${formData.review.length > 900 ? 'text-red-500' : ''}`}
-              >
-                {formData.review.length}/1000 characters
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <button type="submit" disabled={isSubmitting} className="submit-button">
-              {isSubmitting ? (
-                <>
-                  <svg className="submit-spinner" viewBox="0 0 24 24">
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
+            {/* Right Side - Form Section */}
+            <div className="form-right-section">
+              <form onSubmit={handleSubmit} className="review-form">
+                {/* Name and Email Row */}
+                <div className="form-row">
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className={`form-input ${errors.name ? 'border-red-500 focus:border-red-500' : ''}`}
+                      placeholder="fullname"
                     />
-                    <path
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    {errors.name && <p className="error-message">{errors.name}</p>}
+                  </div>
+
+                  <div className="form-group">
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className={`form-input ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
+                      placeholder="email"
                     />
-                  </svg>
-                  Submitting...
-                </>
-              ) : (
-                <>
-                  Submit Review
-                  <svg
-                    className="submit-arrow"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                    {errors.email && <p className="error-message">{errors.email}</p>}
+                  </div>
+                </div>
+
+                {/* Rating */}
+                <div className="form-group">
+                  <div className="rating-container">
+                    <span className="rating-label">review star</span>
+                    {renderStarRating(true)}
+                  </div>
+                </div>
+
+                {/* Review Text */}
+                <div className="form-group">
+                  <textarea
+                    id="review"
+                    name="review"
+                    value={formData.review}
+                    onChange={handleInputChange}
+                    required
+                    rows={6}
+                    className={`form-textarea ${errors.review ? 'border-red-500 focus:border-red-500' : ''}`}
+                    placeholder="write a review"
+                  />
+                  {errors.review && <p className="error-message">{errors.review}</p>}
+                  <div
+                    className={`character-count ${formData.review.length > 900 ? 'text-red-500' : ''}`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </>
-              )}
-            </button>
-          </form>
+                    {formData.review.length}/1000 characters
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button type="submit" disabled={isSubmitting} className="submit-button">
+                  {isSubmitting ? (
+                    <>
+                      <svg className="submit-spinner" viewBox="0 0 24 24">
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Submitting...
+                    </>
+                  ) : (
+                    'summit button'
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
 
