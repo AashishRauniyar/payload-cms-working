@@ -198,7 +198,7 @@ const InteractiveStarRating: React.FC<{
   const [hoveredRating, setHoveredRating] = useState(0)
 
   return (
-    <div className="flex justify-center gap-1 mb-1">
+    <div className="flex justify-center mb-1">
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
@@ -241,15 +241,15 @@ const FloatingLabelInput: React.FC<{
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all duration-300 bg-white shadow-sm hover:shadow-md"
+        className="w-full px-2 py-1.5 border border-gray-200 rounded-md focus:border-blue-500 focus:outline-none transition-all duration-300 bg-white shadow-sm hover:shadow-md text-sm"
         placeholder=""
       />
       <label
         htmlFor={id}
-        className={`absolute left-3 transition-all duration-300 pointer-events-none ${
+        className={`absolute left-2 transition-all duration-300 pointer-events-none ${
           labelFloated
-            ? 'top-0 -translate-y-1/2 bg-white px-2 text-xs text-blue-600 font-medium'
-            : 'top-1/2 -translate-y-1/2 text-gray-500 text-sm'
+            ? 'top-0 -translate-y-1/2 bg-white px-1 text-xs text-blue-600 font-medium'
+            : 'top-1/2 -translate-y-1/2 text-gray-500 text-xs'
         }`}
       >
         {label}
@@ -333,28 +333,28 @@ export const ReviewsBlock: React.FC<ReviewsBlockType> = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
-      <div className="max-w-md mx-auto">
+    <div className="bg-gradient-to-br from-gray-50 to-gray-100 py-2 px-2 min-h-screen flex items-center">
+      <div className="max-w-sm mx-auto w-full">
         {/* Main Form Card */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-md border border-gray-200">
           {/* Header */}
-          <div className="text-center py-4 px-4 border-b border-gray-100">
-            <div className="text-lg font-bold text-gray-900 mb-1">Write a Review</div>
+          <div className="text-center py-2 px-3 border-b border-gray-100">
+            <div className="text-base font-bold text-gray-900">Write a Review</div>
             <div className="text-xs text-gray-600">Share your experience</div>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="px-4 py-4 space-y-3">
+          <form onSubmit={handleSubmit} className="px-3 py-3 space-y-2">
             {/* Star Rating */}
             <div className="text-center">
-              <label className="block text-xs font-medium text-gray-700 mb-2">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
                 Rating <span className="text-red-500">*</span>
               </label>
               <InteractiveStarRating
                 rating={formData.rating}
                 onRatingChange={(rating) => setFormData({ ...formData, rating })}
               />
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-gray-500">
                 {formData.rating > 0 && (
                   <span>
                     {formData.rating === 1 && 'Poor'}
@@ -397,25 +397,23 @@ export const ReviewsBlock: React.FC<ReviewsBlockType> = () => {
             />
 
             {/* Submit Button */}
-            <div className="pt-1">
-              <button
-                type="submit"
-                disabled={isSubmitting || formData.rating === 0}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2.5 px-4 rounded-lg text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
-                    Submitting...
-                  </div>
-                ) : (
-                  'Submit Review'
-                )}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting || formData.rating === 0}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              {isSubmitting ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                  Submitting...
+                </div>
+              ) : (
+                'Submit Review'
+              )}
+            </button>
 
             {/* Privacy Note */}
-            <div className="text-center text-xs text-gray-500 mt-2">
+            <div className="text-center text-xs text-gray-500">
               Your email will not be published. Required fields are marked{' '}
               <span className="text-red-500">*</span>
             </div>
