@@ -1,74 +1,19 @@
 'use client'
 
 import React from 'react'
-import { Media } from '../../components/Media'
+import { Star, StarHalf } from 'lucide-react'
 import { CMSLink } from '../../components/Link'
+import { Media } from '../../components/Media'
 import type { TopOurChoose as TopOurChooseType } from '@/payload-types'
-
-// Robust image component with timeout and retry handling
-const RobustMedia: React.FC<{ resource: any; className: string }> = ({ resource, className }) => {
-  const [imageError, setImageError] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(true)
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (isLoading) {
-        setImageError(true)
-        setIsLoading(false)
-      }
-    }, 10000)
-
-    return () => clearTimeout(timeout)
-  }, [isLoading])
-
-  React.useEffect(() => {
-    if (resource) {
-      const timer = setTimeout(() => {
-        setIsLoading(false)
-      }, 2000)
-      return () => clearTimeout(timer)
-    }
-  }, [resource])
-
-  if (imageError) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl">
-        <div className="text-center text-gray-500">
-          <svg className="w-8 h-8 mx-auto mb-1" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span className="text-xs font-medium">Image Unavailable</span>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="relative">
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl z-10">
-          <div className="text-center text-gray-500">
-            <div className="animate-spin w-6 h-6 border-2 border-gray-300 border-t-indigo-600 rounded-full mx-auto mb-1"></div>
-            <span className="text-xs font-medium">Loading...</span>
-          </div>
-        </div>
-      )}
-      <Media resource={resource} className={className} />
-    </div>
-  )
-}
 
 interface TopOurChooseBlockProps extends Omit<TopOurChooseType, 'blockType' | 'id' | 'blockName'> {
   disableInnerContainer?: boolean
   className?: string
 }
 
-const StarRating: React.FC<{ rating: number; size?: 'sm' | 'md' | 'lg' }> = ({
+const StarRating: React.FC<{ rating: number; color?: string; size?: 'sm' | 'md' | 'lg' }> = ({
   rating,
+  color = 'text-blue-500',
   size = 'md',
 }) => {
   const sizeClasses = {
@@ -77,59 +22,32 @@ const StarRating: React.FC<{ rating: number; size?: 'sm' | 'md' | 'lg' }> = ({
     lg: 'w-6 h-6',
   }
 
+  const starSize = sizeClasses[size]
   const stars = []
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 !== 0
 
-  // Full stars
   for (let i = 0; i < fullStars; i++) {
-    stars.push(
-      <svg
-        key={i}
-        className={`${sizeClasses[size]} text-yellow-400 fill-current drop-shadow-sm`}
-        viewBox="0 0 20 20"
-      >
-        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-      </svg>,
-    )
+    stars.push(<Star key={i} className={`${starSize} ${color} fill-current`} />)
   }
 
-  // Half star
   if (hasHalfStar) {
-    stars.push(
-      <svg
-        key="half"
-        className={`${sizeClasses[size]} text-yellow-400 fill-current drop-shadow-sm`}
-        viewBox="0 0 20 20"
-      >
-        <defs>
-          <linearGradient id="halfFill">
-            <stop offset="50%" stopColor="currentColor" />
-            <stop offset="50%" stopColor="transparent" />
-          </linearGradient>
-        </defs>
-        <path
-          fill="url(#halfFill)"
-          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-        />
-      </svg>,
-    )
+    stars.push(<StarHalf key="half" className={`${starSize} ${color} fill-current`} />)
   }
 
-  // Empty stars
   const emptyStars = 5 - Math.ceil(rating)
   for (let i = 0; i < emptyStars; i++) {
-    stars.push(
-      <svg key={`empty-${i}`} className={`${sizeClasses[size]} text-gray-300`} viewBox="0 0 20 20">
-        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-      </svg>,
-    )
+    stars.push(<Star key={`empty-${i}`} className={`${starSize} text-gray-300`} />)
   }
 
-  return <div className="flex gap-1">{stars}</div>
+  return <div className="flex">{stars}</div>
 }
 
-const EvidenceIndicator: React.FC<{ evidence: string }> = ({ evidence }) => {
+interface EvidenceIndicatorProps {
+  evidence: string
+}
+
+export const EvidenceIndicator: React.FC<EvidenceIndicatorProps> = ({ evidence }) => {
   const getEvidenceStyle = (evidence: string) => {
     switch (evidence.toLowerCase()) {
       case 'gold star evidence':
@@ -207,8 +125,8 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   title,
   productName,
   productImage,
-  overallRating,
-  ratings,
+  overallRating = 4.3,
+  ratings = [],
   buttons = [],
   backgroundColor,
   disableInnerContainer,
@@ -227,7 +145,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   const content = (
     <div className="max-w-6xl mx-auto">
       {/* Main Card */}
-      <div className="bg-white rounded-3xl shadow-2xl shadow-gray-200/50 overflow-hidden border border-gray-100 backdrop-blur-sm border-gray-300 border-1">
+      <div className="bg-white rounded-3xl shadow-2xl shadow-gray-200/50 overflow-hidden border border-gray-300">
         {/* Hero Header with Gradient */}
         <div className="relative bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 px-8 py-6 ">
           <div className="absolute inset-0 bg-black/10"></div>
@@ -256,63 +174,85 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
             </div>
 
             <div className="grid gap-4 mb-8">
-              {ratings.slice(0, 4).map((rating, index) => (
-                <div
-                  key={rating.category}
-                  className="group p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:shadow-lg hover:border-indigo-200 transition-all duration-300"
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-lg font-semibold text-gray-800 group-hover:text-indigo-700 transition-colors">
-                      {rating.category}
-                    </span>
-                    <StarRating rating={rating.rating} size="sm" />
-                  </div>
-                  <EvidenceIndicator evidence={rating.evidence} />
-                </div>
-              ))}
+              {ratings && ratings.length > 0
+                ? ratings.slice(0, 4).map((rating, index) => (
+                    <div
+                      key={rating.title || `rating-${index}`}
+                      className="group p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:shadow-lg hover:border-indigo-200 transition-all duration-300"
+                      style={{
+                        animationDelay: `${index * 100}ms`,
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-lg font-semibold text-gray-800 group-hover:text-indigo-700 transition-colors">
+                          {rating.title || rating.category}
+                        </span>
+                        <StarRating rating={rating.rating} size="sm" />
+                      </div>
+                      <EvidenceIndicator evidence={rating.evidence || 'Limited Evidence'} />
+                    </div>
+                  ))
+                : // Default ratings if none provided
+                  [
+                    {
+                      title: 'Supports Maximum Pleasure*',
+                      rating: 4,
+                      evidence: 'Good Site Evidence',
+                    },
+                    { title: 'Increase Staying Power*', rating: 5, evidence: 'Good Site Evidence' },
+                    {
+                      title: 'Increased Peak Performance*',
+                      rating: 4.5,
+                      evidence: 'Strong Evidence',
+                    },
+                    { title: 'Boost Blood Circulation*', rating: 4, evidence: 'Strong Evidence' },
+                  ].map((rating, index) => (
+                    <div
+                      key={rating.title}
+                      className="group p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:shadow-lg hover:border-indigo-200 transition-all duration-300"
+                      style={{
+                        animationDelay: `${index * 100}ms`,
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-lg font-semibold text-gray-800 group-hover:text-indigo-700 transition-colors">
+                          {rating.title}
+                        </span>
+                        <StarRating rating={rating.rating} size="sm" />
+                      </div>
+                      <EvidenceIndicator evidence={rating.evidence} />
+                    </div>
+                  ))}
             </div>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-4">
               {buttons && buttons.length > 0 ? (
-                buttons.map((button, index) => (
-                  <div style={{ color: 'white !important' }}>
-                    <CMSLink
-                      key={index}
-                      type={button.link.type}
-                      reference={button.link.reference}
-                      url={button.link.url}
-                      newTab={button.link.newTab}
-                      className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles(button.style)} shadow-lg`}
-                    >
-                      <span className="relative z-10" style={{ color: 'white !important' }}>
-                        {button.label}
-                      </span>
-                      <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-2xl"></div>
-                    </CMSLink>
-                  </div>
+                buttons.map((button) => (
+                  <CMSLink
+                    key={button.label || 'button'}
+                    type={button.link.type}
+                    reference={button.link.reference}
+                    url={button.link.url}
+                    newTab={button.link.newTab}
+                    className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles(button.style)} shadow-lg text-white`}
+                  >
+                    <span className="relative z-10 text-white">{button.label}</span>
+                    <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-2xl"></div>
+                  </CMSLink>
                 ))
               ) : (
                 <>
                   <button
-                    className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles('primary')} shadow-lg`}
-                    style={{ color: 'white !important' }}
+                    className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles('primary')} shadow-lg text-white`}
                   >
-                    <span className="relative z-10" style={{ color: 'white !important' }}>
-                      Shop Now
-                    </span>
+                    <span className="relative z-10 text-white">Shop Now</span>
                     <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-2xl"></div>
                   </button>
                   <button
-                    className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles('secondary')} shadow-lg`}
-                    style={{ color: 'white !important' }}
+                    className={`px-8 py-4 text-base rounded-2xl font-semibold ${getButtonStyles('secondary')} shadow-lg text-white`}
                   >
-                    <span className="relative z-10" style={{ color: 'white !important' }}>
-                      Read Review
-                    </span>
+                    <span className="relative z-10 text-white">Read Review</span>
                     <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-2xl"></div>
                   </button>
                 </>
@@ -331,7 +271,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
               <div className="absolute -inset-4 bg-blue-500 rounded-3xl opacity-20 blur-xl"></div>
               {productImage ? (
                 <div className="relative w-48 h-56 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                  <RobustMedia resource={productImage} className="w-full h-full object-cover" />
+                  <Media resource={productImage} className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="relative bg-gradient-to-br from-blue-200 to-blue-300 rounded-3xl p-8 w-48 h-56 flex items-center justify-center shadow-2xl border-4 border-white">

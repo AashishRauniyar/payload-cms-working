@@ -1169,6 +1169,8 @@ export interface TopOurChoose {
    */
   overallRating: number;
   ratings: {
+    description: any;
+    title: string;
     category: string;
     /**
      * Rating score (0-5)
@@ -1179,6 +1181,7 @@ export interface TopOurChoose {
   }[];
   buttons?:
     | {
+        size: string;
         label: string;
         style: 'primary' | 'secondary' | 'success' | 'warning' | 'outline';
         /**
