@@ -132,15 +132,54 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   disableInnerContainer,
   className,
 }) => {
-  // Default ratings data to match the image
+  // Default ratings data to match the image - only used if no CMS data provided
   const defaultRatings = [
-    { title: 'Boosts Memory and Learning Abilities*', rating: 5, evidence: 'Strong Evidence' },
-    { title: 'Enhances Focus and Mental Clarity*', rating: 4.5, evidence: 'Strong Evidence' },
-    { title: 'Supports Brain Health and Function*', rating: 5, evidence: 'Gold Star Evidence' },
-    { title: 'Reduces Mental Fatigue and Stress*', rating: 4.5, evidence: 'Strong Evidence' },
+    {
+      title: 'Boosts Memory and Learning Abilities*',
+      category: 'Support for Claims',
+      rating: 5,
+      evidence: 'Strong Evidence' as const,
+      description: null,
+      id: 'default-1',
+    },
+    {
+      title: 'Enhances Focus and Mental Clarity*',
+      category: 'Ingredient Safety',
+      rating: 4.5,
+      evidence: 'Strong Evidence' as const,
+      description: null,
+      id: 'default-2',
+    },
+    {
+      title: 'Supports Brain Health and Function*',
+      category: 'Value for the Price',
+      rating: 5,
+      evidence: 'Gold Star Evidence' as const,
+      description: null,
+      id: 'default-3',
+    },
+    {
+      title: 'Reduces Mental Fatigue and Stress*',
+      category: 'Brand Transparency',
+      rating: 4.5,
+      evidence: 'Strong Evidence' as const,
+      description: null,
+      id: 'default-4',
+    },
   ]
 
-  const ratingsData = ratings.length > 0 ? ratings : defaultRatings
+  // Use CMS ratings if available, otherwise fallback to defaults
+  const ratingsData = ratings && ratings.length > 0 ? ratings : defaultRatings
+
+  // Debug log to see what data we're receiving
+  console.log('TopOurChoose component data:', {
+    title,
+    productName,
+    overallRating,
+    ratings,
+    ratingsData,
+    buttons,
+  })
 
   const content = (
     <div className="bg-white border border-gray-300 rounded-lg shadow-sm max-w-5xl mx-auto">
@@ -158,7 +197,10 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
         <div className="flex-1 p-6">
           <div className="space-y-4">
             {ratingsData.map((rating, index) => (
-              <div key={index} className="flex items-center justify-between py-2">
+              <div
+                key={rating.id || `rating-${index}`}
+                className="flex items-center justify-between py-2"
+              >
                 <div className="flex items-center">
                   <div className="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center mr-3">
                     {rating.evidence?.toLowerCase().includes('gold star') ? (
@@ -169,7 +211,9 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                       <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
                     )}
                   </div>
-                  <span className="text-sm text-gray-700 font-medium">{rating.title}</span>
+                  <span className="text-sm text-gray-700 font-medium">
+                    {rating.title || rating.category}
+                  </span>
                 </div>
                 <div className="text-sm text-gray-600 font-medium">
                   {rating.evidence || 'Strong Evidence'}
@@ -181,9 +225,9 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
           {/* Action Buttons */}
           <div className="flex mt-6 space-x-3">
             {buttons && buttons.length > 0 ? (
-              buttons.map((button) => (
+              buttons.map((button, index) => (
                 <CMSLink
-                  key={button.label || 'button'}
+                  key={button.id || button.label || index}
                   type={button.link.type}
                   reference={button.link.reference}
                   url={button.link.url}
@@ -247,25 +291,18 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Support for Claims:</span>
-                <StarRating rating={5} color="text-blue-500" size="sm" />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Ingredient Safety:</span>
-                <StarRating rating={4.5} color="text-blue-500" size="sm" />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Value for the Price:</span>
-                <StarRating rating={5} color="text-blue-500" size="sm" />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Brand Transparency:</span>
-                <StarRating rating={4.5} color="text-blue-500" size="sm" />
-              </div>
+              {/* Dynamic ratings from CMS or defaults */}
+              {ratingsData.slice(0, 4).map((rating, index) => (
+                <div
+                  key={rating.id || `breakdown-${index}`}
+                  className="flex items-center justify-between"
+                >
+                  <span className="text-xs text-gray-600">
+                    {rating.category || rating.title?.replace('*', '') || `Rating ${index + 1}`}:
+                  </span>
+                  <StarRating rating={rating.rating} color="text-blue-500" size="sm" />
+                </div>
+              ))}
             </div>
           </div>
 
