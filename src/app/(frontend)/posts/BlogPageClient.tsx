@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
 import type { Post, Media } from '@/payload-types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,6 +15,26 @@ export const BlogPageClient: React.FC<BlogPageClientProps> = ({ posts }) => {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [activeLetter, setActiveLetter] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<'date' | 'title' | 'popular'>('date')
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const searchParams = useSearchParams()
+
+  // Auto-focus search input when navigated from search button
+  useEffect(() => {
+    const focusSearch = searchParams.get('focus')
+    if (focusSearch === 'search' && searchInputRef.current) {
+      // Small delay to ensure the component is fully rendered
+      setTimeout(() => {
+        searchInputRef.current?.focus()
+        searchInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+        // Add a gentle pulse effect to indicate the focused search
+        searchInputRef.current?.classList.add('animate-pulse')
+        setTimeout(() => {
+          searchInputRef.current?.classList.remove('animate-pulse')
+        }, 1000)
+      }, 100)
+    }
+  }, [searchParams])
 
   // Extract unique categories
   const categories = useMemo(() => {
@@ -100,14 +121,26 @@ export const BlogPageClient: React.FC<BlogPageClientProps> = ({ posts }) => {
       </div>
 
       {/* Search Section */}
-      <div className="max-w-2xl mx-auto mb-5">
+      <div
+        className={`max-w-2xl mx-auto mb-5 ${searchParams.get('focus') === 'search' ? 'ring-2 ring-blue-200 rounded-xl p-4 bg-blue-50/50' : ''}`}
+      >
         <div className="text-center mb-3">
-          <h2 className="text-lg font-semibold text-gray-800 mb-1">Find Health Articles</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-1">
+            {searchParams.get('focus') === 'search'
+              ? '🔍 Search Health Articles'
+              : 'Find Health Articles'}
+          </h2>
+          {searchParams.get('focus') === 'search' && (
+            <p className="text-sm text-blue-600 font-medium">
+              Start typing to search our health articles
+            </p>
+          )}
         </div>
         <div className="relative">
           <input
+            ref={searchInputRef}
             type="text"
-            placeholder="Search articles..."
+            placeholder="Search articles by title, content, or topic..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full px-4 py-2.5 text-base border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"

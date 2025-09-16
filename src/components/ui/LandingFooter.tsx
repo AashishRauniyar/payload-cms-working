@@ -100,7 +100,10 @@ export default function LandingFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <Link
+                  href="/authors"
+                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                >
                   Our Team
                 </Link>
               </li>

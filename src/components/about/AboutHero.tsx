@@ -68,7 +68,7 @@ const AboutHero = () => {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="#team"
+                href="/authors"
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center"
               >
                 <span>Meet Our Team</span>
