@@ -392,10 +392,10 @@ export default function Navbar({ categories }: NavbarProps) {
   // Helper to highlight active links
   const getNavLinkClass = (href: string) => {
     const base =
-      'relative text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50 group'
+      'relative text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-3 lg:px-4 rounded-lg hover:bg-blue-50 group whitespace-nowrap'
     const isActive = pathname === href || (href !== '/' && pathname?.startsWith(href))
     return isActive
-      ? 'relative text-blue-600 bg-blue-50 font-semibold py-2 px-4 rounded-lg border border-blue-100'
+      ? 'relative text-blue-600 bg-blue-50 font-semibold py-2 px-3 lg:px-4 rounded-lg border border-blue-100 whitespace-nowrap'
       : base
   }
 
@@ -458,7 +458,7 @@ export default function Navbar({ categories }: NavbarProps) {
         <div className="mx-auto px-6 lg:px-12">
           <div className="flex justify-between items-center h-16">
             {/* Left Navigation */}
-            <div className="hidden md:flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-1 lg:space-x-2 flex-shrink-0">
               <Link href="/" className={getNavLinkClass('/')}>
                 <span>Home</span>
                 {pathname === '/' && (
@@ -474,7 +474,7 @@ export default function Navbar({ categories }: NavbarProps) {
                   aria-haspopup="true"
                   aria-expanded={openDropdown === 'categories'}
                   aria-controls="nav-categories-menu"
-                  className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50 group"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-3 lg:px-4 rounded-lg hover:bg-blue-50 group"
                 >
                   <span>Categories</span>
                   <ChevronDownIcon
@@ -529,7 +529,8 @@ export default function Navbar({ categories }: NavbarProps) {
                 )}
               </Link>
               <Link href="/supplements" className={getNavLinkClass('/supplements')}>
-                <span>Supplements</span>
+                <span className="hidden lg:inline">Supplements</span>
+                <span className="lg:hidden">Supps</span>
                 {pathname.startsWith('/supplements') && (
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
                 )}
@@ -537,7 +538,7 @@ export default function Navbar({ categories }: NavbarProps) {
             </div>
 
             {/* Center Logo */}
-            <div className="flex-1 flex justify-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+            <div className="flex justify-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2 md:z-10">
               <Link href="/" className="flex items-center group">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
@@ -546,12 +547,17 @@ export default function Navbar({ categories }: NavbarProps) {
                     </div>
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
                   </div>
-                  <div className="hidden sm:block">
-                    <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  <div className="hidden lg:block">
+                    <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent whitespace-nowrap">
                       HealthScopeDaily
                     </div>
-                    <div className="text-xs text-gray-500 font-medium -mt-1">
+                    <div className="text-xs text-gray-500 font-medium -mt-1 whitespace-nowrap">
                       Evidence-Based Reviews
+                    </div>
+                  </div>
+                  <div className="hidden md:block lg:hidden">
+                    <div className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent whitespace-nowrap">
+                      HealthScope
                     </div>
                   </div>
                 </div>
@@ -559,7 +565,7 @@ export default function Navbar({ categories }: NavbarProps) {
             </div>
 
             {/* Right Navigation */}
-            <div className="hidden md:flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-1 lg:space-x-2 flex-shrink-0">
               <Link href="/brands" className={getNavLinkClass('/brands')}>
                 <span>Brands</span>
                 {pathname.startsWith('/brands') && (
@@ -575,7 +581,8 @@ export default function Navbar({ categories }: NavbarProps) {
               </Link>
 
               <Link href="/authors" className={getNavLinkClass('/authors')}>
-                <span>Our Experts</span>
+                <span className="hidden lg:inline">Our Experts</span>
+                <span className="lg:hidden">Experts</span>
                 {pathname.startsWith('/authors') && (
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
                 )}
@@ -589,7 +596,7 @@ export default function Navbar({ categories }: NavbarProps) {
                   aria-haspopup="true"
                   aria-expanded={openDropdown === 'company'}
                   aria-controls="nav-company-menu"
-                  className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50 group"
+                  className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-3 lg:px-4 rounded-lg hover:bg-blue-50 group"
                 >
                   <span>About</span>
                   <ChevronDownIcon
@@ -635,7 +642,7 @@ export default function Navbar({ categories }: NavbarProps) {
                 )}
               </div>
 
-              <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-gray-200">
+              <div className="flex items-center space-x-2 lg:space-x-3 ml-2 lg:ml-4 pl-2 lg:pl-4 border-l border-gray-200">
                 <Link
                   href="/search"
                   aria-label="Search"
@@ -644,8 +651,9 @@ export default function Navbar({ categories }: NavbarProps) {
                   <Search className="w-5 h-5" />
                 </Link>
 
-                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                  Get Started
+                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 lg:px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 whitespace-nowrap">
+                  <span className="hidden lg:inline">Get Started</span>
+                  <span className="lg:hidden">Start</span>
                 </button>
               </div>
             </div>

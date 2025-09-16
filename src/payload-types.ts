@@ -2493,10 +2493,6 @@ export interface FAQBlock {
  */
 export interface CustomCTABlock {
   /**
-   * Main headline text for the CTA section
-   */
-  ctaText: string;
-  /**
    * Text that appears on the CTA button
    */
   buttonText: string;
