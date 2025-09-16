@@ -212,7 +212,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                     )}
                   </div>
                   <span className="text-sm text-gray-700 font-medium">
-                    {rating.title || rating.category}
+                    {('title' in rating ? rating.title : rating.category) as string}
                   </span>
                 </div>
                 <div className="text-sm text-gray-600 font-medium">
@@ -221,9 +221,31 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Center - Product Image with Buttons Below */}
+        <div className="w-40 flex flex-col items-center justify-center p-6">
+          {/* Product Image */}
+          <div className="mb-4">
+            {productImage ? (
+              <div className="w-32 h-40">
+                <Media resource={productImage} className="w-full h-full object-contain" />
+              </div>
+            ) : (
+              <div className="w-32 h-40 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div className="w-24 h-32 bg-white rounded border border-gray-300 flex items-center justify-center shadow-sm">
+                  <div className="text-center">
+                    <div className="text-xs font-bold text-gray-600 mb-1">WOW MD</div>
+                    <div className="text-xs text-blue-600 font-semibold">NEURO PLUS</div>
+                    <div className="text-xs text-gray-500 mt-1">BRAIN & FOCUS FORMULA</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Action Buttons */}
-          <div className="flex mt-6 space-x-3">
+          <div className="flex flex-col space-y-2 w-full">
             {buttons && buttons.length > 0 ? (
               buttons.map((button, index) => (
                 <CMSLink
@@ -232,10 +254,14 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                   reference={button.link.reference}
                   url={button.link.url}
                   newTab={button.link.newTab}
-                  className={`px-6 py-2 text-sm rounded font-semibold transition-colors ${
-                    button.style === 'primary' || button.label?.toLowerCase().includes('shop')
+                  className={`px-4 py-2 text-xs rounded font-semibold transition-colors text-center ${
+                    button.style === 'primary'
                       ? 'bg-orange-500 text-white hover:bg-orange-600'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                      : button.style === 'secondary'
+                        ? 'bg-blue-500 text-white hover:bg-blue-600'
+                        : button.label?.toLowerCase().includes('shop')
+                          ? 'bg-orange-500 text-white hover:bg-orange-600'
+                          : 'bg-blue-500 text-white hover:bg-blue-600'
                   }`}
                 >
                   {button.label}
@@ -243,10 +269,10 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
               ))
             ) : (
               <>
-                <button className="bg-orange-500 text-white px-6 py-2 text-sm rounded font-semibold hover:bg-orange-600 transition-colors">
+                <button className="bg-orange-500 text-white px-4 py-2 text-xs rounded font-semibold hover:bg-orange-600 transition-colors">
                   Shop Now
                 </button>
-                <button className="bg-blue-500 text-white px-6 py-2 text-sm rounded font-semibold hover:bg-blue-600 transition-colors">
+                <button className="bg-blue-500 text-white px-4 py-2 text-xs rounded font-semibold hover:bg-blue-600 transition-colors">
                   Read Review
                 </button>
               </>
@@ -254,30 +280,11 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
           </div>
         </div>
 
-        {/* Center - Product Image */}
-        <div className="w-40 flex items-center justify-center p-6">
-          {productImage ? (
-            <div className="w-32 h-40">
-              <Media resource={productImage} className="w-full h-full object-contain" />
-            </div>
-          ) : (
-            <div className="w-32 h-40 bg-gray-100 rounded-lg flex items-center justify-center">
-              <div className="w-24 h-32 bg-white rounded border border-gray-300 flex items-center justify-center shadow-sm">
-                <div className="text-center">
-                  <div className="text-xs font-bold text-gray-600 mb-1">WOW MD</div>
-                  <div className="text-xs text-blue-600 font-semibold">NEURO PLUS</div>
-                  <div className="text-xs text-gray-500 mt-1">BRAIN & FOCUS FORMULA</div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* Right Side - Rating Breakdown */}
         <div className="w-80 p-6 bg-gray-50 rounded-r-lg border-l border-gray-200">
           <div className="mb-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-800">Rating Breakdown</h3>
+              <div className="text-sm font-semibold text-gray-800">Rating Breakdown</div>
               <button className="text-gray-400 hover:text-gray-600">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -298,7 +305,11 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                   className="flex items-center justify-between"
                 >
                   <span className="text-xs text-gray-600">
-                    {rating.category || rating.title?.replace('*', '') || `Rating ${index + 1}`}:
+                    {rating.category ||
+                      ('title' in rating
+                        ? (rating.title as string)?.replace('*', '')
+                        : `Rating ${index + 1}`)}
+                    :
                   </span>
                   <StarRating rating={rating.rating} color="text-blue-500" size="sm" />
                 </div>
