@@ -69,7 +69,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
-COPY --from=builder --chown=nextjs:nodejs /app/payload.config.ts ./payload.config.ts
 
 # Copy node_modules with payload CLI for migrations
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
