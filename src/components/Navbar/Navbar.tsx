@@ -193,7 +193,7 @@ export default function Navbar({ categories }: NavbarProps) {
               </div>
 
               <Link href="/posts" className={getNavLinkClass('/posts')}>
-                <span>Blog</span>
+                <span>Reviews</span>
                 {pathname.startsWith('/posts') && (
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
                 )}
@@ -237,12 +237,7 @@ export default function Navbar({ categories }: NavbarProps) {
                 )}
               </Link>
 
-              <Link href="/reviews" className={getNavLinkClass('/reviews')}>
-                <span>Reviews</span>
-                {pathname.startsWith('/reviews') && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
-                )}
-              </Link>
+             
 
               <Link href="/authors" className={getNavLinkClass('/authors')}>
                 <span>Experts</span>
@@ -295,7 +290,11 @@ export default function Navbar({ categories }: NavbarProps) {
                         <span className="flex-1">FAQ</span>
                       </div>
                     </Link>
-                    <Link href="/team" className={getDropdownLinkClass()} onClick={closeDropdown}>
+                    <Link
+                      href="/authors"
+                      className={getDropdownLinkClass()}
+                      onClick={closeDropdown}
+                    >
                       <div className="flex items-center space-x-3 w-full">
                         <Heart className="w-4 h-4 text-red-500" />
                         <span className="flex-1">Our Team</span>
@@ -307,23 +306,26 @@ export default function Navbar({ categories }: NavbarProps) {
 
               <div className="flex items-center space-x-2 ml-3 pl-3 border-l border-gray-200">
                 <Link
-                  href="/search"
+                  href="/posts?focus=search"
                   aria-label="Search"
                   className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 rounded-lg"
                 >
                   <Search className="w-4 h-4" />
                 </Link>
 
-                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg">
+                <Link
+                  href="/posts"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
+                >
                   Get Started
-                </button>
+                </Link>
               </div>
             </div>
 
             {/* Mobile menu button */}
             <div className="lg:hidden flex items-center space-x-2">
               <Link
-                href="/search"
+                href="/posts?focus=search"
                 aria-label="Search"
                 className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 rounded-lg"
               >
@@ -401,19 +403,6 @@ export default function Navbar({ categories }: NavbarProps) {
                   >
                     <div className="w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
                     <span className="font-medium text-sm">Brands</span>
-                  </Link>
-
-                  <Link
-                    href="/reviews"
-                    className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ${
-                      pathname.startsWith('/reviews')
-                        ? 'bg-blue-50 text-blue-600 border border-blue-100'
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
-                    <span className="font-medium text-sm">Reviews</span>
                   </Link>
 
                   <Link
@@ -495,12 +484,13 @@ export default function Navbar({ categories }: NavbarProps) {
 
                 {/* CTA Section */}
                 <div className="pt-3 border-t border-gray-200">
-                  <button
-                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-200 shadow-lg text-sm"
+                  <Link
+                    href="/posts"
+                    className="block w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-200 shadow-lg text-sm text-center"
                     onClick={() => setIsOpen(false)}
                   >
                     Get Started
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
