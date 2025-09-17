@@ -130,7 +130,6 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
       <div className="my-8">
         <CustomCTABlock
           disableInnerContainer={true}
-          ctaText={node.fields.ctaText || undefined}
           buttonText={node.fields.buttonText || undefined}
           buttonLink={node.fields.buttonLink || '#'}
         />

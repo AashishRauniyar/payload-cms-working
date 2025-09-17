@@ -119,7 +119,6 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       <CustomCTABlock
         className="col-start-1 col-span-3"
         disableInnerContainer={true}
-        ctaText={node.fields.ctaText || undefined}
         buttonText={node.fields.buttonText || undefined}
         buttonLink={node.fields.buttonLink || '#'}
       />
