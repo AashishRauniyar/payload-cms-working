@@ -1,8 +1,21 @@
 'use client'
 import React, { useState } from 'react'
 
+interface FormData {
+  name: string
+  email: string
+  review: string
+  rating: number
+}
+
+interface FormErrors {
+  name?: string
+  email?: string
+  review?: string
+}
+
 const ReviewBox = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     review: '',
@@ -11,13 +24,13 @@ const ReviewBox = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [hoveredRating, setHoveredRating] = useState(0)
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState<FormErrors>({})
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
 
     // Clear errors when user starts typing
-    if (errors[name]) {
+    if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({
         ...prev,
         [name]: '',
@@ -35,7 +48,7 @@ const ReviewBox = () => {
     }))
   }
 
-  const handleRatingClick = (rating) => {
+  const handleRatingClick = (rating: number) => {
     setFormData((prev) => ({
       ...prev,
       rating,
@@ -43,9 +56,8 @@ const ReviewBox = () => {
   }
 
   const handleSubmit = async () => {
-
     // Validate form
-    const newErrors = {}
+    const newErrors: FormErrors = {}
 
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required'
@@ -99,8 +111,12 @@ const ReviewBox = () => {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-emerald-800">Review submitted successfully!</h3>
-              <p className="text-sm text-emerald-700 mt-1">Thank you for sharing your feedback with us.</p>
+              <h3 className="text-sm font-medium text-emerald-800">
+                Review submitted successfully!
+              </h3>
+              <p className="text-sm text-emerald-700 mt-1">
+                Thank you for sharing your feedback with us.
+              </p>
             </div>
           </div>
         </div>
@@ -117,7 +133,7 @@ const ReviewBox = () => {
               <div className="absolute bottom-20 right-10 w-16 h-16 border-2 border-white rounded-full"></div>
               <div className="absolute top-1/2 right-20 w-12 h-12 border-2 border-white rounded-full"></div>
             </div>
-            
+
             <div className="relative z-10">
               <div className="mb-6">
                 <div className="flex items-center mb-4">
@@ -128,28 +144,53 @@ const ReviewBox = () => {
                   </div>
                   <h2 className="text-3xl lg:text-4xl font-bold text-white">Write a Review</h2>
                 </div>
-                
+
                 <p className="text-blue-100 text-lg leading-relaxed mb-8">
-                  Share your experience and help others make informed decisions. Your feedback matters to us and our community.
+                  Share your experience and help others make informed decisions. Your feedback
+                  matters to us and our community.
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center text-blue-100">
-                  <svg className="w-5 h-5 mr-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <svg
+                    className="w-5 h-5 mr-3 text-yellow-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   <span>Quick and easy process</span>
                 </div>
                 <div className="flex items-center text-blue-100">
-                  <svg className="w-5 h-5 mr-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <svg
+                    className="w-5 h-5 mr-3 text-yellow-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   <span>Your privacy is protected</span>
                 </div>
                 <div className="flex items-center text-blue-100">
-                  <svg className="w-5 h-5 mr-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <svg
+                    className="w-5 h-5 mr-3 text-yellow-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   <span>Help improve our service</span>
                 </div>
@@ -171,7 +212,9 @@ const ReviewBox = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 transition-colors ${
-                    errors.name ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                    errors.name
+                      ? 'border-red-300 bg-red-50'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                   placeholder="Enter your full name"
                 />
@@ -189,7 +232,9 @@ const ReviewBox = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 transition-colors ${
-                    errors.email ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                    errors.email
+                      ? 'border-red-300 bg-red-50'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                   placeholder="your.email@example.com"
                 />
@@ -242,7 +287,9 @@ const ReviewBox = () => {
                   onChange={handleInputChange}
                   rows={5}
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-500 transition-colors resize-none ${
-                    errors.review ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                    errors.review
+                      ? 'border-red-300 bg-red-50'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                   placeholder="Share your detailed experience and thoughts..."
                 />
@@ -251,9 +298,7 @@ const ReviewBox = () => {
                   <div className="text-xs text-gray-500">
                     {formData.review.length}/1000 characters
                   </div>
-                  <div className="text-xs text-gray-400">
-                    Minimum 10 characters required
-                  </div>
+                  <div className="text-xs text-gray-400">Minimum 10 characters required</div>
                 </div>
               </div>
 
@@ -266,17 +311,43 @@ const ReviewBox = () => {
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Submitting Your Review...
                   </div>
                 ) : (
                   <div className="flex items-center justify-center">
                     <span>Submit Review</span>
-                    <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    <svg
+                      className="ml-2 w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                      />
                     </svg>
                   </div>
                 )}

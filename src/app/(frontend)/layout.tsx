@@ -7,6 +7,7 @@ import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
+import { GoogleAnalytics } from '@/components/GoogleAnalytics'
 import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
@@ -30,6 +31,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
+          {process.env.NEXT_PUBLIC_GA_ID && (
+            <GoogleAnalytics
+              gaId={process.env.NEXT_PUBLIC_GA_ID}
+              debugMode={process.env.NODE_ENV === 'development'}
+            />
+          )}
           <AdminBar
             adminBarProps={{
               preview: isEnabled,
