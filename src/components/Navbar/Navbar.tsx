@@ -198,6 +198,12 @@ export default function Navbar({ categories }: NavbarProps) {
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
                 )}
               </Link>
+              <Link href="/blog" className={getNavLinkClass('/blog')}>
+                <span>Blog</span>
+                {pathname.startsWith('/blog') && (
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
+                )}
+              </Link>
               <Link href="/supplements" className={getNavLinkClass('/supplements')}>
                 <span>Supplements</span>
                 {pathname.startsWith('/supplements') && (
@@ -236,8 +242,6 @@ export default function Navbar({ categories }: NavbarProps) {
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"></div>
                 )}
               </Link>
-
-             
 
               <Link href="/authors" className={getNavLinkClass('/authors')}>
                 <span>Experts</span>
@@ -376,6 +380,19 @@ export default function Navbar({ categories }: NavbarProps) {
                     onClick={() => setIsOpen(false)}
                   >
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                    <span className="font-medium text-sm">Reviews</span>
+                  </Link>
+
+                  <Link
+                    href="/blog"
+                    className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ${
+                      pathname.startsWith('/blog')
+                        ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full"></div>
                     <span className="font-medium text-sm">Blog</span>
                   </Link>
 

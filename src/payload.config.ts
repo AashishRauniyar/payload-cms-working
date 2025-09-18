@@ -7,6 +7,8 @@ import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
+import { BlogCategories } from './collections/BlogCategories'
+import { BlogPosts } from './collections/BlogPosts'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
@@ -70,7 +72,7 @@ export default buildConfig({
         }
       : {}),
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Posts, BlogPosts, Media, Categories, BlogCategories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [
