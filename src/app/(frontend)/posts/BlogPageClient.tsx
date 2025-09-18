@@ -317,16 +317,8 @@ function BlogCard({ post }: { post: Post }) {
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center">
               <div className="text-4xl mb-2 opacity-70">📰</div>
-              <div className="text-xs text-gray-500 font-medium">Health Article</div>
             </div>
           )}
-
-          {/* Article Badge */}
-          <div className="absolute top-3 left-3">
-            <span className="px-2 py-1 bg-white/90 backdrop-blur-sm text-blue-600 text-xs font-semibold rounded-full shadow-sm">
-              Article
-            </span>
-          </div>
         </div>
 
         {/* Content */}
