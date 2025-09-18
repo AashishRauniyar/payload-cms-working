@@ -89,7 +89,7 @@ export default async function BlogPost({ params: paramsPromise }: Args) {
       <div className="flex flex-col items-center gap-4 pt-8">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="prose prose-lg max-w-none">
+            <div className="prose prose-lg max-w-none text-black [&_*]:text-black">
               <RichText data={post.content} enableGutter={false} />
             </div>
 

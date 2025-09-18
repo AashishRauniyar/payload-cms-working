@@ -186,13 +186,13 @@ export default function RichText(props: Props) {
   const { className, enableProse = true, enableGutter = true, ...rest } = props
   return (
     <ConvertRichText
-      converters={jsxConverters}//global rich text
+      converters={jsxConverters} //global rich text
       className={cn(
         'payload-richtext',
         {
           container: enableGutter,
           'max-w-none': !enableGutter,
-          'mx-auto prose md:prose-md dark:prose-invert': enableProse,
+          'mx-auto prose md:prose-md': enableProse,
         },
         className,
       )}
