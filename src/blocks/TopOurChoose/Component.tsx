@@ -224,16 +224,16 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
         </div>
 
         {/* Center - Product Image with Buttons Below */}
-        <div className="w-40 flex flex-col items-center justify-center p-6 bg-white">
+        <div className="w-32 flex flex-col items-center justify-center p-4 bg-white -ml-4">
           {/* Product Image */}
-          <div className="mb-4">
+          <div className="mb-3">
             {productImage ? (
-              <div className="w-32 h-40">
+              <div className="w-24 h-32">
                 <Media resource={productImage} className="w-full h-full object-contain" />
               </div>
             ) : (
-              <div className="w-32 h-40 bg-gray-100 rounded-lg flex items-center justify-center">
-                <div className="w-24 h-32 bg-white rounded border border-gray-300 flex items-center justify-center shadow-sm">
+              <div className="w-24 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+                <div className="w-20 h-28 bg-white rounded border border-gray-300 flex items-center justify-center shadow-sm">
                   <div className="text-center">
                     <div className="text-xs font-bold text-gray-600 mb-1">WOW MD</div>
                     <div className="text-xs text-blue-600 font-semibold">NEURO PLUS</div>
@@ -254,7 +254,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                   reference={button.link.reference}
                   url={button.link.url}
                   newTab={button.link.newTab}
-                  className={`px-3 py-2 text-xs font-bold transition-colors text-center flex-1 ${
+                  className={`px-2 py-2 text-xs font-bold transition-colors text-center flex-1 ${
                     button.style === 'primary' || button.label?.toLowerCase().includes('shop')
                       ? 'bg-blue-500 text-white hover:bg-blue-600'
                       : 'bg-green-500 text-white hover:bg-green-600'
@@ -265,10 +265,10 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
               ))
             ) : (
               <>
-                <button className="bg-blue-500 text-white px-3 py-2 text-xs font-bold hover:bg-blue-600 transition-colors flex-1">
+                <button className="bg-blue-500 text-white px-2 py-2 text-xs font-bold hover:bg-blue-600 transition-colors flex-1">
                   Shop Now
                 </button>
-                <button className="bg-green-500 text-white px-3 py-2 text-xs font-bold hover:bg-green-600 transition-colors flex-1">
+                <button className="bg-green-500 text-white px-2 py-2 text-xs font-bold hover:bg-green-600 transition-colors flex-1">
                   Read Review
                 </button>
               </>
