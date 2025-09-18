@@ -224,7 +224,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
         </div>
 
         {/* Center - Product Image with Buttons Below */}
-        <div className="w-32 flex flex-col items-center justify-center p-4 bg-white -ml-4">
+        <div className="w-80 flex flex-col items-center justify-center p-4 bg-white -ml-4">
           {/* Product Image */}
           <div className="mb-3">
             {productImage ? (
