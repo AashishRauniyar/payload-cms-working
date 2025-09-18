@@ -182,7 +182,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   })
 
   const content = (
-    <div className="bg-white border border-gray-300 rounded-lg shadow-sm max-w-5xl mx-auto">
+    <div className="border border-gray-300 rounded-lg shadow-sm max-w-5xl mx-auto">
       {/* Header - Green Bar */}
       <div className="bg-green-700 text-white px-6 py-3 rounded-t-lg">
         <div className="text-base font-semibold">
@@ -194,7 +194,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
 
       <div className="flex">
         {/* Left Side - Benefits List */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-6 bg-white">
           <div className="space-y-4">
             {ratingsData.map((rating, index) => (
               <div
@@ -224,7 +224,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
         </div>
 
         {/* Center - Product Image with Buttons Below */}
-        <div className="w-40 flex flex-col items-center justify-center p-6">
+        <div className="w-40 flex flex-col items-center justify-center p-6 bg-white">
           {/* Product Image */}
           <div className="mb-4">
             {productImage ? (
@@ -256,8 +256,8 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                   newTab={button.link.newTab}
                   className={`px-3 py-2 text-xs font-bold transition-colors text-center flex-1 ${
                     button.style === 'primary' || button.label?.toLowerCase().includes('shop')
-                      ? 'bg-orange-500 text-white hover:bg-orange-600'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                      ? 'bg-blue-500 text-white hover:bg-blue-600'
+                      : 'bg-green-500 text-white hover:bg-green-600'
                   }`}
                 >
                   {button.label}
@@ -265,10 +265,10 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
               ))
             ) : (
               <>
-                <button className="bg-orange-500 text-white px-3 py-2 text-xs font-bold hover:bg-orange-600 transition-colors flex-1">
+                <button className="bg-blue-500 text-white px-3 py-2 text-xs font-bold hover:bg-blue-600 transition-colors flex-1">
                   Shop Now
                 </button>
-                <button className="bg-blue-500 text-white px-3 py-2 text-xs font-bold hover:bg-blue-600 transition-colors flex-1">
+                <button className="bg-green-500 text-white px-3 py-2 text-xs font-bold hover:bg-green-600 transition-colors flex-1">
                   Read Review
                 </button>
               </>
