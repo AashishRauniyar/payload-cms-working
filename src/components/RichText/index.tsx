@@ -186,7 +186,7 @@ export default function RichText(props: Props) {
   const { className, enableProse = true, enableGutter = true, ...rest } = props
   return (
     <ConvertRichText
-      converters={jsxConverters}
+      converters={jsxConverters}//global rich text
       className={cn(
         'payload-richtext',
         {
