@@ -94,7 +94,7 @@ const AboutHero = () => {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=600&q=80"
+                src="/images/people.png"
                 alt="HealthScopeDaily team of health professionals"
                 className="w-full h-96 lg:h-[500px] object-cover"
               />
