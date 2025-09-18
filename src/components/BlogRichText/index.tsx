@@ -176,7 +176,7 @@ export default function BlogRichText(props: Props) {
     <ConvertRichText
       converters={blogJsxConverters}
       className={cn(
-        'blog-richtext', // Using blog-specific class instead of payload-richtext
+        'blog-richtext', 
         {
           container: enableGutter,
           'max-w-none': !enableGutter,
