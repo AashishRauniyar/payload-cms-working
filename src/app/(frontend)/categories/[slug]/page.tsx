@@ -51,6 +51,7 @@ async function getPostsByCategory(categoryId: number) {
     limit: 50,
     sort: '-publishedAt',
     depth: 2,
+    trash: false, // Exclude trashed posts
   })
 
   return posts.docs as Post[]

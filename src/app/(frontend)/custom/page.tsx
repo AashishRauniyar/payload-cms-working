@@ -13,6 +13,7 @@ export default async function CustomPage() {
   const posts = await payload.find({
     collection: 'posts',
     limit: 5,
+    trash: false, // Exclude trashed posts
     select: {
       title: true,
       slug: true,

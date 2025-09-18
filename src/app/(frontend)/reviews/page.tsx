@@ -41,6 +41,7 @@ async function getPosts() {
     limit: 100,
     sort: '-publishedAt',
     depth: 2,
+    trash: false, // Exclude trashed posts
   })
 
   return posts.docs as Post[]

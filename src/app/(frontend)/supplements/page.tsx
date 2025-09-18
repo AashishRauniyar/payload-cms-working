@@ -23,6 +23,7 @@ async function getSupplementPosts() {
       },
     },
     sort: '-publishedAt',
+    trash: false, // Exclude trashed posts
   })
 
   return posts.docs as Post[]

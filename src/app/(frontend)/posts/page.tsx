@@ -17,6 +17,7 @@ export default async function Page() {
     depth: 2,
     limit: 100, // Increased limit for better browsing
     overrideAccess: false,
+    trash: false, // Exclude trashed posts
     where: {
       _status: {
         equals: 'published',

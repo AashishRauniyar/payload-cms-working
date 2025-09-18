@@ -41,6 +41,7 @@ import { slugField } from '@/fields/slug/index'
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
+  trash: true,
   access: {
     create: authenticated,
     delete: authenticated,

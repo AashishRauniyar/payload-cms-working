@@ -18,6 +18,7 @@ const getPostsSitemap = unstable_cache(
       depth: 0,
       limit: 1000,
       pagination: false,
+      trash: false, // Exclude trashed posts
       where: {
         _status: {
           equals: 'published',

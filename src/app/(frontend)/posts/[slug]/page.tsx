@@ -137,6 +137,7 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
     limit: 1,
     overrideAccess: draft,
     pagination: false,
+    trash: false, // Exclude trashed posts
     where: {
       slug: {
         equals: slug,

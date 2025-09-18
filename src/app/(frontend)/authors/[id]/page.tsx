@@ -36,6 +36,7 @@ async function getPostsByAuthor(id: string) {
     },
     sort: '-publishedAt',
     depth: 1,
+    trash: false, // Exclude trashed posts
   })
   return posts.docs as Post[]
 }

@@ -30,6 +30,7 @@ export const ArchiveBlock: React.FC<
       collection: 'posts',
       depth: 1,
       limit,
+      trash: false, // Exclude trashed posts
       ...(flattenedCategories && flattenedCategories.length > 0
         ? {
             where: {
