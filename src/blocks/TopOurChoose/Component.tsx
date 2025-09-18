@@ -245,7 +245,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-row space-x-2 w-full">
+          <div className="flex flex-row space-x-1 w-full">
             {buttons && buttons.length > 0 ? (
               buttons.map((button, index) => (
                 <CMSLink
@@ -254,10 +254,10 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                   reference={button.link.reference}
                   url={button.link.url}
                   newTab={button.link.newTab}
-                  className={`px-3 py-2 text-xs rounded font-semibold transition-colors text-center flex-1 ${
+                  className={`px-3 py-2 text-xs font-bold transition-colors text-center flex-1 ${
                     button.style === 'primary' || button.label?.toLowerCase().includes('shop')
-                      ? 'bg-blue-500 text-white hover:bg-white hover:text-blue-500 border border-blue-500'
-                      : 'bg-green-500 text-white hover:bg-white hover:text-green-500 border border-green-500'
+                      ? 'bg-orange-500 text-white hover:bg-orange-600'
+                      : 'bg-blue-500 text-white hover:bg-blue-600'
                   }`}
                 >
                   {button.label}
@@ -265,10 +265,10 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
               ))
             ) : (
               <>
-                <button className="bg-blue-500 text-white px-3 py-2 text-xs rounded font-semibold hover:bg-white hover:text-blue-500 border border-blue-500 transition-colors flex-1">
+                <button className="bg-orange-500 text-white px-3 py-2 text-xs font-bold hover:bg-orange-600 transition-colors flex-1">
                   Shop Now
                 </button>
-                <button className="bg-green-500 text-white px-3 py-2 text-xs rounded font-semibold hover:bg-white hover:text-green-500 border border-green-500 transition-colors flex-1">
+                <button className="bg-blue-500 text-white px-3 py-2 text-xs font-bold hover:bg-blue-600 transition-colors flex-1">
                   Read Review
                 </button>
               </>
