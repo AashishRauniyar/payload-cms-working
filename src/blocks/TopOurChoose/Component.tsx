@@ -229,7 +229,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
         {/* Center Image */}
         <div className="flex-shrink-0 flex flex-col items-center justify-start p-6 pt-2">
           {/* Product Image moved up */}
-          <div className="relative group mb-6">
+          <div className="relative group mb-3">
             {productImage ? (
               <div className="w-56 h-64">
                 <Media
@@ -250,8 +250,8 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
             )}
           </div>
 
-          {/* Buttons positioned vertically below image */}
-          <div className="flex flex-col space-y-3 w-full max-w-sm">
+          {/* Buttons positioned vertically below image - moved closer */}
+          <div className="flex flex-col space-y-2 w-full max-w-sm">
             {buttons && buttons.length > 0 ? (
               buttons.map((button, index) => (
                 <CMSLink
