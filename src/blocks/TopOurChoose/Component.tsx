@@ -258,17 +258,13 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                 <button className="group relative overflow-hidden bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 px-12 rounded-full transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl shadow-blue-200">
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
                   <div className="relative flex items-center justify-center">
-                    <div className="text-lg font-bold tracking-wide text-white">
-                      Get Your Supplement Now
-                    </div>
+                    <div className="text-sm font-bold tracking-wide text-white">Shop Now</div>
                   </div>
                 </button>
                 <button className="group relative overflow-hidden bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-12 rounded-full transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl shadow-green-200">
                   <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
                   <div className="relative flex items-center justify-center">
-                    <div className="text-lg font-bold tracking-wide text-white">
-                      Read Full Review
-                    </div>
+                    <div className="text-sm font-bold tracking-wide text-white">Read Review</div>
                   </div>
                 </button>
               </>
