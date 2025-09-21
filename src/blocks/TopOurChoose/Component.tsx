@@ -235,43 +235,41 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                   reference={button.link.reference}
                   url={button.link.url}
                   newTab={button.link.newTab}
-                  className={`group relative overflow-hidden font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg ${
+                  className={`group relative overflow-hidden font-semibold py-4 px-12 rounded-full transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl ${
                     button.style === 'primary' || button.label?.toLowerCase().includes('shop')
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                      : 'bg-green-600 hover:bg-green-700 text-white'
+                      ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-blue-200'
+                      : 'bg-green-500 hover:bg-green-600 text-white shadow-green-200'
                   }`}
                 >
                   <div
-                    className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                    className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full ${
                       button.style === 'primary' || button.label?.toLowerCase().includes('shop')
-                        ? 'bg-gradient-to-r from-blue-500 to-blue-600'
-                        : 'bg-gradient-to-r from-green-500 to-green-600'
+                        ? 'bg-gradient-to-r from-blue-400 to-blue-500'
+                        : 'bg-gradient-to-r from-green-400 to-green-500'
                     }`}
                   ></div>
-                  <div className="relative flex items-center space-x-2">
-                    {button.label?.toLowerCase().includes('shop') ? (
-                      <ShoppingCart className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                    ) : (
-                      <FileText className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                    )}
-                    <span>{button.label}</span>
+                  <div className="relative flex items-center justify-center space-x-3">
+                    <div className="text-2xl">
+                      {button.label?.toLowerCase().includes('shop') ? '💊' : '📖'}
+                    </div>
+                    <div className="text-lg font-bold tracking-wide">{button.label}</div>
                   </div>
                 </CMSLink>
               ))
             ) : (
               <>
-                <button className="group relative overflow-hidden bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative flex items-center space-x-2">
-                    <ShoppingCart className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                    <span className='text-zinc-300'>Shop Now</span>
+                <button className="group relative overflow-hidden bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 px-12 rounded-full transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl shadow-blue-200">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
+                  <div className="relative flex items-center justify-center space-x-3">
+                    <div className="text-2xl">💊</div>
+                    <div className="text-lg font-bold tracking-wide">Get Your Supplement Now</div>
                   </div>
                 </button>
-                <button className="group relative overflow-hidden bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative flex items-center space-x-2">
-                    <FileText className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                    <span className='text-zinc-300'>Read Review</span>
+                <button className="group relative overflow-hidden bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-12 rounded-full transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl shadow-green-200">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
+                  <div className="relative flex items-center justify-center space-x-3">
+                    <div className="text-2xl">📖</div>
+                    <div className="text-lg font-bold tracking-wide">Read Full Review</div>
                   </div>
                 </button>
               </>
