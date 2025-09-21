@@ -304,9 +304,9 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
               className="flex items-center justify-between p-4 cursor-pointer group hover:bg-gray-50 transition-colors duration-200"
               onClick={() => setIsExpanded(!isExpanded)}
             >
-              <h3 className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors duration-300">
+              <div className="font-semibold text-lg text-gray-900 group-hover:text-blue-700 transition-colors duration-300">
                 Rating Breakdown
-              </h3>
+              </div>
               <div
                 className={`transform transition-all duration-300 ${isExpanded ? 'rotate-180' : 'group-hover:scale-110'}`}
               >
