@@ -273,17 +273,17 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
         </div>
 
         {/* Center Image */}
-        <div className="flex-shrink-0 flex items-center justify-center p-6 ">
+        <div className="flex-shrink-0 flex items-center justify-center p-6">
           <div className="relative group">
             {productImage ? (
               <div className="w-52 h-60">
                 <Media
                   resource={productImage}
-                  className="w-full h-full object-contain rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
             ) : (
-              <div className="w-48 h-60 bg-gray-100 rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105 flex items-center justify-center">
+              <div className="w-48 h-60 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                 <div className="w-40 h-52 bg-white rounded border border-gray-300 flex items-center justify-center shadow-sm">
                   <div className="text-center">
                     <div className="text-sm font-bold text-gray-600 mb-2">Product</div>
@@ -293,7 +293,6 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                 </div>
               </div>
             )}
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
         </div>
 
