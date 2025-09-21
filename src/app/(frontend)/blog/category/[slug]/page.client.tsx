@@ -161,11 +161,11 @@ const CategoryPageClient = ({ category, posts }: CategoryPageClientProps) => {
                 <div className="p-6">
                   {/* Categories */}
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {post.blogCategories?.map((cat, catIndex) => {
+                    {post.blogCategories?.map((cat) => {
                       if (typeof cat === 'object') {
                         return (
                           <span
-                            key={catIndex}
+                            key={cat.id}
                             className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                             style={{
                               backgroundColor: cat.color ? `${cat.color}20` : '#f3f4f6',
