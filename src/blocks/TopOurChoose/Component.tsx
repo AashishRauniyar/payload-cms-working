@@ -264,14 +264,14 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative flex items-center space-x-2">
                     <ShoppingCart className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                    <span>Shop Now</span>
+                    <span className='text-zinc-300'>Shop Now</span>
                   </div>
                 </button>
                 <button className="group relative overflow-hidden bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
                   <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative flex items-center space-x-2">
                     <FileText className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                    <span>Read Review</span>
+                    <span className='text-zinc-300'>Read Review</span>
                   </div>
                 </button>
               </>
