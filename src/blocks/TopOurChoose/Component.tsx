@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
-import { Star, StarHalf } from 'lucide-react'
+import React, { useState } from 'react'
+import { Star, StarHalf, ChevronDown, ChevronUp, ShoppingCart, FileText } from 'lucide-react'
 import { CMSLink } from '../../components/Link'
 import { Media } from '../../components/Media'
 import type { TopOurChoose as TopOurChooseType } from '@/payload-types'
@@ -11,94 +11,104 @@ interface TopOurChooseBlockProps extends Omit<TopOurChooseType, 'blockType' | 'i
   className?: string
 }
 
-const StarRating: React.FC<{ rating: number; color?: string; size?: 'sm' | 'md' | 'lg' }> = ({
+const StarRating: React.FC<{
+  rating: number
+  color?: string
+  size?: 'sm' | 'md' | 'lg'
+  interactive?: boolean
+  criterionIndex?: number
+  hoveredCriterion?: number | null
+}> = ({
   rating,
   color = 'text-blue-500',
   size = 'md',
+  interactive = false,
+  criterionIndex = null,
+  hoveredCriterion = null,
 }) => {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6',
+    sm: 'w-3 h-3',
+    md: 'w-4 h-4',
+    lg: 'w-5 h-5',
   }
 
   const starSize = sizeClasses[size]
   const stars = []
   const fullStars = Math.floor(rating)
   const hasHalfStar = rating % 1 !== 0
+  const isHovered = interactive && hoveredCriterion === criterionIndex
 
-  for (let i = 0; i < fullStars; i++) {
-    stars.push(<Star key={i} className={`${starSize} ${color} fill-current`} />)
-  }
-
-  if (hasHalfStar) {
-    stars.push(<StarHalf key="half" className={`${starSize} ${color} fill-current`} />)
-  }
-
-  const emptyStars = 5 - Math.ceil(rating)
-  for (let i = 0; i < emptyStars; i++) {
-    stars.push(<Star key={`empty-${i}`} className={`${starSize} text-gray-300`} />)
-  }
-
-  return <div className="flex">{stars}</div>
-}
-
-interface EvidenceIndicatorProps {
-  evidence: string
-}
-
-export const EvidenceIndicator: React.FC<EvidenceIndicatorProps> = ({ evidence }) => {
-  const getEvidenceStyle = (evidence: string) => {
-    switch (evidence.toLowerCase()) {
-      case 'gold star evidence':
-        return {
-          bg: 'bg-gradient-to-r from-yellow-400 to-yellow-500',
-          text: 'text-yellow-800',
-          bgLight: 'bg-yellow-50',
-          border: 'border-yellow-200',
-        }
-      case 'strong evidence':
-        return {
-          bg: 'bg-gradient-to-r from-green-400 to-green-500',
-          text: 'text-green-800',
-          bgLight: 'bg-green-50',
-          border: 'border-green-200',
-        }
-      case 'good evidence':
-      case 'good site evidence':
-        return {
-          bg: 'bg-gradient-to-r from-blue-400 to-blue-500',
-          text: 'text-blue-800',
-          bgLight: 'bg-blue-50',
-          border: 'border-blue-200',
-        }
-      case 'limited evidence':
-        return {
-          bg: 'bg-gradient-to-r from-gray-400 to-gray-500',
-          text: 'text-gray-800',
-          bgLight: 'bg-gray-50',
-          border: 'border-gray-200',
-        }
-      default:
-        return {
-          bg: 'bg-gradient-to-r from-gray-400 to-gray-500',
-          text: 'text-gray-800',
-          bgLight: 'bg-gray-50',
-          border: 'border-gray-200',
-        }
+  for (let i = 0; i < 5; i++) {
+    if (i < fullStars) {
+      stars.push(
+        <Star
+          key={i}
+          className={`${starSize} transition-all duration-300 cursor-pointer
+            ${
+              isHovered
+                ? 'fill-blue-600 text-blue-600 transform scale-110 drop-shadow-lg'
+                : `${color} fill-current hover:fill-blue-600 hover:text-blue-600`
+            }`}
+        />,
+      )
+    } else if (i === fullStars && hasHalfStar) {
+      stars.push(
+        <div key={i} className={`${starSize} relative`}>
+          <Star className={`${starSize} text-gray-300 absolute transition-all duration-300`} />
+          <StarHalf
+            className={`${starSize} transition-all duration-300 absolute cursor-pointer
+              ${
+                isHovered
+                  ? 'fill-blue-600 text-blue-600 transform scale-110 drop-shadow-lg'
+                  : `${color} fill-current hover:fill-blue-600 hover:text-blue-600`
+              }`}
+          />
+        </div>,
+      )
+    } else {
+      stars.push(
+        <Star
+          key={i}
+          className={`${starSize} text-gray-300 transition-all duration-300 cursor-pointer
+            ${isHovered ? 'text-gray-400 transform scale-110' : 'hover:text-gray-400'}`}
+        />,
+      )
     }
   }
 
-  const style = getEvidenceStyle(evidence)
+  return <div className="flex space-x-1">{stars}</div>
+}
 
-  return (
-    <div
-      className={`inline-flex items-center px-3 py-1 rounded-full ${style.bgLight} ${style.border} border`}
-    >
-      <div className={`w-2.5 h-2.5 rounded-full ${style.bg} mr-2 shadow-sm`}></div>
-      <span className={`text-xs font-semibold ${style.text}`}>{evidence}</span>
-    </div>
-  )
+const getEvidenceIcon = (evidence: string, isHovered = false) => {
+  const baseClasses =
+    'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 transform'
+
+  switch (evidence?.toLowerCase()) {
+    case 'gold star evidence':
+      return (
+        <div
+          className={`${baseClasses} ${isHovered ? 'bg-yellow-500 scale-110 shadow-lg' : 'bg-yellow-400'}`}
+        >
+          <Star
+            className={`w-3 h-3 fill-white text-white transition-all duration-300 ${isHovered ? 'animate-pulse' : ''}`}
+          />
+        </div>
+      )
+    case 'limited evidence':
+      return (
+        <div
+          className={`${baseClasses} ${isHovered ? 'bg-gray-500 scale-110 shadow-lg' : 'bg-gray-400'}`}
+        ></div>
+      )
+    case 'strong evidence':
+      return (
+        <div
+          className={`${baseClasses} ${isHovered ? 'bg-green-600 scale-110 shadow-lg' : 'bg-green-500'}`}
+        ></div>
+      )
+    default:
+      return <div className={`${baseClasses} bg-gray-300`}></div>
+  }
 }
 
 const getButtonStyles = (style: string) => {
@@ -132,38 +142,41 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   disableInnerContainer,
   className,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [hoveredCriterion, setHoveredCriterion] = useState<number | null>(null)
+
   // Default ratings data to match the image - only used if no CMS data provided
   const defaultRatings = [
     {
-      title: 'Boosts Memory and Learning Abilities*',
+      title: 'Support for Claims',
       category: 'Support for Claims',
-      rating: 5,
-      evidence: 'Strong Evidence' as const,
-      description: null,
+      rating: 4,
+      evidence: 'Gold Star Evidence' as const,
+      description: 'Strong clinical backing with peer-reviewed studies',
       id: 'default-1',
     },
     {
-      title: 'Enhances Focus and Mental Clarity*',
+      title: 'Ingredient Safety',
       category: 'Ingredient Safety',
-      rating: 4.5,
-      evidence: 'Strong Evidence' as const,
-      description: null,
+      rating: 5,
+      evidence: 'Limited Evidence' as const,
+      description: 'Generally recognized as safe with minimal side effects',
       id: 'default-2',
     },
     {
-      title: 'Supports Brain Health and Function*',
+      title: 'Value for the Price',
       category: 'Value for the Price',
-      rating: 5,
-      evidence: 'Gold Star Evidence' as const,
-      description: null,
+      rating: 4.5,
+      evidence: 'Strong Evidence' as const,
+      description: 'Competitive pricing compared to similar premium products',
       id: 'default-3',
     },
     {
-      title: 'Reduces Mental Fatigue and Stress*',
-      category: 'Brand Transparency',
-      rating: 4.5,
+      title: 'Projected Efficacy',
+      category: 'Projected Efficacy',
+      rating: 4,
       evidence: 'Strong Evidence' as const,
-      description: null,
+      description: 'Expected results based on ingredient profiles and dosages',
       id: 'default-4',
     },
   ]
@@ -171,81 +184,49 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
   // Use CMS ratings if available, otherwise fallback to defaults
   const ratingsData = ratings && ratings.length > 0 ? ratings : defaultRatings
 
-  // Debug log to see what data we're receiving
-  console.log('TopOurChoose component data:', {
-    title,
-    productName,
-    overallRating,
-    ratings,
-    ratingsData,
-    buttons,
-  })
-
   const content = (
-    <div className="border border-gray-300 rounded-lg shadow-sm max-w-5xl mx-auto">
-      {/* Header - Green Bar */}
-      <div className="bg-green-700 text-white px-6 py-3 rounded-t-lg">
-        <div className="text-base font-semibold">
-          {productName ||
-            title ||
-            'Neuro Plus Brain and Focus Formula | Cognitive Performance Enhancer'}
-        </div>
+    <div className="max-w-6xl mx-auto bg-white shadow-lg">
+      {/* Header */}
+      <div className="bg-green-600 text-white px-6 py-4">
+        <h1 className="text-2xl font-bold">{productName || title || 'Primal RX Gummies'}</h1>
       </div>
 
       <div className="flex">
-        {/* Left Side - Benefits List */}
-        <div className="flex-1 p-6 bg-white">
-          <div className="space-y-4">
-            {ratingsData.map((rating, index) => (
-              <div
-                key={rating.id || `rating-${index}`}
-                className="flex items-center justify-between py-2"
-              >
-                <div className="flex items-center">
-                  <div className="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center mr-3">
-                    {rating.evidence?.toLowerCase().includes('gold star') ? (
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    ) : rating.evidence?.toLowerCase().includes('strong') ? (
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    ) : (
-                      <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                    )}
-                  </div>
-                  <span className="text-sm text-gray-700 font-medium">
+        {/* Left Section - Criteria */}
+        <div className="flex-1 p-6 space-y-4">
+          {ratingsData.map((rating, index) => (
+            <div
+              key={rating.id || `rating-${index}`}
+              className="group flex items-center justify-between py-3 border-b border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-pointer"
+              onMouseEnter={() => setHoveredCriterion(index)}
+              onMouseLeave={() => setHoveredCriterion(null)}
+            >
+              <div className="flex items-center space-x-3">
+                {getEvidenceIcon(rating.evidence, hoveredCriterion === index)}
+                <div>
+                  <div className="font-medium text-gray-900 group-hover:text-blue-700 transition-colors duration-300">
                     {('title' in rating ? rating.title : rating.category) as string}
-                  </span>
-                </div>
-                <div className="text-sm text-gray-600 font-medium">
-                  {rating.evidence || 'Strong Evidence'}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Center - Product Image with Buttons Below */}
-        <div className="w-80 flex flex-col items-center justify-center p-4 bg-white -ml-4">
-          {/* Product Image */}
-          <div className="mb-3">
-            {productImage ? (
-              <div className="w-24 h-32">
-                <Media resource={productImage} className="w-full h-full object-contain" />
-              </div>
-            ) : (
-              <div className="w-24 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-                <div className="w-20 h-28 bg-white rounded border border-gray-300 flex items-center justify-center shadow-sm">
-                  <div className="text-center">
-                    <div className="text-xs font-bold text-gray-600 mb-1">WOW MD</div>
-                    <div className="text-xs text-blue-600 font-semibold">NEURO PLUS</div>
-                    <div className="text-xs text-gray-500 mt-1">BRAIN & FOCUS FORMULA</div>
+                  </div>
+                  <div className="text-sm text-gray-600 group-hover:text-blue-600 transition-colors duration-300">
+                    {rating.evidence}
+                  </div>
+                  {/* Animated evidence description */}
+                  <div
+                    className={`overflow-hidden transition-all duration-500 ease-out ${
+                      hoveredCriterion === index ? 'max-h-16 opacity-100 mt-2' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className="text-xs text-blue-700 bg-blue-50 px-2 py-1 rounded italic">
+                      {(rating as any).description || 'Additional information about this criterion'}
+                    </div>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          ))}
 
-          {/* Action Buttons */}
-          <div className="flex flex-row space-x-1 w-full">
+          {/* Buttons */}
+          <div className="flex space-x-4 pt-4">
             {buttons && buttons.length > 0 ? (
               buttons.map((button, index) => (
                 <CMSLink
@@ -254,74 +235,128 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                   reference={button.link.reference}
                   url={button.link.url}
                   newTab={button.link.newTab}
-                  className={`px-2 py-2 text-xs font-bold transition-colors text-center flex-1 ${
+                  className={`group relative overflow-hidden font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg ${
                     button.style === 'primary' || button.label?.toLowerCase().includes('shop')
-                      ? 'bg-blue-500 text-white hover:bg-blue-600'
-                      : 'bg-green-500 text-white hover:bg-green-600'
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                      : 'bg-green-600 hover:bg-green-700 text-white'
                   }`}
                 >
-                  {button.label}
+                  <div
+                    className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                      button.style === 'primary' || button.label?.toLowerCase().includes('shop')
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-600'
+                        : 'bg-gradient-to-r from-green-500 to-green-600'
+                    }`}
+                  ></div>
+                  <div className="relative flex items-center space-x-2">
+                    {button.label?.toLowerCase().includes('shop') ? (
+                      <ShoppingCart className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+                    ) : (
+                      <FileText className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+                    )}
+                    <span>{button.label}</span>
+                  </div>
                 </CMSLink>
               ))
             ) : (
               <>
-                <button className="bg-blue-500 text-white px-2 py-2 text-xs font-bold hover:bg-blue-600 transition-colors flex-1">
-                  Shop Now
+                <button className="group relative overflow-hidden bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative flex items-center space-x-2">
+                    <ShoppingCart className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+                    <span>Shop Now</span>
+                  </div>
                 </button>
-                <button className="bg-green-500 text-white px-2 py-2 text-xs font-bold hover:bg-green-600 transition-colors flex-1">
-                  Read Review
+                <button className="group relative overflow-hidden bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative flex items-center space-x-2">
+                    <FileText className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+                    <span>Read Review</span>
+                  </div>
                 </button>
               </>
             )}
           </div>
         </div>
 
-        {/* Right Side - Rating Breakdown */}
-        <div className="w-80 p-6 bg-gray-50 rounded-r-lg border-l border-gray-200">
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-sm font-semibold text-gray-800">Rating Breakdown</div>
-              <button className="text-gray-400 hover:text-gray-600">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
+        {/* Center Image */}
+        <div className="flex-shrink-0 flex items-center justify-center p-6 bg-gray-50">
+          <div className="relative group">
+            {productImage ? (
+              <div className="w-48 h-60">
+                <Media
+                  resource={productImage}
+                  className="w-full h-full object-contain rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+            ) : (
+              <div className="w-48 h-60 bg-gray-100 rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105 flex items-center justify-center">
+                <div className="w-40 h-52 bg-white rounded border border-gray-300 flex items-center justify-center shadow-sm">
+                  <div className="text-center">
+                    <div className="text-sm font-bold text-gray-600 mb-2">Product</div>
+                    <div className="text-sm text-blue-600 font-semibold">Image</div>
+                    <div className="text-xs text-gray-500 mt-2">Placeholder</div>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className="absolute inset-0 rounded-lg bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+        </div>
+
+        {/* Right Section - Rating Breakdown */}
+        <div className="flex-1 p-6">
+          <div className="border border-gray-200 rounded-lg">
+            <div
+              className="flex items-center justify-between p-4 cursor-pointer group hover:bg-gray-50 transition-colors duration-200"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              <h3 className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors duration-300">
+                Rating Breakdown
+              </h3>
+              <div
+                className={`transform transition-all duration-300 ${isExpanded ? 'rotate-180' : 'group-hover:scale-110'}`}
+              >
+                <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-blue-600" />
+              </div>
             </div>
 
-            <div className="space-y-3">
-              {/* Dynamic ratings from CMS or defaults */}
-              {ratingsData.slice(0, 4).map((rating, index) => (
+            {/* Always Visible Ratings */}
+            <div className="p-4 space-y-3 border-t border-gray-100">
+              {ratingsData.map((rating, index) => (
                 <div
-                  key={rating.id || `breakdown-${index}`}
-                  className="flex items-center justify-between"
+                  key={index}
+                  className="flex items-center justify-between hover:bg-blue-50 px-2 py-1 rounded transition-colors duration-200"
                 >
-                  <span className="text-xs text-gray-600">
-                    {rating.category ||
-                      ('title' in rating
-                        ? (rating.title as string)?.replace('*', '')
-                        : `Rating ${index + 1}`)}
+                  <span className="text-sm text-gray-600">
+                    {String(
+                      rating.category || ('title' in rating ? rating.title : `Rating ${index + 1}`),
+                    )}
                     :
                   </span>
-                  <StarRating rating={rating.rating} color="text-blue-500" size="sm" />
+                  <div className="flex items-center space-x-2">
+                    <StarRating
+                      rating={rating.rating}
+                      size="sm"
+                      interactive={true}
+                      criterionIndex={index}
+                      hoveredCriterion={hoveredCriterion}
+                    />
+                  </div>
                 </div>
               ))}
-            </div>
-          </div>
 
-          {/* Overall Rating */}
-          <div className="border-t border-gray-300 pt-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-gray-800">Overall Rating:</span>
-              <div className="flex items-center">
-                <StarRating rating={overallRating} color="text-yellow-500" size="sm" />
-                <span className="ml-2 text-lg font-bold text-gray-800">
-                  {overallRating.toFixed(1)}
-                </span>
+              {/* Overall Rating */}
+              <div className="pt-3 border-t border-gray-200">
+                <div className="flex items-center justify-between bg-gradient-to-r from-yellow-50 to-orange-50 p-3 rounded-lg">
+                  <span className="font-semibold text-gray-900">Overall Rating:</span>
+                  <div className="flex items-center space-x-2">
+                    <StarRating rating={overallRating} size="md" color="text-yellow-500" />
+                    <span className="text-lg font-bold text-gray-900">
+                      {overallRating.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
