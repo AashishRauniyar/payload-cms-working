@@ -249,7 +249,7 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                     }`}
                   ></div>
                   <div className="relative flex items-center justify-center">
-                    <div className="text-lg font-bold tracking-wide text-white">{button.label}</div>
+                    <div className="text-sm font-bold tracking-wide text-white">{button.label}</div>
                   </div>
                 </CMSLink>
               ))
