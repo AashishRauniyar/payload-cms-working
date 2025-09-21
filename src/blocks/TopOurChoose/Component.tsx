@@ -248,11 +248,8 @@ export const TopOurChoose: React.FC<TopOurChooseBlockProps> = ({
                         : 'bg-gradient-to-r from-green-400 to-green-500'
                     }`}
                   ></div>
-                  <div className="relative flex items-center justify-center space-x-3">
-                    <div className="text-2xl">
-                      {button.label?.toLowerCase().includes('shop') ? '💊' : '📖'}
-                    </div>
-                    <div className="text-lg font-bold tracking-wide">{button.label}</div>
+                  <div className="relative flex items-center justify-center">
+                    <div className="text-lg font-bold tracking-wide text-white">{button.label}</div>
                   </div>
                 </CMSLink>
               ))
