@@ -205,8 +205,9 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
     }
   };
 
-  const getCriterionColor = (title: string) => {
-    switch (title.toLowerCase()) {
+  const getCriterionColor = (title?: string) => {
+    const key = (title || '').toLowerCase()
+    switch (key) {
       case 'support for claims':
         return 'from-blue-500/20 to-blue-600/20 border-blue-500/30';
       case 'ingredient safety':
@@ -220,8 +221,9 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
     }
   };
 
-  const getProgressColor = (title: string) => {
-    switch (title.toLowerCase()) {
+  const getProgressColor = (title?: string) => {
+    const key = (title || '').toLowerCase()
+    switch (key) {
       case 'support for claims':
         return 'from-blue-400 to-blue-500';
       case 'ingredient safety':
