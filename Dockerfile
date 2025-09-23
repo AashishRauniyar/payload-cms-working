@@ -1,11 +1,14 @@
 
 # Simple Dockerfile for Coolify deployment
-FROM node:22.12.0-alpine
-
+FROM node:22.12.0-alpine AS base
 
 # Install dependencies
 RUN apk add --no-cache libc6-compat
 
+WORKDIR /app
+
+# Install dependencies stage
+FROM base AS deps
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -37,19 +40,16 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-
-# Copy source code
-COPY . .
-
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-
 # Create production user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-
 
 # Create necessary directories with correct permissions BEFORE copying files
 RUN mkdir -p /app/public/media /app/.next /app/uploads
