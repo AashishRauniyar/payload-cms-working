@@ -82,7 +82,7 @@ const FeaturedBrands = () => {
     return Array.from({ length: 5 }, (_, i) => (
       <svg
         key={i}
-        className={`w-4 h-4 ${i < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300'}`}
+        className={`w-4 h-4 ${i < Math.floor(rating) ? 'text-blue-400' : 'text-gray-300'}`}
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -109,8 +109,11 @@ const FeaturedBrands = () => {
           {featuredBrands.map((brand, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:scale-105 group cursor-pointer"
+              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 group cursor-pointer"
             >
+              {/* Accent Bar */}
+              <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-blue-500 to-green-500" />
+
               {/* Brand Header */}
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center justify-between mb-4">
@@ -127,13 +130,11 @@ const FeaturedBrands = () => {
                     )}
                   </div>
                   {brand.featured && (
-                    <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full">
-                      Featured
-                    </span>
+                    <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">Featured</span>
                   )}
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
+                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-700 transition-colors duration-300">
                   {brand.name}
                 </h3>
 
@@ -154,22 +155,22 @@ const FeaturedBrands = () => {
 
                 <div className="flex items-center justify-between mb-6">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{brand.products}</div>
+                    <div className="text-2xl font-bold text-blue-700">{brand.products}</div>
                     <div className="text-xs text-gray-500">Products</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{brand.rating}★</div>
+                    <div className="text-2xl font-bold text-green-700">{brand.rating}★</div>
                     <div className="text-xs text-gray-500">Rating</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600">
+                    <div className="text-2xl font-bold text-blue-700">
                       {Math.floor(brand.reviews / 1000)}K+
                     </div>
                     <div className="text-xs text-gray-500">Reviews</div>
                   </div>
                 </div>
 
-                <button className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-300 group-hover:shadow-lg">
+                <button className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-green-700 transition-colors duration-300 group-hover:shadow-md">
                   View Products
                 </button>
               </div>
@@ -179,7 +180,7 @@ const FeaturedBrands = () => {
 
         {/* View All Brands CTA */}
         <div className="mt-16 text-center">
-          <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+          <button className="bg-gradient-to-r from-blue-600 to-green-600 text-white px-10 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-xl">
             Explore All 500+ Brands
           </button>
         </div>
