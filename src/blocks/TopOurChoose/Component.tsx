@@ -189,8 +189,9 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
     }
   };
 
-  const getCriterionIcon = (title: string) => {
-    switch (title.toLowerCase()) {
+  const getCriterionIcon = (title?: string) => {
+    const key = (title || '').toLowerCase()
+    switch (key) {
       case 'support for claims':
         return Award;
       case 'ingredient safety':
