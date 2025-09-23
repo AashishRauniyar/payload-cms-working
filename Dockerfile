@@ -2,8 +2,9 @@
 # Simple Dockerfile for Coolify deployment
 FROM node:22.12.0-alpine AS base
 
-# Install dependencies
-RUN apk add --no-cache libc6-compat
+# Install dependencies and enable corepack for pnpm support
+RUN apk add --no-cache libc6-compat && \
+    corepack enable
 
 WORKDIR /app
 
@@ -17,7 +18,7 @@ COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then npm install --legacy-peer-deps; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -31,12 +32,17 @@ COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the application using regular build
+# Set environment variables for build
+ENV NODE_ENV=production
+ENV SKIP_MIGRATIONS=true
+ENV SKIP_ENV_VALIDATION=true
 ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
+
+# Build the application using safe build for Docker
 RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then npm run build; \
+  if [ -f yarn.lock ]; then yarn run build:safe; \
+  elif [ -f package-lock.json ]; then npm run build:safe; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build:safe; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
