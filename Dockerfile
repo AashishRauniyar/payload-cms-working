@@ -34,7 +34,7 @@ ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placehold
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then pnpm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
