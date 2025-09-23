@@ -74,6 +74,8 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 }
 
 export async function generateStaticParams() {
+
   // Skip static generation during Docker build
   return []
+
 }

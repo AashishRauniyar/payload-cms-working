@@ -1,12 +1,11 @@
-# Multi-stage Docker build for Payload CMS production
-# Based on official Payload documentation and Next.js with-docker example
 
-FROM node:22.12.0-alpine AS base
+# Simple Dockerfile for Coolify deployment
+FROM node:22.12.0-alpine
 
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+
+# Install dependencies
 RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -38,15 +37,19 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app
+
+# Copy source code
+COPY . .
+
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+
+# Create production user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
 
 # Create necessary directories with correct permissions BEFORE copying files
 RUN mkdir -p /app/public/media /app/.next /app/uploads
@@ -91,3 +94,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 
 # server.js is created by next build from the standalone output
 CMD ["node", "server.js"]
+

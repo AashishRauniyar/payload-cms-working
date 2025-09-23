@@ -19,8 +19,10 @@ import LandingPageServer from '../landing/server'
 export const dynamic = 'force-dynamic'
 
 export async function generateStaticParams() {
+
   // Skip static generation during Docker build
   return []
+
 }
 
 type Args = {
