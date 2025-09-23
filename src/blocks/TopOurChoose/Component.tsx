@@ -20,16 +20,38 @@ type ActionButton = {
   id: string;
 };
 
-export const TopOurChoose: React.FC = () => {
+export type TopOurChooseProps = {
+  className?: string;
+  disableInnerContainer?: boolean;
+  title?: string;
+  productName?: string;
+  productImage?: unknown;
+  overallRating?: number;
+  ratings?: Criterion[];
+  buttons?: ActionButton[];
+  backgroundColor?: string;
+};
+
+export const TopOurChoose: React.FC<TopOurChooseProps> = ({
+  className,
+  disableInnerContainer, // unused but accepted for API consistency
+  title,
+  productName: productNameProp,
+  productImage, // unused in this implementation
+  overallRating: overallRatingProp,
+  ratings: ratingsProp,
+  buttons: buttonsProp,
+  backgroundColor, // unused in this implementation
+}) => {
   const [hoveredCriterion, setHoveredCriterion] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Using your component's data structure
-  const overallRating = 4.3;
-  const productName = "Primal RX Gummies";
+  const overallRating = typeof overallRatingProp === 'number' ? overallRatingProp : 4.3;
+  const productName = productNameProp || "Primal RX Gummies";
   
   // Default ratings data following your structure
-  const ratingsData: Criterion[] = [
+  const ratingsDataDefault: Criterion[] = [
     {
       title: 'Support for Claims',
       category: 'Support for Claims',
@@ -64,8 +86,10 @@ export const TopOurChoose: React.FC = () => {
     },
   ];
 
+  const ratingsData = ratingsProp && ratingsProp.length ? ratingsProp as Criterion[] : ratingsDataDefault;
+
   // Default buttons following your structure
-  const buttons: ActionButton[] = [
+  const buttonsDefault: ActionButton[] = [
     {
       label: 'Shop Now',
       style: 'primary',
@@ -77,6 +101,8 @@ export const TopOurChoose: React.FC = () => {
       id: 'review'
     }
   ];
+
+  const buttons = buttonsProp && buttonsProp.length ? buttonsProp as ActionButton[] : buttonsDefault;
 
   const StarRating: React.FC<{
     rating: number;
@@ -209,7 +235,7 @@ export const TopOurChoose: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 bg-white">
+    <div className={`${className ? className + ' ' : ''}max-w-5xl mx-auto p-4 bg-white`}>
       {/* Compact Header Card */}
       <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 shadow-lg mb-4">
         <div className="grid md:grid-cols-3 gap-4 items-center">
@@ -236,7 +262,7 @@ export const TopOurChoose: React.FC = () => {
                 <span className="text-green-700 text-sm font-medium">Premium Quality</span>
               </div>
               <div className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
-                {productName}
+                {title || productName}
               </div>
               <p className="text-gray-600 text-sm mt-2">
                 Advanced daily supplement with scientifically-backed ingredients for optimal health support.
