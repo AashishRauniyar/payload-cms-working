@@ -1,0 +1,3 @@
+# pnpm configuration for Sharp and native modules
+shamefully-hoist=true
+public-hoist-pattern=*sharp*
