@@ -4,7 +4,8 @@ FROM node:22.12.0-alpine AS base
 
 # Install dependencies and enable corepack for pnpm support
 RUN apk add --no-cache libc6-compat && \
-    corepack enable
+    corepack enable && \
+    corepack prepare pnpm@10.0.0 --activate
 
 WORKDIR /app
 
@@ -13,14 +14,9 @@ FROM base AS deps
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+COPY package.json pnpm-lock.yaml ./
 
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+RUN pnpm install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -39,12 +35,7 @@ ENV SKIP_ENV_VALIDATION=true
 ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
 
 # Build the application using safe build for Docker
-RUN \
-  if [ -f yarn.lock ]; then yarn run build:safe; \
-  elif [ -f package-lock.json ]; then npm run build:safe; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build:safe; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+RUN pnpm run build:safe
 
 # Production image, copy all the files and run next
 FROM base AS runner
