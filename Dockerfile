@@ -3,11 +3,14 @@
 FROM node:22.12.0-alpine AS base
 
 # Install dependencies and enable corepack for pnpm support
-RUN apk add --no-cache libc6-compat && \
+RUN apk add --no-cache libc6-compat python3 make g++ git && \
     corepack enable && \
     corepack prepare pnpm@10.0.0 --activate
 
 WORKDIR /app
+
+# Avoid optional large downloads during install (e.g., Playwright browsers)
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 # Install dependencies stage
 FROM base AS deps
@@ -16,7 +19,7 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod
 
 # Rebuild the source code only when needed
 FROM base AS builder
