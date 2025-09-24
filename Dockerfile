@@ -99,9 +99,15 @@
 FROM node:22.12.0-alpine AS base
 
 # Install required system deps and enable pnpm properly
-RUN apk add --no-cache libc6-compat python3 make g++ && \
+RUN apk add --no-cache \
+    g++ \
+    libc6-compat \
+    make \
+    pkgconfig \
+    python3 \
+    vips-dev && \
     corepack enable && \
-    corepack prepare pnpm@latest --activate
+    (corepack prepare pnpm@9.12.0 --activate || npm install -g pnpm@9.12.0)
 
 WORKDIR /app
 
