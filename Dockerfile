@@ -98,9 +98,10 @@
 # Simple Dockerfile for Coolify deployment
 FROM node:22.12.0-alpine AS base
 
-# Install dependencies and enable corepack for pnpm support
-RUN apk add --no-cache libc6-compat && \
-    corepack enable
+# Install required system deps and enable pnpm properly
+RUN apk add --no-cache libc6-compat python3 make g++ && \
+    corepack enable && \
+    corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
@@ -108,14 +109,15 @@ WORKDIR /app
 FROM base AS deps
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Copy only package files first for caching
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
+# Install dependencies based on available lockfile
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
-  else corepack enable pnpm && pnpm install; \
+  elif [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; \
+  else pnpm install; \
   fi
 
 # Rebuild the source code only when needed
@@ -138,8 +140,8 @@ ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placehold
 RUN \
   if [ -f yarn.lock ]; then yarn run build:safe; \
   elif [ -f package-lock.json ]; then npm run build:safe; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build:safe; \
-  else corepack enable pnpm && pnpm run build:safe; \
+  elif [ -f pnpm-lock.yaml ]; then pnpm run build:safe; \
+  else pnpm run build:safe; \
   fi
 
 # Production image, copy all the files and run next
