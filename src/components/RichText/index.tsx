@@ -151,17 +151,9 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       />
     ),
     topOurChoose: ({ node }: { node: SerializedBlockNode }) => (
-      <TopOurChoose
-        className="col-start-1 col-span-3"
-        disableInnerContainer={true}
-        title={node.fields.title || undefined}
-        productName={node.fields.productName || 'Product'}
-        productImage={node.fields.productImage || null}
-        overallRating={node.fields.overallRating || 4.5}
-        ratings={node.fields.ratings || []}
-        buttons={node.fields.buttons || []}
-        backgroundColor={node.fields.backgroundColor || 'none'}
-      />
+      <div className="col-start-1 col-span-3">
+        <TopOurChoose />
+      </div>
     ),
     ingredientsBlock: ({ node }: { node: SerializedBlockNode }) => (
       <IngredientsBlock
