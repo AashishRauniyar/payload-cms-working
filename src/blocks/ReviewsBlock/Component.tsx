@@ -115,7 +115,7 @@
 
 //         {/* Testimonial Text */}
 //         <div className="flex-1">
-//           <p className="text-gray-700 text-sm leading-relaxed italic">"{reviewText}"</p>
+//           <p className="text-gray-700 text-sm leading-relaxed italic">&quot;{reviewText}&quot;</p>
 //         </div>
 //       </div>
 //     </div>
@@ -289,7 +289,7 @@ const TestimonialCard: React.FC<{
 
         {/* Testimonial Text */}
         <div className="flex-1">
-          <p className="text-gray-700 text-sm leading-relaxed italic">"{reviewText}"</p>
+          <p className="text-gray-700 text-sm leading-relaxed italic">&quot;{reviewText}&quot;</p>
         </div>
       </div>
     </div>

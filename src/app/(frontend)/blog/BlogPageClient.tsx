@@ -59,7 +59,7 @@ const BlogPageClient = ({ posts }: BlogPageClientProps) => {
 
   // Filter and sort posts
   const filteredPosts = useMemo(() => {
-    let filtered = posts.filter((post) => {
+    const filtered = posts.filter((post) => {
       const matchesSearch =
         !searchQuery ||
         post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -243,8 +243,8 @@ const BlogPageClient = ({ posts }: BlogPageClientProps) => {
           </h3>
           <p className="text-gray-500 text-sm">
             {filteredPosts.length} blog post{filteredPosts.length !== 1 ? 's' : ''} found
-            {activeLetter && <span className="ml-1">starting with "{activeLetter}"</span>}
-            {searchQuery && <span className="ml-1">matching "{searchQuery}"</span>}
+            {activeLetter && <span className="ml-1">starting with &quot;{activeLetter}&quot;</span>}
+            {searchQuery && <span className="ml-1">matching &quot;{searchQuery}&quot;</span>}
             {selectedCategory && <span className="ml-1">in {selectedCategory}</span>}
           </p>
         </div>
@@ -274,7 +274,7 @@ const BlogPageClient = ({ posts }: BlogPageClientProps) => {
           <div className="text-4xl text-gray-300 mb-3">🔍</div>
           <h3 className="text-lg font-semibold text-gray-600 mb-2">No blog posts found</h3>
           <p className="text-gray-500 mb-4 max-w-md mx-auto text-sm">
-            We couldn't find any blog posts matching your criteria. Try adjusting your search terms
+            We couldn&apos;t find any blog posts matching your criteria. Try adjusting your search terms
             or filters.
           </p>
           <button

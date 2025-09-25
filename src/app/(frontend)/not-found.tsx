@@ -20,7 +20,7 @@ export default function NotFound() {
         <div className="max-w-2xl mx-auto mb-12">
           <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-6">Page Not Found</h1>
           <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
-            Oops! The page you're looking for seems to have wandered off. Don't worry – let's get
+            Oops! The page you&apos;re looking for seems to have wandered off. Don&apos;t worry – let&apos;s get
             you back on track to discover valuable health insights.
           </p>
         </div>
@@ -125,7 +125,7 @@ export default function NotFound() {
           </div>
 
           <p className="text-gray-500 text-sm">
-            Still can't find what you're looking for?
+            Still can&apos;t find what you&apos;re looking for?
             <Link href="/search" className="text-blue-600 hover:text-blue-700 ml-1 underline">
               Try our search feature
             </Link>

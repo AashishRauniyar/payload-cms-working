@@ -119,8 +119,8 @@ export default function CategoriesClient({ categories }: Props) {
           </h3>
           <p className="text-gray-500 text-sm">
             {results.length} categor{results.length !== 1 ? 'ies' : 'y'} found
-            {activeLetter && <span className="ml-1">starting with "{activeLetter}"</span>}
-            {query && <span className="ml-1">matching "{query}"</span>}
+            {activeLetter && <span className="ml-1">starting with &quot;{activeLetter}&quot;</span>}
+            {query && <span className="ml-1">matching &quot;{query}&quot;</span>}
           </p>
         </div>
         {(query || activeLetter) && (
@@ -148,7 +148,7 @@ export default function CategoriesClient({ categories }: Props) {
           <div className="text-5xl text-gray-300 mb-4">🔍</div>
           <h3 className="text-xl font-semibold text-gray-600 mb-3">No categories found</h3>
           <p className="text-gray-500 mb-6 max-w-md mx-auto">
-            We couldn't find any categories matching your search criteria. Try adjusting your search
+            We couldn&apos;t find any categories matching your search criteria. Try adjusting your search
             terms or browse all categories.
           </p>
           <button

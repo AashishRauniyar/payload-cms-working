@@ -1,8 +1,8 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import LandingFooter from '@/components/ui/LandingFooter'
-import type { Post, Media } from '@/payload-types'
+// import LandingFooter from '@/components/ui/LandingFooter'
+// import type { Post, Media } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
 
@@ -660,7 +660,7 @@ export default function LandingPage() {
                     <AnimatedCounter end={1200} suffix="+" />
                   </div>
                   <div className="text-lg text-gray-600 font-semibold">
-                    Men's Health Supplements
+                    Men&apos;s Health Supplements
                   </div>
                 </div>
                 <div className="space-y-3 group">
@@ -828,7 +828,7 @@ export default function LandingPage() {
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               </div>
-              Editor's Choice
+              Editor&apos;s Choice
             </div>
             <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight">
               <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
@@ -1071,7 +1071,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Editor's Choice - Top Picks */}
+      {/* Editor&apos;s Choice - Top Picks */}
       <section className="py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-5">
@@ -1087,7 +1087,7 @@ export default function LandingPage() {
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               </div>
-              Editor's Choice
+              Editor&apos;s Choice
             </div>
             <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight">
               Top-Rated{' '}
@@ -1206,7 +1206,7 @@ export default function LandingPage() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
               <div className="relative z-10">
                 <h3 className="text-3xl font-black text-gray-900 mb-6">
-                  Can't Find What You're Looking For?
+                  Can&apos;t Find What You&apos;re Looking For?
                 </h3>
                 <p className="text-xl text-gray-600 mb-8 leading-relaxed font-medium">
                   Our supplement database contains over 5,000 reviewed products. Use our smart

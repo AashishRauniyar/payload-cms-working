@@ -4,8 +4,8 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
 import { draftMode } from 'next/headers'
-import PageClient from './page.client'
-import BlogPageClient from './BlogPageClient'
+// import PageClient from './page.client'
+import BlogPageClient from '../BlogPageClient'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 600
@@ -32,7 +32,6 @@ export default async function Page() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
-      <PageClient />
       <BlogPageClient posts={blogPosts.docs} />
     </div>
   )

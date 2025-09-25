@@ -59,7 +59,7 @@ export const BlogPageClient: React.FC<BlogPageClientProps> = ({ posts }) => {
 
   // Filter and sort posts
   const filteredPosts = useMemo(() => {
-    let filtered = posts.filter((post) => {
+    const filtered = posts.filter((post) => {
       const matchesSearch =
         !searchQuery ||
         post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -242,8 +242,8 @@ export const BlogPageClient: React.FC<BlogPageClientProps> = ({ posts }) => {
           </h3>
           <p className="text-gray-500 text-sm">
             {filteredPosts.length} article{filteredPosts.length !== 1 ? 's' : ''} found
-            {activeLetter && <span className="ml-1">starting with "{activeLetter}"</span>}
-            {searchQuery && <span className="ml-1">matching "{searchQuery}"</span>}
+            {activeLetter && <span className="ml-1">starting with &quot;{activeLetter}&quot;</span>}
+            {searchQuery && <span className="ml-1">matching &quot;{searchQuery}&quot;</span>}
             {selectedCategory && <span className="ml-1">in {selectedCategory}</span>}
           </p>
         </div>
@@ -273,7 +273,7 @@ export const BlogPageClient: React.FC<BlogPageClientProps> = ({ posts }) => {
           <div className="text-4xl text-gray-300 mb-3">🔍</div>
           <h3 className="text-lg font-semibold text-gray-600 mb-2">No articles found</h3>
           <p className="text-gray-500 mb-4 max-w-md mx-auto text-sm">
-            We couldn't find any articles matching your criteria. Try adjusting your search terms or
+            We couldn&apos;t find any articles matching your criteria. Try adjusting your search terms or
             filters.
           </p>
           <button

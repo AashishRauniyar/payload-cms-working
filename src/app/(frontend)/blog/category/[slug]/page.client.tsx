@@ -17,7 +17,7 @@ const CategoryPageClient = ({ category, posts }: CategoryPageClientProps) => {
 
   // Filter and sort posts
   const filteredPosts = useMemo(() => {
-    let filtered = posts.filter((post) => {
+    const filtered = posts.filter((post) => {
       const matchesSearch =
         !searchQuery ||
         post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -138,7 +138,7 @@ const CategoryPageClient = ({ category, posts }: CategoryPageClientProps) => {
       {/* Posts Grid */}
       {filteredPosts.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredPosts.map((post, index) => {
+          {filteredPosts.map((post, _index) => {
             const featuredImage = getFeaturedImage(post)
 
             return (
