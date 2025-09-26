@@ -127,15 +127,15 @@ WORKDIR /app
 # Copy manifest files only (cache layer)
 COPY package.json pnpm-lock.yaml ./
 
-# Install production + needed build deps (Payload build needs deps, not dev tools)
-RUN pnpm install --frozen-lockfile
+# Install ALL dependencies including devDependencies for build
+RUN pnpm install --frozen-lockfile --prod=false
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 
 ENV NEXT_TELEMETRY_DISABLED=1 \
-    NODE_ENV=production \
+    NODE_ENV=development \
     SKIP_MIGRATIONS=true \
     SKIP_ENV_VALIDATION=true
 
@@ -146,8 +146,11 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build (single package manager path - pnpm)
-RUN pnpm run build:safe
+# Build with verbose output to capture potential errors
+RUN set -ex && \
+    echo "Node version: $(node -v)" && \
+    echo "PNPM version: $(pnpm -v)" && \
+    pnpm run build:safe
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -175,6 +178,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+# Optionally prune dev dependencies for smaller runtime image
+# RUN pnpm prune --prod
 
 # Permissions sanity
 RUN chmod -R 755 /app/public && mkdir -p /app/public/media && chmod -R 755 /app/public/media
