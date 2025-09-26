@@ -142,23 +142,24 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Make sure build script exists and is executable
-RUN ls -la /app/build.sh || (echo "build.sh not found!"; exit 1)
-RUN chmod +x /app/build.sh
-
 # Use simplified package.json for the build
 COPY Dockerfile.package.json ./package.json
 
-# Add debugging to check what's going on
+# Build directly in the Dockerfile instead of using an external script
 RUN set -ex && \
     echo "Node version: $(node -v)" && \
     echo "Current directory: $(pwd)" && \
     echo "Directory listing:" && \
     ls -la && \
-    echo "Checking build.sh:" && \
-    ls -la build.sh && \
-    echo "Starting simplified build..." && \
-    sh ./build.sh
+    echo "Starting Next.js build..." && \
+    export NODE_ENV=production && \
+    export NEXT_TELEMETRY_DISABLED=1 && \
+    export SKIP_MIGRATIONS=true && \
+    export PAYLOAD_CONFIG_PATH=dist/payload.config.js && \
+    export PAYLOAD_DISABLE_EMAIL=true && \
+    export PAYLOAD_DISABLE_SHARP=true && \
+    export NODE_OPTIONS=--no-deprecation && \
+    npx next build
 
 # Production image, copy all the necessary files and run next
 FROM base AS runner
