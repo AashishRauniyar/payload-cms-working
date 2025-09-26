@@ -96,111 +96,88 @@
 # CMD ["node", "server.js"]
 
 #############################################
-# Production Dockerfile (Coolify friendly)   #
-# Optimized for Payload + Next standalone    #
-# Uses Node 18 (better Sharp compatibility)  #
+# Simple Dockerfile for Coolify deployment   #
 #############################################
 
-# Use Node 18 for better Sharp compatibility 
-FROM node:18-alpine AS base
+# Use Node 18 for better Sharp compatibility
+FROM node:18-alpine
 
-# Install necessary system dependencies - minimum needed set
+# Install necessary dependencies
 RUN apk add --no-cache \
-  g++ \
-  git \
-  libc6-compat \
-  make \
-  python3
+    python3 \
+    make \
+    g++ \
+    git \
+    libc6-compat \
+    vips-dev
 
 WORKDIR /app
 
-# Dependencies stage - use npm for better compatibility with native modules
-FROM base AS deps
-WORKDIR /app
-
-# Copy package files (use package.json only, skip pnpm lock)
+# Copy package files first for better caching
 COPY package.json ./
 
-# Use npm instead of pnpm for more reliable native module builds
-RUN npm install --legacy-peer-deps && \
-    npm install cross-env -g
+# Install dependencies with best compatibility options
+RUN echo "Installing dependencies..." && \
+    npm install --no-optional --legacy-peer-deps
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-
-# Set environment variables needed for build
-ENV NEXT_TELEMETRY_DISABLED=1 \
-    NODE_ENV=development \
-    SKIP_MIGRATIONS=true \
-    SKIP_ENV_VALIDATION=true \
-    PAYLOAD_DISABLE_EMAIL=true \
-    PAYLOAD_DISABLE_SHARP=true \
-    NODE_OPTIONS=--no-deprecation
-
-# Copy node_modules and source files into builder stage
-COPY --from=deps /app/node_modules ./node_modules
+# Copy the rest of the application
 COPY . .
 
-# Use simplified package.json for the build
-COPY Dockerfile.package.json ./package.json
-
-# Build directly in the Dockerfile instead of using an external script
-RUN set -ex && \
-    echo "Node version: $(node -v)" && \
-    echo "Current directory: $(pwd)" && \
-    echo "Directory listing:" && \
-    ls -la && \
-    echo "Starting Next.js build..." && \
-    export NODE_ENV=production && \
-    export NEXT_TELEMETRY_DISABLED=1 && \
-    export SKIP_MIGRATIONS=true && \
-    export PAYLOAD_CONFIG_PATH=dist/payload.config.js && \
-    export PAYLOAD_DISABLE_EMAIL=true && \
-    export PAYLOAD_DISABLE_SHARP=true && \
-    export NODE_OPTIONS=--no-deprecation && \
-    npx next build
-
-# Production image, copy all the necessary files and run next
-FROM base AS runner
-WORKDIR /app
-
-# Set environment variables for production runtime
+# Set up environment variables
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3019 \
+    PAYLOAD_CONFIG_PATH=dist/payload.config.js \
+    PORT=3000 \
     HOSTNAME=0.0.0.0
 
-# Create application user & dirs (to ensure permissions are set correctly)
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs && \
-    mkdir -p /app/public/media /app/uploads /app/.next && \
-    chown -R nextjs:nodejs /app
+# Create build shell script for error handling
+RUN echo '#!/bin/sh\n\
+set -e\n\
+\n\
+echo "Starting build with error handling..."\n\
+\n\
+# First attempt - standard build\n\
+if npm run build; then\n\
+    echo "Build succeeded on first attempt!"\n\
+    exit 0\n\
+fi\n\
+\n\
+echo "First build attempt failed, trying alternate build..."\n\
+\n\
+# Second attempt - try with NODE_ENV=development for full dependencies\n\
+export NODE_ENV=development\n\
+if npx next build; then\n\
+    echo "Build succeeded on second attempt!"\n\
+    exit 0\n\
+fi\n\
+\n\
+echo "Second build attempt failed, trying minimal build..."\n\
+\n\
+# Third attempt - try with minimal options\n\
+export PAYLOAD_DISABLE_SHARP=true\n\
+export SKIP_MIGRATIONS=true\n\
+export PAYLOAD_DISABLE_EMAIL=true\n\
+if npx next build; then\n\
+    echo "Build succeeded on third attempt!"\n\
+    exit 0\n\
+fi\n\
+\n\
+echo "All build attempts failed!"\n\
+exit 1' > /app/build-with-fallbacks.sh && chmod +x /app/build-with-fallbacks.sh
 
-# Copy necessary runtime files from the builder stage
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./ 
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./ 
-COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./ 
-COPY --from=builder --chown=nextjs:nodejs /app/src ./src
-COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+# Run the build script
+RUN /app/build-with-fallbacks.sh
 
-# Optionally prune dev dependencies for smaller runtime image
-# RUN npm prune --production
+# Create media directory and ensure proper permissions
+RUN mkdir -p /app/public/media && \
+    chmod -R 755 /app/public/media
 
-# Ensure proper permissions for public directories
-RUN chmod -R 755 /app/public && mkdir -p /app/public/media && chmod -R 755 /app/public/media
-
-# Use the non-root user to run the app
-USER nextjs
-
-EXPOSE 3019
+# Expose port
+EXPOSE 3000
 
 # Define health check for the running app
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
+  CMD node -e "require('http').get('http://localhost:3000/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
 
 # Start the application
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
