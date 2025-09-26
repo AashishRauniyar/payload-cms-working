@@ -154,6 +154,16 @@ RUN echo "Starting build process..." && \
 RUN mkdir -p /app/public/media && \
     chmod -R 755 /app/public/media
 
+# Debug: Check what files were created during build
+RUN echo "=== BUILD ARTIFACTS DEBUG ===" && \
+    echo "Contents of /app:" && \
+    ls -la /app && \
+    echo "Contents of .next (if exists):" && \
+    ls -la .next/ || echo ".next directory not found" && \
+    echo "Contents of .next/standalone (if exists):" && \
+    ls -la .next/standalone/ || echo ".next/standalone directory not found" && \
+    echo "=== END DEBUG ==="
+
 # Set runtime environment variables
 ENV NODE_ENV=production \
     PORT=3000 \
@@ -166,5 +176,29 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
 
-# Start the application
-CMD ["npm", "start"]
+# Create a startup script that handles different server locations
+RUN echo '#!/bin/sh\n\
+echo "Starting Payload CMS application..."\n\
+echo "Current directory: $(pwd)"\n\
+echo "Directory contents:"\n\
+ls -la\n\
+\n\
+# Check for standalone server.js first\n\
+if [ -f ".next/standalone/server.js" ]; then\n\
+    echo "Found standalone server, copying necessary files..."\n\
+    # Copy static files to standalone\n\
+    cp -r public .next/standalone/public || true\n\
+    cp -r .next/static .next/standalone/.next/static || true\n\
+    cd .next/standalone\n\
+    echo "Starting with: node server.js"\n\
+    node server.js\n\
+elif [ -f "server.js" ]; then\n\
+    echo "Using root server.js..."\n\
+    node server.js\n\
+else\n\
+    echo "Using Next.js start command..."\n\
+    NODE_OPTIONS="--no-deprecation" npx next start\n\
+fi' > /app/start.sh && chmod +x /app/start.sh
+
+# Start the application using our startup script
+CMD ["/app/start.sh"]
