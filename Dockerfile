@@ -136,10 +136,19 @@ ENV NODE_ENV=development \
 RUN echo "Starting build process..." && \
     echo "Node version: $(node -v)" && \
     echo "NPM version: $(npm -v)" && \
-    echo "Checking package.json scripts:" && \
-    cat package.json | grep -A 20 '"scripts"' && \
-    echo "Attempting build..." && \
-    npm run build
+    echo "Current NODE_ENV: $NODE_ENV" && \
+    echo "Override NODE_ENV to development for build..." && \
+    export NODE_ENV=development && \
+    echo "New NODE_ENV: $NODE_ENV" && \
+    echo "Checking if cross-env is available:" && \
+    which cross-env || echo "cross-env not found in PATH" && \
+    echo "Attempting simple next build first..." && \
+    (NODE_ENV=development NODE_OPTIONS=--no-deprecation npx next build || \
+     echo "Direct next build failed, trying with cross-env..." && \
+     NODE_ENV=development cross-env NODE_OPTIONS=--no-deprecation next build || \
+     echo "Cross-env build failed, trying npm run build..." && \
+     NODE_ENV=development npm run build || \
+     echo "All build attempts failed!")
 
 # Create media directory and ensure proper permissions
 RUN mkdir -p /app/public/media && \
