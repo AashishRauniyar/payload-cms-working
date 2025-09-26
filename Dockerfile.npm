@@ -1,0 +1,89 @@
+############################################
+# Simple, reliable Dockerfile for Next.js with Payload
+# Using NPM for more reliable builds with native modules
+############################################
+
+# Use Node 18 for better Sharp compatibility
+FROM node:18-alpine AS base
+
+# Install necessary system dependencies
+RUN apk add --no-cache \
+    g++ \
+    git \
+    libc6-compat \
+    make \
+    python3
+
+WORKDIR /app
+
+# Dependencies stage - uses npm which has fewer issues with Sharp
+FROM base AS deps
+WORKDIR /app
+
+# Copy package files
+COPY package.json ./
+# Skip pnpm lock files intentionally to use npm instead
+
+# Use npm instead of pnpm for more reliable native module builds
+RUN npm install --legacy-peer-deps
+
+# Builder stage
+FROM base AS builder
+WORKDIR /app
+
+# Set environment variables for build
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV SKIP_MIGRATIONS=true
+ENV SKIP_ENV_VALIDATION=true
+ENV PAYLOAD_DISABLE_SHARP=true
+
+# Copy dependencies and source
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Replace package.json with simplified version for build
+COPY Dockerfile.package.json ./package.json
+
+# Build with simplified approach
+RUN npm run build
+
+# Production image
+FROM base AS runner
+WORKDIR /app
+
+# Set environment variables for runtime
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3019
+ENV HOSTNAME=0.0.0.0
+
+# Create application user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs && \
+    mkdir -p /app/public/media /app/uploads /app/.next && \
+    chown -R nextjs:nodejs /app
+
+# Copy build output and static files
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
+# Copy files needed for migrations and Payload
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+# Set permissions
+RUN chmod -R 755 /app/public && chmod -R 755 /app/public/media
+
+USER nextjs
+
+EXPOSE 3019
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
+
+CMD ["node", "server.js"]

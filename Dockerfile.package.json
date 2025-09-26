@@ -6,12 +6,15 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "build:safe": "SKIP_MIGRATIONS=true PAYLOAD_DISABLE_EMAIL=true NEXT_TELEMETRY_DISABLED=1 next build",
+    "start": "next start",
     "postbuild": "echo 'Build completed successfully'"
   },
-  "pnpm": {
-    "overrides": {
-      "sharp": "0.34.2"
-    }
+  "dependencies": {
+    "next": "15.4.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "overrides": {
+    "sharp": "0.32.0"
   }
 }

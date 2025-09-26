@@ -98,46 +98,32 @@
 #############################################
 # Production Dockerfile (Coolify friendly)   #
 # Optimized for Payload + Next standalone    #
-# Uses Node 20 (better sharp prebuilds)      #
+# Uses Node 18 (better Sharp compatibility)  #
 #############################################
 
+# Use Node 18 for better Sharp compatibility 
+FROM node:18-alpine AS base
 
-
-# Define Node version and base image
-ARG NODE_VERSION=20.18.0
-FROM node:${NODE_VERSION}-alpine AS base
-
-# Install system dependencies (including those required for sharp) and enable pnpm
-ARG PNPM_VERSION=9.12.0
+# Install necessary system dependencies - minimum needed set
 RUN apk add --no-cache \
   g++ \
   git \
   libc6-compat \
   make \
-  pkgconfig \
-  python3 \
-  vips-dev \
-  bash \
-  zlib-dev && \
-  corepack enable && \
-  (corepack prepare pnpm@${PNPM_VERSION} --activate || npm install -g pnpm@${PNPM_VERSION}) && \
-  npm cache clean --force >/dev/null 2>&1 || true
+  python3
 
 WORKDIR /app
 
-# Install dependencies stage
+# Dependencies stage - use npm for better compatibility with native modules
 FROM base AS deps
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml for dependency installation
-COPY package.json pnpm-lock.yaml ./
+# Copy package files (use package.json only, skip pnpm lock)
+COPY package.json ./
 
-# Install ALL dependencies, including dev dependencies for build
-# Also explicitly install both sharp and @img/sharp for fallback
-COPY .npmrc .pnpmrc ./
-RUN pnpm install --frozen-lockfile --prod=false && \
-    pnpm install sharp@0.34.2 @img/sharp -D && \
-    pnpm rebuild sharp
+# Use npm instead of pnpm for more reliable native module builds
+RUN npm install --legacy-peer-deps && \
+    npm install cross-env -g
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -149,25 +135,25 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
     SKIP_MIGRATIONS=true \
     SKIP_ENV_VALIDATION=true \
     PAYLOAD_DISABLE_EMAIL=true \
+    PAYLOAD_DISABLE_SHARP=true \
     NODE_OPTIONS=--no-deprecation
 
 # Copy node_modules and source files into builder stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build with verbose output to capture potential errors
-# First run diagnostics to verify Sharp installation
+# Create simplified build script that doesn't rely on complex package.json
+RUN echo '#!/bin/sh\nNODE_OPTIONS=--no-deprecation SKIP_MIGRATIONS=true PAYLOAD_DISABLE_EMAIL=true PAYLOAD_DISABLE_SHARP=true exec next build "$@"' > /app/build.sh && \
+    chmod +x /app/build.sh
+
+# Use simplified package.json for the build
+COPY Dockerfile.package.json ./package.json
+
+# Build with direct script instead of relying on package.json scripts
 RUN set -ex && \
     echo "Node version: $(node -v)" && \
-    echo "PNPM version: $(pnpm -v)" && \
-    echo "Testing Sharp installation:" && \
-    node -e "try { require('sharp'); console.log('Sharp is properly installed'); } catch(e) { console.error('Standard Sharp failed:', e); try { require('@img/sharp'); console.log('@img/sharp fallback is working'); } catch(e2) { console.error('Both Sharp versions failed:', e2); } }" && \
-    echo "Starting simplified build to bypass payload:generate issues..." && \
-    pnpm run build:safe || \
-    # If the build fails, try a simplified approach with minimal dependencies
-    (echo "Initial build failed, trying backup approach..." && \
-     pnpm install next@15.4.4 sharp@0.34.2 cross-env -D && \
-     SKIP_MIGRATIONS=true PAYLOAD_DISABLE_EMAIL=true NODE_OPTIONS=--no-deprecation next build)
+    echo "Starting simplified build..." && \
+    /app/build.sh
 
 # Production image, copy all the necessary files and run next
 FROM base AS runner
@@ -196,7 +182,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Optionally prune dev dependencies for smaller runtime image
-# RUN pnpm prune --prod
+# RUN npm prune --production
 
 # Ensure proper permissions for public directories
 RUN chmod -R 755 /app/public && mkdir -p /app/public/media && chmod -R 755 /app/public/media
@@ -208,7 +194,7 @@ EXPOSE 3019
 
 # Define health check for the running app
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "http.get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
+  CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
 
 # Start the application
 CMD ["node", "server.js"]
