@@ -1,5 +1,11 @@
 #!/bin/sh
-set -e
+set -ex
+
+# Print debug information
+echo "Running build.sh"
+echo "Current directory: $(pwd)"
+echo "Directory listing:"
+ls -la
 
 echo "Building Next.js application..."
 
@@ -12,8 +18,8 @@ export PAYLOAD_DISABLE_EMAIL=true
 export PAYLOAD_DISABLE_SHARP=true
 export NODE_OPTIONS=--no-deprecation
 
-# Run Next.js build
+# Run Next.js build directly using npx for reliability
 echo "Running next build..."
-next build
+npx next build
 
 echo "Build completed successfully!"
