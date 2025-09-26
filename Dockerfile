@@ -167,7 +167,8 @@ RUN echo "=== BUILD ARTIFACTS DEBUG ===" && \
 # Set runtime environment variables
 ENV NODE_ENV=production \
     PORT=3000 \
-    HOSTNAME=0.0.0.0
+    HOSTNAME=0.0.0.0 \
+    NEXT_TELEMETRY_DISABLED=1
 
 # Expose port
 EXPOSE 3000
@@ -178,26 +179,32 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 
 # Create a startup script that handles different server locations
 RUN echo '#!/bin/sh\n\
-echo "Starting Payload CMS application..."\n\
+echo "🚀 Starting Payload CMS application..."\n\
 echo "Current directory: $(pwd)"\n\
 echo "Directory contents:"\n\
 ls -la\n\
+\n\
+# Try to run migrations first\n\
+if [ -f "migrate.js" ]; then\n\
+    echo "🔄 Running migrations..."\n\
+    node migrate.js 2>&1 || echo "Migration failed but continuing..."\n\
+    echo "✨ Migrations completed!"\n\
+fi\n\
+\n\
+echo "✅ Starting server..."\n\
 \n\
 # Check for standalone server.js first\n\
 if [ -f ".next/standalone/server.js" ]; then\n\
     echo "Found standalone server, copying necessary files..."\n\
     # Copy static files to standalone\n\
-    cp -r public .next/standalone/public || true\n\
-    cp -r .next/static .next/standalone/.next/static || true\n\
+    cp -r public .next/standalone/public 2>/dev/null || true\n\
+    cp -r .next/static .next/standalone/.next/static 2>/dev/null || true\n\
     cd .next/standalone\n\
     echo "Starting with: node server.js"\n\
-    node server.js\n\
-elif [ -f "server.js" ]; then\n\
-    echo "Using root server.js..."\n\
-    node server.js\n\
+    HOSTNAME=0.0.0.0 PORT=3000 node server.js\n\
 else\n\
-    echo "Using Next.js start command..."\n\
-    NODE_OPTIONS="--no-deprecation" npx next start\n\
+    echo "Using npm start command..."\n\
+    npm start\n\
 fi' > /app/start.sh && chmod +x /app/start.sh
 
 # Start the application using our startup script
