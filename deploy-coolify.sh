@@ -3,10 +3,10 @@ set -e
 
 echo "🚀 Deploying to Coolify..."
 echo "Adding files to git..."
-git add Dockerfile Dockerfile.package.json
+git add Dockerfile Dockerfile.package.json build.sh
 
 echo "Committing changes..."
-git commit -m "Fix: Simplified Docker build process for reliable deployment"
+git commit -m "Fix: Added build script for Docker deployment"
 
 echo "Pushing to deployment branch..."
 git push origin deployment

@@ -142,9 +142,8 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Create simplified build script that doesn't rely on complex package.json
-RUN echo '#!/bin/sh\nNODE_OPTIONS=--no-deprecation SKIP_MIGRATIONS=true PAYLOAD_DISABLE_EMAIL=true PAYLOAD_DISABLE_SHARP=true exec next build "$@"' > /app/build.sh && \
-    chmod +x /app/build.sh
+# Make build script executable
+RUN chmod +x /app/build.sh
 
 # Use simplified package.json for the build
 COPY Dockerfile.package.json ./package.json
@@ -153,7 +152,7 @@ COPY Dockerfile.package.json ./package.json
 RUN set -ex && \
     echo "Node version: $(node -v)" && \
     echo "Starting simplified build..." && \
-    /app/build.sh
+    sh /app/build.sh
 
 # Production image, copy all the necessary files and run next
 FROM base AS runner
