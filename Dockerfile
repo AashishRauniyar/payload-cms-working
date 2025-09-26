@@ -133,7 +133,11 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Install ALL dependencies, including dev dependencies for build
-RUN pnpm install --frozen-lockfile --prod=false
+# Also explicitly install both sharp and @img/sharp for fallback
+COPY .npmrc .pnpmrc ./
+RUN pnpm install --frozen-lockfile --prod=false && \
+    pnpm install sharp@0.34.2 @img/sharp -D && \
+    pnpm rebuild sharp
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -143,17 +147,27 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1 \
     NODE_ENV=development \
     SKIP_MIGRATIONS=true \
-    SKIP_ENV_VALIDATION=true
+    SKIP_ENV_VALIDATION=true \
+    PAYLOAD_DISABLE_EMAIL=true \
+    NODE_OPTIONS=--no-deprecation
 
 # Copy node_modules and source files into builder stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build with verbose output to capture potential errors
+# First run diagnostics to verify Sharp installation
 RUN set -ex && \
     echo "Node version: $(node -v)" && \
     echo "PNPM version: $(pnpm -v)" && \
-    pnpm run build:safe
+    echo "Testing Sharp installation:" && \
+    node -e "try { require('sharp'); console.log('Sharp is properly installed'); } catch(e) { console.error('Standard Sharp failed:', e); try { require('@img/sharp'); console.log('@img/sharp fallback is working'); } catch(e2) { console.error('Both Sharp versions failed:', e2); } }" && \
+    echo "Starting simplified build to bypass payload:generate issues..." && \
+    pnpm run build:safe || \
+    # If the build fails, try a simplified approach with minimal dependencies
+    (echo "Initial build failed, trying backup approach..." && \
+     pnpm install next@15.4.4 sharp@0.34.2 cross-env -D && \
+     SKIP_MIGRATIONS=true PAYLOAD_DISABLE_EMAIL=true NODE_OPTIONS=--no-deprecation next build)
 
 # Production image, copy all the necessary files and run next
 FROM base AS runner

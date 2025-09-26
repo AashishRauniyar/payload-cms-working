@@ -1,7 +1,8 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
 
-import sharp from 'sharp' // sharp-import
+// Import sharp from our adapter instead of directly
+import sharp from './utilities/sharpAdapter' // sharp-import
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
@@ -80,7 +81,10 @@ export default buildConfig({
     // storage-adapter-placeholder
   ],
   secret: process.env.PAYLOAD_SECRET || 'fallback-secret-for-build-only-not-secure',
-  sharp,
+  
+  // Only use sharp if not explicitly disabled
+  ...(process.env.PAYLOAD_DISABLE_SHARP !== 'true' && { sharp }),
+  
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

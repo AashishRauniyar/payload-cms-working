@@ -1,0 +1,17 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "description": "Website template for Payload",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "build:safe": "SKIP_MIGRATIONS=true PAYLOAD_DISABLE_EMAIL=true NEXT_TELEMETRY_DISABLED=1 next build",
+    "postbuild": "echo 'Build completed successfully'"
+  },
+  "pnpm": {
+    "overrides": {
+      "sharp": "0.34.2"
+    }
+  }
+}
