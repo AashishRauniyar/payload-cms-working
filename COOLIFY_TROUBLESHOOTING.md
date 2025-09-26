@@ -27,6 +27,45 @@ FROM node:18-alpine AS base
 
 3. If using volumes, check permissions on mounted directories.
 
+### Issue: Missing build.sh script error
+
+**Symptoms:**
+
+- Build fails with error: `failed to solve: process "/bin/sh -c set -ex && echo \"Node version: $(node -v)\" && echo \"Starting simplified build...\" && /app/build.sh" did not complete successfully: exit code: 127`
+- Error indicates the build.sh script is missing or not executable
+
+**Solutions:**
+
+1. Ensure the build.sh script exists in the root of your project:
+
+```bash
+#!/bin/sh
+set -e
+
+echo "Building Next.js application..."
+export NODE_ENV=production
+export NEXT_TELEMETRY_DISABLED=1
+export SKIP_MIGRATIONS=true
+export PAYLOAD_CONFIG_PATH=dist/payload.config.js
+export PAYLOAD_DISABLE_EMAIL=true
+export PAYLOAD_DISABLE_SHARP=true
+export NODE_OPTIONS=--no-deprecation
+
+echo "Running next build..."
+next build
+
+echo "Build completed successfully!"
+```
+
+2. Make sure the Dockerfile references the script correctly:
+
+```dockerfile
+COPY . .
+RUN chmod +x /app/build.sh
+```
+
+3. Use `sh /app/build.sh` instead of directly calling `/app/build.sh` for better compatibility.
+
 ### Issue: Memory errors during build
 
 **Symptoms:**
