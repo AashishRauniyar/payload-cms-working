@@ -116,9 +116,10 @@ WORKDIR /app
 # Copy package files first for better caching
 COPY package.json ./
 
-# Install dependencies with best compatibility options
+# Install ALL dependencies (including dev dependencies) for build
 RUN echo "Installing dependencies..." && \
-    npm install --no-optional --legacy-peer-deps
+    npm install --legacy-peer-deps && \
+    npm install -g cross-env
 
 # Copy the rest of the application
 COPY . .
@@ -128,20 +129,26 @@ ENV NODE_ENV=development \
     NEXT_TELEMETRY_DISABLED=1 \
     PAYLOAD_CONFIG_PATH=dist/payload.config.js \
     SKIP_MIGRATIONS=true \
-    PAYLOAD_DISABLE_EMAIL=true
+    PAYLOAD_DISABLE_EMAIL=true \
+    PAYLOAD_DISABLE_SHARP=true
 
-# Try direct build with all necessary flags
+# Debug and build with verbose output
 RUN echo "Starting build process..." && \
-    export NODE_ENV=development && \
-    export NEXT_TELEMETRY_DISABLED=1 && \
-    export SKIP_MIGRATIONS=true && \
-    export PAYLOAD_CONFIG_PATH=dist/payload.config.js && \
-    export PAYLOAD_DISABLE_EMAIL=true && \
-    npx next build
+    echo "Node version: $(node -v)" && \
+    echo "NPM version: $(npm -v)" && \
+    echo "Checking package.json scripts:" && \
+    cat package.json | grep -A 20 '"scripts"' && \
+    echo "Attempting build..." && \
+    npm run build
 
 # Create media directory and ensure proper permissions
 RUN mkdir -p /app/public/media && \
     chmod -R 755 /app/public/media
+
+# Set runtime environment variables
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0
 
 # Expose port
 EXPOSE 3000
