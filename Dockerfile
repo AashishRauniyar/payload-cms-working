@@ -96,7 +96,7 @@
 # CMD ["node", "server.js"]
 
 #############################################
-# Simple Dockerfile for Coolify deployment   #
+# Ultra-Simple Dockerfile for Coolify        #
 #############################################
 
 # Use Node 18 for better Sharp compatibility
@@ -123,50 +123,21 @@ RUN echo "Installing dependencies..." && \
 # Copy the rest of the application
 COPY . .
 
-# Set up environment variables
-ENV NODE_ENV=production \
+# Set up environment variables for build
+ENV NODE_ENV=development \
     NEXT_TELEMETRY_DISABLED=1 \
     PAYLOAD_CONFIG_PATH=dist/payload.config.js \
-    PORT=3000 \
-    HOSTNAME=0.0.0.0
+    SKIP_MIGRATIONS=true \
+    PAYLOAD_DISABLE_EMAIL=true
 
-# Create build shell script for error handling
-RUN echo '#!/bin/sh\n\
-set -e\n\
-\n\
-echo "Starting build with error handling..."\n\
-\n\
-# First attempt - standard build\n\
-if npm run build; then\n\
-    echo "Build succeeded on first attempt!"\n\
-    exit 0\n\
-fi\n\
-\n\
-echo "First build attempt failed, trying alternate build..."\n\
-\n\
-# Second attempt - try with NODE_ENV=development for full dependencies\n\
-export NODE_ENV=development\n\
-if npx next build; then\n\
-    echo "Build succeeded on second attempt!"\n\
-    exit 0\n\
-fi\n\
-\n\
-echo "Second build attempt failed, trying minimal build..."\n\
-\n\
-# Third attempt - try with minimal options\n\
-export PAYLOAD_DISABLE_SHARP=true\n\
-export SKIP_MIGRATIONS=true\n\
-export PAYLOAD_DISABLE_EMAIL=true\n\
-if npx next build; then\n\
-    echo "Build succeeded on third attempt!"\n\
-    exit 0\n\
-fi\n\
-\n\
-echo "All build attempts failed!"\n\
-exit 1' > /app/build-with-fallbacks.sh && chmod +x /app/build-with-fallbacks.sh
-
-# Run the build script
-RUN /app/build-with-fallbacks.sh
+# Try direct build with all necessary flags
+RUN echo "Starting build process..." && \
+    NODE_ENV=development \
+    NEXT_TELEMETRY_DISABLED=1 \
+    SKIP_MIGRATIONS=true \
+    PAYLOAD_CONFIG_PATH=dist/payload.config.js \
+    PAYLOAD_DISABLE_EMAIL=true \
+    npx next build
 
 # Create media directory and ensure proper permissions
 RUN mkdir -p /app/public/media && \
