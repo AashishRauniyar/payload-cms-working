@@ -132,11 +132,11 @@ ENV NODE_ENV=development \
 
 # Try direct build with all necessary flags
 RUN echo "Starting build process..." && \
-    NODE_ENV=development \
-    NEXT_TELEMETRY_DISABLED=1 \
-    SKIP_MIGRATIONS=true \
-    PAYLOAD_CONFIG_PATH=dist/payload.config.js \
-    PAYLOAD_DISABLE_EMAIL=true \
+    export NODE_ENV=development && \
+    export NEXT_TELEMETRY_DISABLED=1 && \
+    export SKIP_MIGRATIONS=true && \
+    export PAYLOAD_CONFIG_PATH=dist/payload.config.js && \
+    export PAYLOAD_DISABLE_EMAIL=true && \
     npx next build
 
 # Create media directory and ensure proper permissions
