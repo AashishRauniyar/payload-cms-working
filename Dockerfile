@@ -101,10 +101,13 @@
 # Uses Node 20 (better sharp prebuilds)      #
 #############################################
 
+
+
+# Define Node version and base image
 ARG NODE_VERSION=20.18.0
 FROM node:${NODE_VERSION}-alpine AS base
 
-# Install system deps (include git + vips for sharp) and enable pnpm
+# Install system dependencies (including those required for sharp) and enable pnpm
 ARG PNPM_VERSION=9.12.0
 RUN apk add --no-cache \
   g++ \
@@ -113,7 +116,9 @@ RUN apk add --no-cache \
   make \
   pkgconfig \
   python3 \
-  vips-dev && \
+  vips-dev \
+  bash \
+  zlib-dev && \
   corepack enable && \
   (corepack prepare pnpm@${PNPM_VERSION} --activate || npm install -g pnpm@${PNPM_VERSION}) && \
   npm cache clean --force >/dev/null 2>&1 || true
@@ -124,25 +129,23 @@ WORKDIR /app
 FROM base AS deps
 WORKDIR /app
 
-# Copy manifest files only (cache layer)
+# Copy package.json and pnpm-lock.yaml for dependency installation
 COPY package.json pnpm-lock.yaml ./
 
-# Install ALL dependencies including devDependencies for build
+# Install ALL dependencies, including dev dependencies for build
 RUN pnpm install --frozen-lockfile --prod=false
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 
+# Set environment variables needed for build
 ENV NEXT_TELEMETRY_DISABLED=1 \
     NODE_ENV=development \
     SKIP_MIGRATIONS=true \
     SKIP_ENV_VALIDATION=true
 
-# (Optional) supply dummy DB URI only if required. Leave unset to avoid accidental attempts.
-# ARG DUMMY_DB="postgresql://user:pass@localhost:5432/dummy"
-# ENV DATABASE_URI=${DUMMY_DB}
-
+# Copy node_modules and source files into builder stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -152,29 +155,28 @@ RUN set -ex && \
     echo "PNPM version: $(pnpm -v)" && \
     pnpm run build:safe
 
-# Production image, copy all the files and run next
+# Production image, copy all the necessary files and run next
 FROM base AS runner
 WORKDIR /app
 
+# Set environment variables for production runtime
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3019 \
     HOSTNAME=0.0.0.0
 
-# Create application user & dirs (single RUN layer)
+# Create application user & dirs (to ensure permissions are set correctly)
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs && \
     mkdir -p /app/public/media /app/uploads /app/.next && \
     chown -R nextjs:nodejs /app
 
-# Copy standalone output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+# Copy necessary runtime files from the builder stage
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./ 
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-
-# Copy needed runtime assets (for payload CLI & migrations if ever executed inside container)
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
-COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./ 
+COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./ 
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
@@ -182,14 +184,17 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 # Optionally prune dev dependencies for smaller runtime image
 # RUN pnpm prune --prod
 
-# Permissions sanity
+# Ensure proper permissions for public directories
 RUN chmod -R 755 /app/public && mkdir -p /app/public/media && chmod -R 755 /app/public/media
 
+# Use the non-root user to run the app
 USER nextjs
 
 EXPOSE 3019
 
+# Define health check for the running app
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD node -e "http.get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
 
+# Start the application
 CMD ["node", "server.js"]
