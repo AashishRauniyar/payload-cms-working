@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Windows permission fixer for pnpm
 const fs = require('fs')
 const path = require('path')
