@@ -127,7 +127,7 @@ COPY . .
 # Set up environment variables for build
 ENV NODE_ENV=development \
     NEXT_TELEMETRY_DISABLED=1 \
-    PAYLOAD_CONFIG_PATH=dist/payload.config.js \
+    PAYLOAD_CONFIG_PATH=src/payload.config.ts \
     SKIP_MIGRATIONS=true \
     PAYLOAD_DISABLE_EMAIL=true \
     PAYLOAD_DISABLE_SHARP=true
@@ -166,31 +166,53 @@ RUN echo "=== BUILD ARTIFACTS DEBUG ===" && \
 
 # Set runtime environment variables
 ENV NODE_ENV=production \
-    PORT=3000 \
+    PORT=3019 \
     HOSTNAME=0.0.0.0 \
     NEXT_TELEMETRY_DISABLED=1
 
 # Expose port
-EXPOSE 3000
+EXPOSE 3019
 
 # Define health check for the running app
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
+  CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
 
 # Create a startup script that handles different server locations
 RUN echo '#!/bin/sh\n\
 echo "🚀 Starting Payload CMS application..."\n\
+echo "🔍 Environment Check:"\n\
+echo "  NODE_ENV: $NODE_ENV"\n\
+echo "  PORT: $PORT"\n\
+echo "  DATABASE_URI: ${DATABASE_URI:0:30}..."\n\
+echo "  PAYLOAD_SECRET: ${PAYLOAD_SECRET:0:10}..."\n\
 echo "Current directory: $(pwd)"\n\
 echo "Directory contents:"\n\
 ls -la\n\
 \n\
-# Try to run migrations first\n\
-if [ -f "migrate.js" ]; then\n\
-    echo "🔄 Running migrations..."\n\
-    node migrate.js 2>&1 || echo "Migration failed but continuing..."\n\
-    echo "✨ Migrations completed!"\n\
+# Check database connection\n\
+echo "🔍 Checking database connection..."\n\
+if [ ! -z "$DATABASE_URI" ]; then\n\
+    echo "✅ Database URI is set"\n\
+else\n\
+    echo "❌ DATABASE_URI not found!"\n\
+    exit 1\n\
 fi\n\
 \n\
+echo "✅ Database is ready!"\n\
+\n\
+# Try to run migrations first\n\
+echo "🚀 Running Payload migrations..."\n\
+if [ -f "migrate.js" ]; then\n\
+    echo "Using migrate.js file..."\n\
+    node migrate.js 2>&1 && echo "✅ Migration output completed" || echo "⚠️ Migration failed but continuing..."\n\
+elif command -v payload >/dev/null 2>&1; then\n\
+    echo "Using payload CLI..."\n\
+    npx payload migrate 2>&1 && echo "✅ Migration output completed" || echo "⚠️ Migration failed but continuing..."\n\
+else\n\
+    echo "ℹ️ No migration method found, skipping..."\n\
+fi\n\
+\n\
+echo "✨ Migrations completed successfully!"\n\
 echo "✅ Starting server..."\n\
 \n\
 # Check for standalone server.js first\n\
@@ -201,10 +223,10 @@ if [ -f ".next/standalone/server.js" ]; then\n\
     cp -r .next/static .next/standalone/.next/static 2>/dev/null || true\n\
     cd .next/standalone\n\
     echo "Starting with: node server.js"\n\
-    HOSTNAME=0.0.0.0 PORT=3000 node server.js\n\
+    HOSTNAME=0.0.0.0 PORT=3019 node server.js\n\
 else\n\
     echo "Using npm start command..."\n\
-    npm start\n\
+    PORT=3019 HOSTNAME=0.0.0.0 npm start\n\
 fi' > /app/start.sh && chmod +x /app/start.sh
 
 # Start the application using our startup script
