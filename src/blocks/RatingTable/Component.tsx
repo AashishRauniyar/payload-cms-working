@@ -16,8 +16,7 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
   const {
     title,
     productImage,
-    customRating, // Primary rating field from CMS
-    overallRating = 4.5,
+    customRating, // User input rating value
     ratingMetrics = [],
     description,
     backgroundColor = 'white',
@@ -28,28 +27,15 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
   // Handle productImage type (could be number or Media object)
   const imageData = typeof productImage === 'object' && productImage !== null ? productImage : null
 
-  // Calculate star rating dynamically
+  // Calculate star rating - only use user input value
   const calculateStarRating = () => {
-    // Priority 1: Use customRating if provided from CMS
+    // Only use customRating if provided from CMS (user input)
     if (customRating !== undefined && customRating !== null && customRating >= 0) {
       return Math.min(Math.max(customRating, 0), 5) // Clamp between 0 and 5
     }
 
-    // Priority 2: Calculate from metrics if available
-    if (ratingMetrics.length > 0) {
-      const totalPercentage = ratingMetrics.reduce((sum, metric) => sum + metric.percentage, 0)
-      const averagePercentage = totalPercentage / ratingMetrics.length
-      // Convert percentage to 5-star scale (0-100% becomes 0-5 stars)
-      return Math.min(Math.max((averagePercentage / 100) * 5, 0), 5)
-    }
-
-    // Priority 3: Use overallRating as fallback
-    if (overallRating && overallRating > 0) {
-      return Math.min(Math.max(overallRating, 0), 5) // Clamp between 0 and 5
-    }
-
-    // Default fallback
-    return 4.5
+    // No fallback - return 0 if no user input
+    return 0
   }
 
   const calculatedRating = calculateStarRating()
