@@ -29,16 +29,30 @@ export const RatingTableBlock: Block = {
       },
     },
     {
+      name: 'customRating',
+      type: 'number',
+      label: 'Custom Star Rating',
+      required: false,
+      min: 0,
+      max: 5,
+      admin: {
+        step: 0.1,
+        description:
+          'Enter a custom star rating (0-5). Leave empty to use overall rating or calculated from metrics.',
+        placeholder: 'e.g., 3.5',
+      },
+    },
+    {
       name: 'overallRating',
       type: 'number',
-      label: 'Overall Star Rating',
-      required: true,
+      label: 'Overall Star Rating (Fallback)',
+      required: false,
       defaultValue: 4.5,
       min: 0,
       max: 5,
       admin: {
         step: 0.1,
-        description: 'Overall star rating out of 5 stars',
+        description: 'Fallback star rating used when custom rating is not provided',
       },
     },
     {

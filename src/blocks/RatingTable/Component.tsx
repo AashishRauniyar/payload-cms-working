@@ -10,20 +10,19 @@ import './styles.css'
 interface RatingTableProps extends RatingTableBlock {
   disableInnerContainer?: boolean
   className?: string
-  customRating?: number // Allow external rating override
 }
 
 export const RatingTable: React.FC<RatingTableProps> = (props) => {
   const {
     title,
     productImage,
+    customRating, // Primary rating field from CMS
     overallRating = 4.5,
     ratingMetrics = [],
     description,
     backgroundColor = 'white',
     disableInnerContainer,
     className,
-    customRating, // New prop for external rating control
   } = props
 
   // Handle productImage type (could be number or Media object)
@@ -31,17 +30,12 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
 
   // Calculate star rating dynamically
   const calculateStarRating = () => {
-    // Priority 1: Use customRating if provided (for external control)
-    if (customRating !== undefined && customRating !== null) {
+    // Priority 1: Use customRating if provided from CMS
+    if (customRating !== undefined && customRating !== null && customRating >= 0) {
       return Math.min(Math.max(customRating, 0), 5) // Clamp between 0 and 5
     }
 
-    // Priority 2: Use overallRating if provided and is a valid number
-    if (overallRating && overallRating > 0) {
-      return Math.min(Math.max(overallRating, 0), 5) // Clamp between 0 and 5
-    }
-
-    // Priority 3: Calculate from metrics if available
+    // Priority 2: Calculate from metrics if available
     if (ratingMetrics.length > 0) {
       const totalPercentage = ratingMetrics.reduce((sum, metric) => sum + metric.percentage, 0)
       const averagePercentage = totalPercentage / ratingMetrics.length
@@ -49,8 +43,13 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
       return Math.min(Math.max((averagePercentage / 100) * 5, 0), 5)
     }
 
+    // Priority 3: Use overallRating as fallback
+    if (overallRating && overallRating > 0) {
+      return Math.min(Math.max(overallRating, 0), 5) // Clamp between 0 and 5
+    }
+
     // Default fallback
-    return 0
+    return 4.5
   }
 
   const calculatedRating = calculateStarRating()
