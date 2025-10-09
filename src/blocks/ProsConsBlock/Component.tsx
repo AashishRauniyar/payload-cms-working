@@ -124,8 +124,8 @@ export function ProsConsBlock({
             {/* Content - Responsive Spacing */}
             <div className="space-y-3 sm:space-y-4 lg:space-y-6 mt-2 sm:mt-4">
               {prosData.map((item, index) => (
-                <div key={index} className="flex items-start space-x-3 sm:space-x-4">
-                  <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-green-500 rounded-full flex items-center justify-center mt-1">
+                <div key={index} className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-green-500 rounded-full flex items-center justify-center">
                     <Check
                       className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white"
                       strokeWidth={2.5}
@@ -159,8 +159,8 @@ export function ProsConsBlock({
             {/* Content - Responsive Spacing */}
             <div className="space-y-3 sm:space-y-4 lg:space-y-6 mt-2 sm:mt-4">
               {consData.map((item, index) => (
-                <div key={index} className="flex items-start space-x-3 sm:space-x-4">
-                  <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-red-500 rounded-full flex items-center justify-center mt-1">
+                <div key={index} className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-red-500 rounded-full flex items-center justify-center">
                     <X
                       className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white"
                       strokeWidth={2.5}
