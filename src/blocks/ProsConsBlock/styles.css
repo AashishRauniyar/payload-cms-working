@@ -114,10 +114,6 @@
 
 /* High DPI screens */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .pros-cons-header-circle {
-    /* Crisp borders on retina displays */
-    border-width: 2px;
-  }
 }
 
 /* Accessibility improvements */
