@@ -13,6 +13,9 @@ interface RatingTableProps extends RatingTableBlock {
 }
 
 export const RatingTable: React.FC<RatingTableProps> = (props) => {
+  // Debug: Log all props to see what's being passed
+  console.log('RatingTable - All props:', props)
+
   const {
     title,
     productImage,
@@ -29,47 +32,47 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
 
   // Calculate star rating - only use user input value
   const calculateStarRating = () => {
-    // Only use customRating if provided from CMS (user input)
-    if (customRating !== undefined && customRating !== null && customRating >= 0) {
-      return Math.min(Math.max(customRating, 0), 5) // Clamp between 0 and 5
+    // Debug: Log the customRating value
+    console.log('RatingTable - customRating value:', customRating, typeof customRating)
+
+    // Use customRating if it's a valid number (including 0)
+    if (typeof customRating === 'number' && !isNaN(customRating)) {
+      const clampedRating = Math.min(Math.max(customRating, 0), 5)
+      console.log('RatingTable - Using customRating:', clampedRating)
+      return clampedRating
     }
 
-    // No fallback - return 0 if no user input
+    // No valid input - return 0
+    console.log('RatingTable - No valid customRating, returning 0')
     return 0
   }
 
   const calculatedRating = calculateStarRating()
 
-  // Generate star rating display with dynamic precision
-  const renderStars = (rating: number, showPreciseHalf = true) => {
+  // Generate star rating display with precise decimal support
+  const renderStars = (rating: number) => {
+    console.log('RatingTable - Rendering stars for rating:', rating)
     const clampedRating = Math.min(Math.max(rating, 0), 5)
     const fullStars = Math.floor(clampedRating)
     const remainder = clampedRating - fullStars
 
-    // Determine if we should show a half star based on remainder
-    const hasHalfStar = showPreciseHalf && remainder >= 0.25 && remainder < 0.75
-    const shouldRoundUp = remainder >= 0.75
-
-    const actualFullStars = shouldRoundUp ? fullStars + 1 : fullStars
-    const emptyStars = 5 - actualFullStars - (hasHalfStar ? 1 : 0)
-
     const stars = []
 
     // Full stars
-    for (let i = 0; i < actualFullStars; i++) {
+    for (let i = 0; i < fullStars; i++) {
       stars.push(<Star key={`full-${i}`} className="rt-star rt-star-filled" fill="currentColor" />)
     }
 
-    // Half star with precise fill percentage
-    if (hasHalfStar) {
-      const halfPercentage = ((remainder - 0.25) / 0.5) * 100 // Map 0.25-0.75 to 0-100%
+    // Partial star (for any decimal remainder > 0)
+    if (remainder > 0) {
+      const partialPercentage = remainder * 100 // Convert to percentage (0.8 = 80%)
       stars.push(
-        <div key="half" className="rt-star rt-star-half" style={{ position: 'relative' }}>
+        <div key="partial" className="rt-star rt-star-half" style={{ position: 'relative' }}>
           <Star className="rt-star rt-star-empty" />
           <Star
             className="rt-star rt-star-filled rt-star-half-overlay"
             style={{
-              clipPath: `inset(0 ${100 - halfPercentage}% 0 0)`,
+              clipPath: `inset(0 ${100 - partialPercentage}% 0 0)`,
               position: 'absolute',
               top: 0,
               left: 0,
@@ -79,6 +82,10 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
         </div>,
       )
     }
+
+    // Empty stars for the remaining slots
+    const totalUsedStars = fullStars + (remainder > 0 ? 1 : 0)
+    const emptyStars = 5 - totalUsedStars
 
     // Empty stars
     for (let i = 0; i < emptyStars; i++) {
@@ -151,6 +158,8 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
             >
               {renderStars(calculatedRating)}
             </div>
+            {/* Debug: Show actual rating value */}
+            <div className="text-sm text-gray-600 mt-1">Rating: {calculatedRating} stars</div>
           </div>
         </div>
 
