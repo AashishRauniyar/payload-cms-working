@@ -1,5 +1,6 @@
 import React from 'react'
 import { Check, X } from 'lucide-react'
+import './styles.css'
 
 interface ProsConsItem {
   point: string
@@ -91,32 +92,48 @@ export function ProsConsBlock({
   }
 
   const content = (
-    <div className="max-w-7xl w-full mx-auto">
-      <div className="grid grid-cols-2 gap-8">
+    <div className="pros-cons-container w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+      {/* Title - Responsive Typography */}
+      {title && (
+        <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-center mb-6 sm:mb-8 lg:mb-12 text-gray-800 px-4">
+          {title}
+        </h2>
+      )}
+
+      {/* Cards Container - Responsive Grid */}
+      <div className="pros-cons-grid grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
         {/* PROS Card */}
-        <div className="relative">
-          {/* Card Container */}
-          <div className="bg-gray-50 border-2 border-green-400 rounded-xl p-8 pt-16 relative">
-            {/* Header Circle */}
-            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div className="w-20 h-20 bg-white border-4 border-green-400 rounded-full flex items-center justify-center">
-                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                  <Check className="w-7 h-7 text-white" strokeWidth={3} />
+        <div className="relative order-1 lg:order-1">
+          {/* Card Container - Responsive Padding */}
+          <div className="pros-cons-card bg-gray-50 border-2 border-green-400 rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 pt-12 sm:pt-14 lg:pt-16 relative shadow-sm hover:shadow-md transition-shadow duration-300">
+            {/* Header Circle - Responsive Sizing */}
+            <div className="pros-cons-header-circle absolute -top-8 sm:-top-10 lg:-top-12 left-1/2 transform -translate-x-1/2">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-white border-3 sm:border-4 border-green-400 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <Check
+                    className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white"
+                    strokeWidth={3}
+                  />
                 </div>
               </div>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+              <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap">
                 {prosTitle}
               </div>
             </div>
 
-            {/* Content */}
-            <div className="space-y-6 mt-4 flex-1 overflow-y-auto">
+            {/* Content - Responsive Spacing */}
+            <div className="space-y-3 sm:space-y-4 lg:space-y-6 mt-2 sm:mt-4">
               {prosData.map((item, index) => (
-                <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mt-1">
-                    <Check className="w-5 h-5 text-white" strokeWidth={2.5} />
+                <div key={index} className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-green-500 rounded-full flex items-center justify-center mt-0.5 sm:mt-1">
+                    <Check
+                      className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white"
+                      strokeWidth={2.5}
+                    />
                   </div>
-                  <p className="text-gray-700 leading-relaxed text-base">{item.point}</p>
+                  <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg flex-1 break-words">
+                    {item.point}
+                  </p>
                 </div>
               ))}
             </div>
@@ -124,29 +141,34 @@ export function ProsConsBlock({
         </div>
 
         {/* CONS Card */}
-        <div className="relative">
-          {/* Card Container */}
-          <div className="bg-gray-50 border-2 border-red-400 rounded-xl p-8 pt-16 relative">
-            {/* Header Circle */}
-            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <div className="w-20 h-20 bg-white border-4 border-red-500 rounded-full flex items-center justify-center shadow-lg">
-                <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
-                  <X className="w-7 h-7 text-white" strokeWidth={3} />
+        <div className="relative order-2 lg:order-2">
+          {/* Card Container - Responsive Padding */}
+          <div className="pros-cons-card bg-gray-50 border-2 border-red-400 rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 pt-12 sm:pt-14 lg:pt-16 relative shadow-sm hover:shadow-md transition-shadow duration-300">
+            {/* Header Circle - Responsive Sizing */}
+            <div className="pros-cons-header-circle absolute -top-8 sm:-top-10 lg:-top-12 left-1/2 transform -translate-x-1/2">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-white border-3 sm:border-4 border-red-500 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-red-500 rounded-full flex items-center justify-center">
+                  <X className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={3} />
                 </div>
               </div>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+              <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap">
                 {consTitle}
               </div>
             </div>
 
-            {/* Content */}
-            <div className="space-y-6 mt-4">
+            {/* Content - Responsive Spacing */}
+            <div className="space-y-3 sm:space-y-4 lg:space-y-6 mt-2 sm:mt-4">
               {consData.map((item, index) => (
-                <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mt-1">
-                    <X className="w-5 h-5 text-white" strokeWidth={2.5} />
+                <div key={index} className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-red-500 rounded-full flex items-center justify-center mt-0.5 sm:mt-1">
+                    <X
+                      className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white"
+                      strokeWidth={2.5}
+                    />
                   </div>
-                  <p className="text-gray-700 leading-relaxed text-base">{item.point}</p>
+                  <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg flex-1 break-words">
+                    {item.point}
+                  </p>
                 </div>
               ))}
             </div>
@@ -159,9 +181,8 @@ export function ProsConsBlock({
   if (disableInnerContainer) {
     return (
       <section
-        className={`${backgroundClasses[backgroundColor]} p-8 flex items-center justify-center ${className}`}
+        className={`${backgroundClasses[backgroundColor]} py-6 sm:py-8 lg:py-12 xl:py-16 px-2 sm:px-4 lg:px-6 xl:px-8 ${className}`}
       >
-        {title && <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
         {content}
       </section>
     )
@@ -169,9 +190,8 @@ export function ProsConsBlock({
 
   return (
     <section
-      className={`${backgroundClasses[backgroundColor]} p-8 flex items-center justify-center ${className}`}
+      className={`${backgroundClasses[backgroundColor]} py-6 sm:py-8 lg:py-12 xl:py-16 px-2 sm:px-4 lg:px-6 xl:px-8 ${className}`}
     >
-      {title && <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
       {content}
     </section>
   )

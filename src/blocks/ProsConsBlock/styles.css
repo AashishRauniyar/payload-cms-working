@@ -1,0 +1,139 @@
+/* ProsConsBlock Responsive Styles */
+
+/* Custom responsive breakpoints for better control */
+.pros-cons-container {
+  container-type: inline-size;
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .pros-cons-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .pros-cons-grid {
+    gap: 1.5rem;
+  }
+
+  .pros-cons-card {
+    margin: 0 0.25rem;
+  }
+
+  .pros-cons-header-circle {
+    transform: translateX(-50%) scale(0.8);
+  }
+}
+
+/* Mobile-first approach */
+@media (max-width: 640px) {
+  .pros-cons-card {
+    /* Ensure cards don't get too narrow on small screens */
+    min-height: 200px;
+  }
+
+  .pros-cons-header-circle {
+    /* Slightly smaller circles on mobile for better proportion */
+    transform: translateX(-50%) scale(0.9);
+  }
+
+  .pros-cons-content {
+    /* Better touch targets on mobile */
+    padding-bottom: 1rem;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .pros-cons-grid {
+    /* Ensure proper spacing on tablets */
+    gap: 2rem;
+  }
+
+  .pros-cons-card {
+    /* Balanced height on tablets */
+    min-height: 250px;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1025px) {
+  .pros-cons-grid {
+    /* Optimal spacing on desktop */
+    gap: 3rem;
+  }
+
+  .pros-cons-card {
+    /* Equal height cards on desktop */
+    min-height: 300px;
+  }
+
+  /* Hover effects for desktop */
+  .pros-cons-card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1440px) {
+  .pros-cons-container {
+    max-width: 1400px;
+  }
+
+  .pros-cons-grid {
+    gap: 4rem;
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+  .pros-cons-container {
+    max-width: 1600px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .pros-cons-card {
+    break-inside: avoid;
+    box-shadow: none !important;
+  }
+
+  .pros-cons-header-circle {
+    position: static !important;
+    transform: none !important;
+    margin-bottom: 1rem;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .pros-cons-header-circle {
+    /* Crisp borders on retina displays */
+    border-width: 2px;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .pros-cons-card {
+    transition: none !important;
+  }
+
+  .pros-cons-card:hover {
+    transform: none !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pros-cons-card {
+    background-color: rgb(31 41 55);
+    color: rgb(243 244 246);
+  }
+
+  .pros-cons-text {
+    color: rgb(209 213 219);
+  }
+}
