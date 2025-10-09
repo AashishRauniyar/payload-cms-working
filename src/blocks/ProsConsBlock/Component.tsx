@@ -105,7 +105,7 @@ export function ProsConsBlock({
         {/* PROS Card */}
         <div className="relative order-1 lg:order-1">
           {/* Card Container - Responsive Padding */}
-          <div className="pros-cons-card bg-gray-50 border-2 border-green-400 rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 pt-12 sm:pt-14 lg:pt-16 relative shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className="pros-cons-card bg-white border-2 border-green-400 rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 pt-12 sm:pt-14 lg:pt-16 relative shadow-sm hover:shadow-md transition-shadow duration-300">
             {/* Header Circle - Responsive Sizing */}
             <div className="pros-cons-header-circle absolute -top-8 sm:-top-10 lg:-top-12 left-1/2 transform -translate-x-1/2">
               <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-white border-3 sm:border-4 border-green-400 rounded-full flex items-center justify-center shadow-lg">
@@ -143,7 +143,7 @@ export function ProsConsBlock({
         {/* CONS Card */}
         <div className="relative order-2 lg:order-2">
           {/* Card Container - Responsive Padding */}
-          <div className="pros-cons-card bg-gray-50 border-2 border-red-400 rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 pt-12 sm:pt-14 lg:pt-16 relative shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className="pros-cons-card bg-white border-2 border-red-400 rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 pt-12 sm:pt-14 lg:pt-16 relative shadow-sm hover:shadow-md transition-shadow duration-300">
             {/* Header Circle - Responsive Sizing */}
             <div className="pros-cons-header-circle absolute -top-8 sm:-top-10 lg:-top-12 left-1/2 transform -translate-x-1/2">
               <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-white border-3 sm:border-4 border-red-500 rounded-full flex items-center justify-center shadow-lg">

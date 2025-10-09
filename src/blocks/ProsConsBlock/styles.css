@@ -5,6 +5,11 @@
   container-type: inline-size;
 }
 
+/* Ensure cards are always white background */
+.pros-cons-card {
+  background-color: white !important;
+}
+
 /* Extra small devices */
 @media (max-width: 480px) {
   .pros-cons-container {
@@ -126,14 +131,14 @@
   }
 }
 
-/* Dark mode support */
+/* Dark mode support - Keep white background but adjust text */
 @media (prefers-color-scheme: dark) {
   .pros-cons-card {
-    background-color: rgb(31 41 55);
-    color: rgb(243 244 246);
+    background-color: white !important;
+    color: rgb(31 41 55);
   }
 
   .pros-cons-text {
-    color: rgb(209 213 219);
+    color: rgb(75 85 99) !important;
   }
 }
