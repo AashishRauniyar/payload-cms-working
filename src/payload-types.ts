@@ -1088,9 +1088,13 @@ export interface RatingTableBlock {
    */
   productImage: number | Media;
   /**
-   * Overall star rating out of 5 stars
+   * Enter a custom star rating (0-5). Leave empty to use overall rating or calculated from metrics.
    */
-  overallRating: number;
+  customRating?: number | null;
+  /**
+   * Fallback star rating used when custom rating is not provided
+   */
+  overallRating?: number | null;
   /**
    * Add rating metrics with percentage values
    */
@@ -1847,6 +1851,7 @@ export interface BrandHighlightsTableBlockSelect<T extends boolean = true> {
 export interface RatingTableBlockSelect<T extends boolean = true> {
   title?: T;
   productImage?: T;
+  customRating?: T;
   overallRating?: T;
   ratingMetrics?:
     | T
