@@ -131,7 +131,7 @@ export function ProsConsBlock({
                       strokeWidth={2.5}
                     />
                   </div>
-                  <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg flex-1 break-words">
+                  <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg flex-1 break-words items-center">
                     {item.point}
                   </p>
                 </div>
