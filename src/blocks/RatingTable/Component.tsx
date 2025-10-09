@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 import { Star } from 'lucide-react'
 import RichText from '@/components/RichText'
 import type { RatingTableBlock } from '@/payload-types'
@@ -9,6 +10,7 @@ import './styles.css'
 interface RatingTableProps extends RatingTableBlock {
   disableInnerContainer?: boolean
   className?: string
+  customRating?: number // Allow external rating override
 }
 
 export const RatingTable: React.FC<RatingTableProps> = (props) => {
@@ -21,52 +23,81 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
     backgroundColor = 'white',
     disableInnerContainer,
     className,
+    customRating, // New prop for external rating control
   } = props
 
   // Handle productImage type (could be number or Media object)
   const imageData = typeof productImage === 'object' && productImage !== null ? productImage : null
 
-  // Calculate star rating based on average of rating metrics percentages
+  // Calculate star rating dynamically
   const calculateStarRating = () => {
-    if (ratingMetrics.length === 0) {
-      return overallRating // fallback to overallRating if no metrics
+    // Priority 1: Use customRating if provided (for external control)
+    if (customRating !== undefined && customRating !== null) {
+      return Math.min(Math.max(customRating, 0), 5) // Clamp between 0 and 5
     }
 
-    const totalPercentage = ratingMetrics.reduce((sum, metric) => sum + metric.percentage, 0)
-    const averagePercentage = totalPercentage / ratingMetrics.length
+    // Priority 2: Use overallRating if provided and is a valid number
+    if (overallRating && overallRating > 0) {
+      return Math.min(Math.max(overallRating, 0), 5) // Clamp between 0 and 5
+    }
 
-    // Convert percentage to 5-star scale (0-100% becomes 0-5 stars)
-    return (averagePercentage / 100) * 5
+    // Priority 3: Calculate from metrics if available
+    if (ratingMetrics.length > 0) {
+      const totalPercentage = ratingMetrics.reduce((sum, metric) => sum + metric.percentage, 0)
+      const averagePercentage = totalPercentage / ratingMetrics.length
+      // Convert percentage to 5-star scale (0-100% becomes 0-5 stars)
+      return Math.min(Math.max((averagePercentage / 100) * 5, 0), 5)
+    }
+
+    // Default fallback
+    return 0
   }
 
   const calculatedRating = calculateStarRating()
 
-  // Generate star rating display
-  const renderStars = (rating: number) => {
-    const fullStars = Math.floor(rating)
-    const hasHalfStar = rating % 1 !== 0
-    const emptyStars = 5 - Math.ceil(rating)
+  // Generate star rating display with dynamic precision
+  const renderStars = (rating: number, showPreciseHalf = true) => {
+    const clampedRating = Math.min(Math.max(rating, 0), 5)
+    const fullStars = Math.floor(clampedRating)
+    const remainder = clampedRating - fullStars
+
+    // Determine if we should show a half star based on remainder
+    const hasHalfStar = showPreciseHalf && remainder >= 0.25 && remainder < 0.75
+    const shouldRoundUp = remainder >= 0.75
+
+    const actualFullStars = shouldRoundUp ? fullStars + 1 : fullStars
+    const emptyStars = 5 - actualFullStars - (hasHalfStar ? 1 : 0)
 
     const stars = []
 
     // Full stars
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} className="rt-star rt-star-filled" />)
+    for (let i = 0; i < actualFullStars; i++) {
+      stars.push(<Star key={`full-${i}`} className="rt-star rt-star-filled" fill="currentColor" />)
     }
 
-    // Half star
+    // Half star with precise fill percentage
     if (hasHalfStar) {
+      const halfPercentage = ((remainder - 0.25) / 0.5) * 100 // Map 0.25-0.75 to 0-100%
       stars.push(
-        <div key="half" className="rt-star rt-star-half">
+        <div key="half" className="rt-star rt-star-half" style={{ position: 'relative' }}>
           <Star className="rt-star rt-star-empty" />
-          <Star className="rt-star rt-star-filled rt-star-half-overlay" />
+          <Star
+            className="rt-star rt-star-filled rt-star-half-overlay"
+            style={{
+              clipPath: `inset(0 ${100 - halfPercentage}% 0 0)`,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+            }}
+            fill="currentColor"
+          />
         </div>,
       )
     }
 
     // Empty stars
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="rt-star rt-star-empty" />)
+      stars.push(<Star key={`empty-${i}`} className="rt-star rt-star-empty" fill="none" />)
     }
 
     return stars
@@ -111,10 +142,12 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
           {/* Product Image */}
           <div className="rt-modern-image-wrapper">
             {imageData?.url ? (
-              <img
+              <Image
                 src={imageData.url}
                 alt={imageData.alt || title || 'Product Image'}
                 className="rt-modern-image"
+                width={200}
+                height={200}
                 itemProp="image"
               />
             ) : (
