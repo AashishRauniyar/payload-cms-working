@@ -325,32 +325,30 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
     Array.isArray(products) && products.length > 0 ? products.slice(0, 3) : []
 
   const content = (
-    <div className="max-w-7xl mx-auto p-8">
+    <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       {/* Header Section */}
-      <div className="flex items-start justify-between mb-16">
-        <div className="flex-shrink-0">
-          <h1 className="text-5xl font-white text-blue-600 leading-tight tracking-tight">
+      <div className="flex flex-col lg:flex-row items-start lg:justify-between mb-8 sm:mb-12 lg:mb-16">
+        <div className="flex-shrink-0 mb-8 lg:mb-0">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-white text-blue-600 leading-tight tracking-tight">
             {h1}
             <br />
             <span className="text-blue-600">{h2}</span>
             <br />
-            <span className="text-3xl text-blue-600">{h3}</span>
+            <span className="text-xl sm:text-2xl md:text-3xl text-blue-600">{h3}</span>
           </h1>
-          <div className="w-16 h-1 bg-blue-600 mt-4"></div>
+          <div className="w-12 sm:w-16 h-1 bg-blue-600 mt-3 sm:mt-4"></div>
         </div>
 
-        {/* Simplified Product Images */}
-        <div className="flex gap-24 items-center flex-1 justify-center">
+        {/* Simplified Product Images - Responsive Grid */}
+        <div className="w-full lg:w-auto grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-24 lg:flex lg:flex-1 lg:justify-center">
           {productList.map((product, idx) => (
             <div className="text-center" key={idx}>
               {/* Simple image container with light background */}
-              {/* increase image size */}
-              <div className="w-40 h-48 rounded-lg flex items-center justify-center mb-4 ">
+              <div className="relative w-full h-36 sm:h-40 md:h-44 lg:h-48 rounded-lg flex items-center justify-center mb-2 sm:mb-3 md:mb-4">
                 {product.media && typeof product.media === 'object' ? (
                   <Media
                     resource={product.media}
                     alt={product.name}
-                    // increase image size
                     className="max-h-full max-w-full object-contain"
                   />
                 ) : (
@@ -359,26 +357,32 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
 
                 {/* #1 badge for first product */}
                 {idx === 0 && (
-                  <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">
+                  <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-yellow-400 text-yellow-900 text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
                     #1
                   </div>
                 )}
               </div>
 
               {/* Product name */}
-              <div className="font-bold text-lg text-gray-900">{product.name}</div>
-              <div className="text-sm text-gray-500 mt-1">Premium Formula</div>
+              <div className="font-bold text-xs sm:text-sm md:text-base lg:text-lg text-gray-900 break-words">
+                {product.name}
+              </div>
+              <div className="hidden sm:block text-xs md:text-sm text-gray-500 mt-1">
+                Premium Formula
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Comparison Table */}
-      <div className="border border-gray-200 bg-white">
+      {/* Comparison Table - Mobile: Stacked Cards, Desktop: Table */}
+      
+      {/* Desktop Table View (hidden on mobile) */}
+      <div className="hidden md:block border border-gray-200 bg-white rounded-lg overflow-hidden">
         {/* Header Row */}
         <div className="bg-blue-600 text-gray-900">
           <div className="flex">
-            <div className="w-1/4 p-5 font-bold text-lg border-r text-white border-blue-700">
+            <div className="w-1/4 p-3 lg:p-5 font-bold text-sm lg:text-lg border-r text-white border-blue-700">
               What To Look For
             </div>
             {productList.map((p, i) => {
@@ -387,10 +391,12 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
                 : 0
               return (
                 <div
-                  className="w-1/4 p-5 text-center border-r border-blue-700 text-white last:border-r-0"
+                  className="w-1/4 p-3 lg:p-5 text-center border-r border-blue-700 text-white last:border-r-0"
                   key={`rating-${i}`}
                 >
-                  <div className="font-bold mb-3 text-white">{p.name}</div>
+                  <div className="font-bold mb-2 lg:mb-3 text-white text-sm lg:text-base">
+                    {p.name}
+                  </div>
                   <StarRating rating={rating} />
                 </div>
               )
@@ -401,12 +407,12 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
         {/* Main Ingredients Row */}
         <div className="bg-blue-50 border-b border-gray-200">
           <div className="flex">
-            <div className="w-1/4 p-5 font-semibold text-gray-900 bg-blue-100 border-r border-gray-200">
+            <div className="w-1/4 p-3 lg:p-5 font-semibold text-sm lg:text-base text-gray-900 bg-blue-100 border-r border-gray-200">
               Main Ingredients
             </div>
             {productList.map((p, i) => (
               <div
-                className="w-1/4 p-5 text-center text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
+                className="w-1/4 p-3 lg:p-5 text-center text-xs lg:text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
                 key={`ing-${i}`}
               >
                 {p.ing || ''}
@@ -418,12 +424,12 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
         {/* Key Benefits Row */}
         <div className="border-b border-gray-200">
           <div className="flex">
-            <div className="w-1/4 p-5 font-semibold text-gray-900 bg-gray-50 border-r border-gray-200">
+            <div className="w-1/4 p-3 lg:p-5 font-semibold text-sm lg:text-base text-gray-900 bg-gray-50 border-r border-gray-200">
               Key Benefits
             </div>
             {productList.map((p, i) => (
               <div
-                className="w-1/4 p-5 text-center text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
+                className="w-1/4 p-3 lg:p-5 text-center text-xs lg:text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
                 key={`benefit-${i}`}
               >
                 {p.benefits || ''}
@@ -435,12 +441,12 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
         {/* Customer Satisfaction Row */}
         <div>
           <div className="flex">
-            <div className="w-1/4 p-5 font-semibold text-gray-900 bg-green-50 border-r border-gray-200">
+            <div className="w-1/4 p-3 lg:p-5 font-semibold text-sm lg:text-base text-gray-900 bg-green-50 border-r border-gray-200">
               Customer Satisfaction
             </div>
             {productList.map((p, i) => (
               <div
-                className="w-1/4 p-5 text-center text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
+                className="w-1/4 p-3 lg:p-5 text-center text-xs lg:text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
                 key={`csat-${i}`}
               >
                 {p.csat || ''}
@@ -448,6 +454,56 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Mobile Card View (visible only on mobile) */}
+      <div className="md:hidden space-y-6">
+        {productList.map((product, idx) => {
+          const rating = Number.isFinite(product?.rating)
+            ? Math.max(0, Math.min(5, Number(product.rating)))
+            : 0
+          return (
+            <div
+              key={`mobile-card-${idx}`}
+              className="border border-gray-200 bg-white rounded-lg overflow-hidden shadow-sm"
+            >
+              {/* Card Header */}
+              <div className="bg-blue-600 p-4 text-white">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-lg">{product.name}</h3>
+                  {idx === 0 && (
+                    <div className="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">
+                      #1
+                    </div>
+                  )}
+                </div>
+                <StarRating rating={rating} />
+              </div>
+
+              {/* Card Body */}
+              <div className="divide-y divide-gray-200">
+                <div className="p-4 bg-blue-50">
+                  <div className="font-semibold text-sm text-gray-900 mb-2">
+                    Main Ingredients
+                  </div>
+                  <div className="text-sm text-gray-700">{product.ing || 'N/A'}</div>
+                </div>
+
+                <div className="p-4">
+                  <div className="font-semibold text-sm text-gray-900 mb-2">Key Benefits</div>
+                  <div className="text-sm text-gray-700">{product.benefits || 'N/A'}</div>
+                </div>
+
+                <div className="p-4 bg-green-50">
+                  <div className="font-semibold text-sm text-gray-900 mb-2">
+                    Customer Satisfaction
+                  </div>
+                  <div className="text-sm text-gray-700">{product.csat || 'N/A'}</div>
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

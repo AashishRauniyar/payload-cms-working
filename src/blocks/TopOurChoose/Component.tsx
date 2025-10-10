@@ -112,9 +112,9 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
     criterionIndex?: number | null;
   }> = ({ rating, size = 'sm', color = 'text-yellow-400', interactive = false, criterionIndex = null }) => {
     const sizeClasses = {
-      sm: 'w-4 h-4',
-      md: 'w-5 h-5',
-      lg: 'w-6 h-6',
+      sm: 'w-3.5 h-3.5 sm:w-4 sm:h-4',
+      md: 'w-4 h-4 sm:w-5 sm:h-5',
+      lg: 'w-5 h-5 sm:w-6 sm:h-6',
     };
 
     const starSize = sizeClasses[size];
@@ -163,13 +163,13 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
   };
 
   const getEvidenceIcon = (evidence: string | undefined, isHovered: boolean = false) => {
-    const baseClasses = 'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 transform';
+    const baseClasses = 'w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center transition-all duration-300 transform flex-shrink-0';
 
     switch (evidence?.toLowerCase()) {
       case 'gold star evidence':
         return (
           <div className={`${baseClasses} ${isHovered ? 'bg-blue-500 scale-110 shadow-lg' : 'bg-blue-400'}`}>
-            <Star className={`w-3 h-3 fill-white text-white transition-all duration-300 ${isHovered ? 'animate-pulse' : ''}`} />
+            <Star className={`w-2.5 h-2.5 sm:w-3 sm:h-3 fill-white text-white transition-all duration-300 ${isHovered ? 'animate-pulse' : ''}`} />
           </div>
         );
       case 'limited evidence':
@@ -238,19 +238,19 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
   };
 
   return (
-    <div className={`${className ? className + ' ' : ''}max-w-5xl mx-auto p-4 bg-white`}>
+    <div className={`${className ? className + ' ' : ''}max-w-5xl mx-auto px-3 py-4 sm:px-4 md:px-6 bg-white`}>
       {/* Compact Header Card */}
-      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 shadow-lg mb-4">
-        <div className="grid md:grid-cols-3 gap-4 items-center">
+      <div className="bg-gray-50 border border-gray-200 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-lg mb-3 sm:mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 items-center">
           
           {/* Product Image - Real image */}
           <div className="relative">
-            <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 max-w-48 mx-auto relative">
+            <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 max-w-[10rem] sm:max-w-[12rem] mx-auto relative">
               <Image
                 src="/media/okkkk.png"
                 alt={`${productName} product image`}
                 fill
-                sizes="(max-width: 768px) 12rem, 12rem"
+                sizes="(max-width: 640px) 10rem, (max-width: 768px) 12rem, 12rem"
                 className="object-contain p-2"
                 priority
               />
@@ -258,41 +258,41 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
           </div>
 
           {/* Product Info - Compact */}
-          <div className="md:col-span-2 space-y-3">
+          <div className="sm:col-span-1 md:col-span-2 space-y-2 sm:space-y-3">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
-                <Award className="w-4 h-4 text-green-600" />
-                <span className="text-green-700 text-sm font-medium">Premium Quality</span>
+              <div className="flex items-center gap-2 mb-1 sm:mb-1.5">
+                <Award className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
+                <span className="text-green-700 text-xs sm:text-sm font-medium">Premium Quality</span>
               </div>
-              <div className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent leading-tight">
                 {title || productName}
               </div>
-              <p className="text-gray-600 text-sm mt-2">
+              <p className="text-gray-600 text-xs sm:text-sm mt-1.5 sm:mt-2 line-clamp-2">
                 Advanced daily supplement with scientifically-backed ingredients for optimal health support.
               </p>
             </div>
 
-            {/* Overall Rating - Inline */}
-            <div className="flex items-center justify-between bg-gray-100 rounded-lg p-2.5">
-              <div className="flex items-center gap-2">
+            {/* Overall Rating - Responsive */}
+            <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between bg-gray-100 rounded-lg p-2 sm:p-2.5 gap-2 xs:gap-3">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <StarRating rating={overallRating} />
-                <span className="text-lg font-bold text-blue-600">{overallRating}</span>
-                <span className="text-gray-600 text-sm">Overall</span>
+                <span className="text-base sm:text-lg font-bold text-blue-600">{overallRating}</span>
+                <span className="text-gray-600 text-xs sm:text-sm">Overall</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1.5 sm:gap-2 w-full xs:w-auto">
                 {buttons.map((button, index) => (
                   <button
                     key={button.id || index}
-                    className={`font-semibold py-2 px-3 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm ${
+                    className={`font-semibold py-1.5 sm:py-2 px-2.5 sm:px-3 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 text-xs sm:text-sm flex-1 xs:flex-initial whitespace-nowrap ${
                       button.style === 'primary'
                         ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg'
                         : 'bg-gray-200 hover:bg-gray-300 text-gray-700 border border-gray-300'
                     }`}
                   >
                     {button.style === 'primary' ? (
-                      <ShoppingCart className="w-4 h-4 inline mr-1" />
+                      <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
                     ) : (
-                      <Eye className="w-4 h-4 inline mr-1" />
+                      <Eye className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
                     )}
                     {button.label}
                   </button>
@@ -304,24 +304,24 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
       </div>
 
       {/* Performance Analysis Header */}
-      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 shadow-lg mb-4">
+      <div className="bg-gray-50 border border-gray-200 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg mb-3 sm:mb-4">
         <div
           className="flex items-center justify-between cursor-pointer group"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <div className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+          <div className="text-base sm:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
             Performance Analysis
           </div>
           <div className={`transform transition-all duration-300 ${isExpanded ? 'rotate-180' : 'group-hover:scale-110'}`}>
-            <ChevronDown className="w-5 h-5 text-gray-600 group-hover:text-blue-600" />
+            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 group-hover:text-blue-600" />
           </div>
         </div>
       </div>
 
       {/* Compact Ratings Grid - Collapsible */}
       {isExpanded && (
-        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 shadow-lg mb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-50 border border-gray-200 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg mb-3 sm:mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {ratingsData.map((rating, index) => {
             const Icon = getCriterionIcon(rating.title);
             const colorClasses = getCriterionColor(rating.title);
@@ -330,43 +330,45 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
             return (
               <div 
                 key={rating.id || index}
-                className={`bg-gradient-to-r ${colorClasses} rounded-xl p-3 border hover:scale-105 transition-transform cursor-pointer bg-white shadow-md`}
+                className={`bg-gradient-to-r ${colorClasses} rounded-lg sm:rounded-xl p-2.5 sm:p-3 border hover:scale-105 transition-transform cursor-pointer bg-white shadow-md`}
                 onMouseEnter={() => setHoveredCriterion(index)}
                 onMouseLeave={() => setHoveredCriterion(null)}
               >
-                <div className="flex items-center justify-between mb-2.5">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-start sm:items-center justify-between mb-2 sm:mb-2.5 gap-2">
+                  <div className="flex items-start sm:items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
                     {getEvidenceIcon(rating.evidence, hoveredCriterion === index)}
-                    <Icon className="w-4 h-4 text-gray-700" />
-                    <div className="min-w-0">
-                      <div className="font-semibold text-gray-800 text-sm truncate">{rating.title}</div>
-                      <p className="text-gray-600 text-xs">{rating.evidence}</p>
+                    <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700 flex-shrink-0 mt-0.5 sm:mt-0" />
+                    <div className="min-w-0 flex-1">
+                      <div className="font-semibold text-gray-800 text-xs sm:text-sm line-clamp-1">{rating.title}</div>
+                      <p className="text-gray-600 text-[10px] sm:text-xs line-clamp-1">{rating.evidence}</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <StarRating
-                      rating={rating.rating}
-                      size="sm"
-                      interactive={true}
-                      criterionIndex={index}
-                    />
-                    <p className="text-gray-800 font-bold text-sm">{rating.rating}/5</p>
+                  <div className="text-right flex-shrink-0">
+                    <div className="hidden sm:block">
+                      <StarRating
+                        rating={rating.rating}
+                        size="sm"
+                        interactive={true}
+                        criterionIndex={index}
+                      />
+                    </div>
+                    <p className="text-gray-800 font-bold text-xs sm:text-sm mt-1 sm:mt-0">{rating.rating}/5</p>
                   </div>
                 </div>
                 
                 {/* Progress Bar */}
-                <div className="w-full bg-gray-300 rounded-full h-2 mb-2">
+                <div className="w-full bg-gray-300 rounded-full h-2 sm:h-2.5 mb-1.5 sm:mb-2">
                   <div 
-                    className={`bg-gradient-to-r ${progressColor} h-2 rounded-full transition-all duration-500`}
+                    className={`bg-gradient-to-r ${progressColor} h-2 sm:h-2.5 rounded-full transition-all duration-500`}
                     style={{width: `${(rating.rating/5) * 100}%`}}
                   ></div>
                 </div>
 
-                {/* Description on hover */}
+                {/* Description - Always visible on mobile, hover on desktop */}
                 <div className={`overflow-hidden transition-all duration-500 ease-out ${
-                  hoveredCriterion === index ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'
+                  hoveredCriterion === index ? 'max-h-20 sm:max-h-12 opacity-100' : 'max-h-20 sm:max-h-0 opacity-100 sm:opacity-0'
                 }`}>
-                  <div className="text-xs text-blue-700 bg-blue-50 px-2 py-1 rounded italic">
+                  <div className="text-[10px] sm:text-xs text-blue-700 bg-blue-50 px-1.5 sm:px-2 py-1 rounded italic leading-relaxed">
                     {rating.description}
                   </div>
                 </div>
@@ -378,17 +380,17 @@ export const TopOurChoose: React.FC<TopOurChooseProps> = ({
       )}
 
       {/* Compact Bottom CTA */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-3">
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl sm:rounded-2xl p-3 sm:p-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div>
-            <div className="text-base font-bold text-white">Ready to optimize your health?</div>
-            <p className="text-white text-sm" style={{color:'white'}}>Join thousands who trust {productName}</p>
+          <div className="text-center sm:text-left w-full sm:w-auto">
+            <div className="text-sm sm:text-base font-bold text-white">Ready to optimize your health?</div>
+            <p className="text-white text-xs sm:text-sm mt-0.5" style={{color:'white'}}>Join thousands who trust {productName}</p>
           </div>
-          <div className="flex gap-2.5">
-            <button className="bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 text-sm">
+          <div className="flex gap-2 sm:gap-2.5 w-full sm:w-auto">
+            <button className="bg-white text-blue-600 font-semibold py-2 px-3 sm:px-4 rounded-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 active:scale-95 text-xs sm:text-sm flex-1 sm:flex-initial whitespace-nowrap">
               Best Price
             </button>
-            <button className="bg-transparent border border-white text-white font-semibold py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-300 text-sm">
+            <button className="bg-transparent border border-white text-white font-semibold py-2 px-3 sm:px-4 rounded-lg hover:bg-white/20 transition-all duration-300 text-xs sm:text-sm flex-1 sm:flex-initial whitespace-nowrap">
               Learn More
             </button>
           </div>

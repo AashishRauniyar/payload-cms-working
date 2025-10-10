@@ -128,9 +128,9 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex gap-8">
+      <div className="rt-modern-content">
         {/* Left Side - Product Image and Rating */}
-        <div className="flex flex-col justify-start items-center">
+        <div className="rt-modern-left">
           {/* Product Image */}
           <div className="rt-modern-image-wrapper">
             {imageData?.url ? (
@@ -153,13 +153,15 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
             <meta itemProp="bestRating" content="5" />
             <meta itemProp="worstRating" content="1" />
             <div
-              className="flex gap-1"
+              className="flex gap-1 flex-wrap justify-center"
               aria-label={`${calculatedRating.toFixed(1)} out of 5 stars`}
             >
               {renderStars(calculatedRating)}
             </div>
             {/* Debug: Show actual rating value */}
-            <div className="text-sm text-gray-600 mt-1">Rating: {calculatedRating} stars</div>
+            <div className="text-xs sm:text-sm text-gray-600 mt-1 text-center">
+              Rating: {calculatedRating} stars
+            </div>
           </div>
         </div>
 
