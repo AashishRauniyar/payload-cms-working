@@ -72,13 +72,24 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
     return Math.min(Math.max(n, 0), 5)
   }
 
-  // Calculate star rating - only use user input value (REQUIRED)
+  // Calculate star rating - prefer customRating, but gracefully fall back to legacy overallRating
+  // This avoids empty stars while the database schema is being migrated.
   const calculateStarRating = () => {
+    // 1) Preferred: customRating (new field)
     const normalized = normalizeRating(customRating as unknown)
     if (normalized !== null) return normalized
 
-    // This should never happen since customRating is required
-    console.error('RatingTable - customRating is missing or invalid:', customRating)
+    // 2) Fallback: overallRating (legacy field persisted in DB prior to migration)
+    //    Accessed via index signature to avoid strict typing issues against generated types
+    const legacy = (props as unknown as { overallRating?: number | string })?.overallRating
+    const normalizedLegacy = normalizeRating(legacy)
+    if (normalizedLegacy !== null) return normalizedLegacy
+
+    // If neither present, return 0 to render empty stars (should not happen once schema is aligned)
+    console.error('RatingTable - rating is missing or invalid:', {
+      customRating,
+      overallRating: legacy,
+    })
     return 0
   }
 
