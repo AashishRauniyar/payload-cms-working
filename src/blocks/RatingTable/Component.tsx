@@ -13,13 +13,10 @@ interface RatingTableProps extends RatingTableBlock {
 }
 
 export const RatingTable: React.FC<RatingTableProps> = (props) => {
-  // Debug: Log all props to see what's being passed
-  console.log('RatingTable - All props:', props)
-
   const {
     title,
     productImage,
-    customRating, // User input rating value
+    customRating, // User input rating value - REQUIRED field
     ratingMetrics = [],
     description,
     backgroundColor = 'white',
@@ -30,45 +27,40 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
   // Handle productImage type (could be number or Media object)
   const imageData = typeof productImage === 'object' && productImage !== null ? productImage : null
 
-  // Calculate star rating - only use user input value
+  // Calculate star rating - only use user input value (REQUIRED)
   const calculateStarRating = () => {
-    // Debug: Log the customRating value
-    console.log('RatingTable - customRating value:', customRating, typeof customRating)
-
-    // Use customRating if it's a valid number (including 0)
+    // customRating is required, so it should always be a valid number
     if (typeof customRating === 'number' && !isNaN(customRating)) {
-      const clampedRating = Math.min(Math.max(customRating, 0), 5)
-      console.log('RatingTable - Using customRating:', clampedRating)
-      return clampedRating
+      // Clamp between 0 and 5 for safety
+      return Math.min(Math.max(customRating, 0), 5)
     }
 
-    // No valid input - return 0
-    console.log('RatingTable - No valid customRating, returning 0')
+    // This should never happen since customRating is required
+    console.error('RatingTable - customRating is missing or invalid:', customRating)
     return 0
   }
 
   const calculatedRating = calculateStarRating()
 
-  // Generate star rating display with precise decimal support
+  // Generate star rating display with precise decimal support (e.g., 2.4 stars)
   const renderStars = (rating: number) => {
-    console.log('RatingTable - Rendering stars for rating:', rating)
     const clampedRating = Math.min(Math.max(rating, 0), 5)
     const fullStars = Math.floor(clampedRating)
     const remainder = clampedRating - fullStars
 
     const stars = []
 
-    // Full stars
+    // Full stars (e.g., for 2.4 rating, show 2 full stars)
     for (let i = 0; i < fullStars; i++) {
       stars.push(<Star key={`full-${i}`} className="rt-star rt-star-filled" fill="currentColor" />)
     }
 
-    // Partial star (for any decimal remainder > 0)
+    // Partial star for decimal remainder (e.g., 0.4 becomes 40% filled)
     if (remainder > 0) {
-      const partialPercentage = remainder * 100 // Convert to percentage (0.8 = 80%)
+      const partialPercentage = remainder * 100 // 0.4 = 40%
       stars.push(
         <div key="partial" className="rt-star rt-star-half" style={{ position: 'relative' }}>
-          <Star className="rt-star rt-star-empty" />
+          <Star className="rt-star rt-star-empty" stroke="currentColor" fill="none" />
           <Star
             className="rt-star rt-star-filled rt-star-half-overlay"
             style={{
@@ -78,18 +70,25 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
               left: 0,
             }}
             fill="currentColor"
+            stroke="currentColor"
           />
         </div>,
       )
     }
 
-    // Empty stars for the remaining slots
+    // Empty stars for remaining slots (e.g., for 2.4 rating, show 2 empty stars)
     const totalUsedStars = fullStars + (remainder > 0 ? 1 : 0)
     const emptyStars = 5 - totalUsedStars
 
-    // Empty stars
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="rt-star rt-star-empty" fill="none" />)
+      stars.push(
+        <Star
+          key={`empty-${i}`}
+          className="rt-star rt-star-empty"
+          stroke="currentColor"
+          fill="none"
+        />,
+      )
     }
 
     return stars
@@ -158,9 +157,9 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
             >
               {renderStars(calculatedRating)}
             </div>
-            {/* Debug: Show actual rating value */}
-            <div className="text-xs sm:text-sm text-gray-600 mt-1 text-center">
-              Rating: {calculatedRating} stars
+            {/* Show exact rating value */}
+            <div className="text-xs sm:text-sm font-medium text-gray-800 mt-2 text-center">
+              {calculatedRating.toFixed(1)}/5.0
             </div>
           </div>
         </div>
