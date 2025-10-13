@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Star } from 'lucide-react'
 import RichText from '@/components/RichText'
-import type { RatingTableBlock } from '@/payload-types'
+import type { RatingTableBlock, Media } from '@/payload-types'
 import './styles.css'
 
 interface RatingTableProps extends RatingTableBlock {
@@ -24,16 +24,58 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
     className,
   } = props
 
-  // Handle productImage type (could be number or Media object)
-  const imageData = typeof productImage === 'object' && productImage !== null ? productImage : null
+  // Resolve product image (handles both numeric ID and populated Media object)
+  const [resolvedImage, setResolvedImage] = useState<Media | null>(
+    typeof productImage === 'object' && productImage !== null ? (productImage as Media) : null,
+  )
+
+  useEffect(() => {
+    let active = true
+
+    const resolve = async () => {
+      try {
+        if (typeof productImage === 'object' && productImage !== null) {
+          // Already populated
+          if (active) setResolvedImage(productImage as Media)
+          return
+        }
+
+        if (typeof productImage === 'number') {
+          // Fetch media doc by ID from Payload REST API
+          const res = await fetch(`/api/media/${productImage}`, { cache: 'no-store' })
+          if (!res.ok) throw new Error(`Failed to load media ${productImage}: ${res.status}`)
+          const data = await res.json()
+          if (active) setResolvedImage(data?.doc ?? null)
+        }
+      } catch (e) {
+        console.error('RatingTable: failed to resolve product image', e)
+        if (active) setResolvedImage(null)
+      }
+    }
+
+    resolve()
+
+    return () => {
+      active = false
+    }
+  }, [productImage])
+
+  // Normalize a rating value from number or string; clamp 0..5; return null if invalid
+  const normalizeRating = (value: unknown): number | null => {
+    let n: number | null = null
+    if (typeof value === 'number') n = value
+    else if (typeof value === 'string') {
+      const parsed = parseFloat(value)
+      n = Number.isFinite(parsed) ? parsed : null
+    }
+    if (n === null || Number.isNaN(n)) return null
+    return Math.min(Math.max(n, 0), 5)
+  }
 
   // Calculate star rating - only use user input value (REQUIRED)
   const calculateStarRating = () => {
-    // customRating is required, so it should always be a valid number
-    if (typeof customRating === 'number' && !isNaN(customRating)) {
-      // Clamp between 0 and 5 for safety
-      return Math.min(Math.max(customRating, 0), 5)
-    }
+    const normalized = normalizeRating(customRating as unknown)
+    if (normalized !== null) return normalized
 
     // This should never happen since customRating is required
     console.error('RatingTable - customRating is missing or invalid:', customRating)
@@ -132,10 +174,10 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
         <div className="rt-modern-left">
           {/* Product Image */}
           <div className="rt-modern-image-wrapper">
-            {imageData?.url ? (
+            {resolvedImage?.url ? (
               <Image
-                src={imageData.url}
-                alt={imageData.alt || title || 'Product Image'}
+                src={resolvedImage.url}
+                alt={resolvedImage.alt || title || 'Product Image'}
                 className="rt-modern-image"
                 width={200}
                 height={200}
@@ -150,7 +192,7 @@ export const RatingTable: React.FC<RatingTableProps> = (props) => {
           <div className="rt-modern-stars" itemScope itemType="https://schema.org/AggregateRating">
             <meta itemProp="ratingValue" content={calculatedRating.toFixed(1)} />
             <meta itemProp="bestRating" content="5" />
-            <meta itemProp="worstRating" content="1" />
+            <meta itemProp="worstRating" content="0" />
             <div
               className="flex gap-1 flex-wrap justify-center"
               aria-label={`${calculatedRating.toFixed(1)} out of 5 stars`}
