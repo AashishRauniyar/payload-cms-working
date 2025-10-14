@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import Image from 'next/image'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
@@ -124,16 +125,18 @@ function RelatedBlogPostCard({ post }: { post: BlogPost }) {
       <a href={`/blog/${post.slug}`} className="block">
         {featuredImage?.url && (
           <div className="aspect-[16/9] relative overflow-hidden">
-            <img
+            <Image
               src={featuredImage.url}
               alt={featuredImage.alt || post.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
         )}
         <div className="p-6">
           <div className="text-sm text-gray-500 mb-2">{publishedDate}</div>
-          <h4 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-2 line-clamp-2">
+          <h4 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-2 line-clamp-2 break-words">
             {post.title}
           </h4>
           {post.excerpt && <p className="text-gray-600 text-sm line-clamp-3">{post.excerpt}</p>}

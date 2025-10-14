@@ -117,7 +117,9 @@ export const BlogPostHero: React.FC<{
           )}
 
           {/* Title */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">{title}</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 break-words hyphens-auto">
+            {title}
+          </h1>
 
           {/* Excerpt */}
           {excerpt && <p className="text-xl text-gray-600 leading-relaxed mb-8">{excerpt}</p>}

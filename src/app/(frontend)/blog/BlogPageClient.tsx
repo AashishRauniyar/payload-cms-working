@@ -274,8 +274,8 @@ const BlogPageClient = ({ posts }: BlogPageClientProps) => {
           <div className="text-4xl text-gray-300 mb-3">🔍</div>
           <h3 className="text-lg font-semibold text-gray-600 mb-2">No blog posts found</h3>
           <p className="text-gray-500 mb-4 max-w-md mx-auto text-sm">
-            We couldn&apos;t find any blog posts matching your criteria. Try adjusting your search terms
-            or filters.
+            We couldn&apos;t find any blog posts matching your criteria. Try adjusting your search
+            terms or filters.
           </p>
           <button
             onClick={() => {
@@ -358,7 +358,7 @@ function BlogCard({ post }: { post: BlogPost }) {
           </div>
 
           {/* Title */}
-          <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-3 line-clamp-2 leading-tight">
+          <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-3 line-clamp-2 leading-tight break-words">
             {post.title}
           </h3>
 
