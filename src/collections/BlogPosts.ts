@@ -307,7 +307,7 @@ export const BlogPosts: CollectionConfig = {
   versions: {
     drafts: {
       autosave: {
-        interval: 100,
+        interval: 5000, // Auto-save every 5 seconds instead of 100ms
       },
       schedulePublish: true,
     },

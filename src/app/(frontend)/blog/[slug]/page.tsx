@@ -38,6 +38,25 @@ export default async function BlogPost({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug = '' } = await paramsPromise
   const url = '/blog/' + slug
+
+  // If in draft mode with no slug, show a preview placeholder
+  if (draft && !slug) {
+    return (
+      <article className="pb-16">
+        <PageClient />
+        <LivePreviewListener />
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl font-bold mb-4">Live Preview</h1>
+            <p className="text-gray-600">
+              Save your blog post to generate a slug and see the full preview.
+            </p>
+          </div>
+        </div>
+      </article>
+    )
+  }
+
   const post = await queryBlogPostBySlug({ slug })
 
   if (!post) return <PayloadRedirects url={url} />
