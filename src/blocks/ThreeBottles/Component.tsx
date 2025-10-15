@@ -376,7 +376,7 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
       </div>
 
       {/* Comparison Table - Mobile: Stacked Cards, Desktop: Table */}
-      
+
       {/* Desktop Table View (hidden on mobile) */}
       <div className="hidden md:block border border-gray-200 bg-white rounded-lg overflow-hidden">
         {/* Header Row */}
@@ -386,9 +386,9 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
               What To Look For
             </div>
             {productList.map((p, i) => {
-              const rating = Number.isFinite(p?.rating)
-                ? Math.max(0, Math.min(5, Number(p.rating)))
-                : 0
+              const raw = (p as Record<string, unknown>).rating as number | string | undefined
+              const parsed = typeof raw === 'string' ? parseFloat(raw) : raw
+              const rating = Number.isFinite(parsed) ? Math.max(0, Math.min(5, Number(parsed))) : 0
               return (
                 <div
                   className="w-1/4 p-3 lg:p-5 text-center border-r border-blue-700 text-white last:border-r-0"
@@ -459,9 +459,9 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
       {/* Mobile Card View (visible only on mobile) */}
       <div className="md:hidden space-y-6">
         {productList.map((product, idx) => {
-          const rating = Number.isFinite(product?.rating)
-            ? Math.max(0, Math.min(5, Number(product.rating)))
-            : 0
+          const raw = (product as Record<string, unknown>).rating as number | string | undefined
+          const parsed = typeof raw === 'string' ? parseFloat(raw) : raw
+          const rating = Number.isFinite(parsed) ? Math.max(0, Math.min(5, Number(parsed))) : 0
           return (
             <div
               key={`mobile-card-${idx}`}
@@ -483,9 +483,7 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
               {/* Card Body */}
               <div className="divide-y divide-gray-200">
                 <div className="p-4 bg-blue-50">
-                  <div className="font-semibold text-sm text-gray-900 mb-2">
-                    Main Ingredients
-                  </div>
+                  <div className="font-semibold text-sm text-gray-900 mb-2">Main Ingredients</div>
                   <div className="text-sm text-gray-700">{product.ing || 'N/A'}</div>
                 </div>
 

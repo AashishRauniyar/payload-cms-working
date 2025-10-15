@@ -5,9 +5,42 @@ import { Media } from '../../components/Media'
 import type { IngredientsBlock as IngredientsBlockType } from '@/payload-types'
 
 // Enhanced image component exactly matching reference design
-const IngredientImage: React.FC<{ resource: any }> = ({ resource }) => {
+import type { Media as MediaType } from '@/payload-types'
+
+const IngredientImage: React.FC<{ resource: MediaType | number | null | undefined }> = ({
+  resource,
+}) => {
   const [imageError, setImageError] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
+  const [resolved, setResolved] = React.useState<MediaType | null>(
+    typeof resource === 'object' && resource !== null ? (resource as MediaType) : null,
+  )
+
+  // Resolve numeric IDs to media documents
+  React.useEffect(() => {
+    let active = true
+    const run = async () => {
+      try {
+        if (typeof resource === 'object' && resource !== null) {
+          if (active) setResolved(resource)
+          return
+        }
+        if (typeof resource === 'number') {
+          const res = await fetch(`/api/media/${resource}`, { cache: 'no-store' })
+          if (!res.ok) throw new Error(`Failed to load media ${resource}`)
+          const data = await res.json()
+          if (active) setResolved(data?.doc ?? null)
+        }
+      } catch (e) {
+        console.error('IngredientsBlock: media resolve failed', e)
+        if (active) setResolved(null)
+      }
+    }
+    run()
+    return () => {
+      active = false
+    }
+  }, [resource])
 
   // Timeout handler for slow-loading images
   React.useEffect(() => {
@@ -31,7 +64,7 @@ const IngredientImage: React.FC<{ resource: any }> = ({ resource }) => {
     }
   }, [resource])
 
-  if (!resource || imageError) {
+  if ((!resolved && !resource) || imageError) {
     return (
       <div
         className="flex items-center justify-center aspect-square w-[140px] lg:w-[160px] max-w-full mx-auto rounded-full bg-white border border-gray-200"
@@ -69,7 +102,7 @@ const IngredientImage: React.FC<{ resource: any }> = ({ resource }) => {
         style={{ boxShadow: '0 2px 12px rgba(0,0,0,.1)' }}
       >
         <Media
-          resource={resource}
+          resource={resolved || resource}
           className="w-full h-full object-cover"
           imgClassName="w-full h-full object-cover"
         />
@@ -102,7 +135,7 @@ export const IngredientsBlock: React.FC<IngredientsBlockProps> = ({
   const bgClass = backgroundColor ? backgroundClasses[backgroundColor] || '' : ''
 
   const content = (
-    <div className="container">
+    <div className={`container ${layout ? '' : ''}`}>
       {title && (
         <h2 className="text-xl md:text-2xl font-bold text-center mb-6 text-slate-900">{title}</h2>
       )}

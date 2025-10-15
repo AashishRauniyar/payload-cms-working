@@ -1,8 +1,9 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { DollarSign, FlaskConical, ShieldCheck, ExternalLink, Award } from 'lucide-react'
-import type { BrandHighlightsTableBlock } from '@/payload-types'
+import type { BrandHighlightsTableBlock, Media as MediaType } from '@/payload-types'
+import { Media } from '@/components/Media'
 import './styles.css'
 
 interface BrandHighlightsTableProps extends BrandHighlightsTableBlock {
@@ -40,26 +41,67 @@ export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = (props)
     productName,
   })
 
-  // Dynamic values - use admin values if they exist, otherwise use sensible defaults
+  // Helpers to normalize numbers (accept numeric strings) while preserving valid 0 values
+  const norm = (val: unknown, def: number): number => {
+    if (typeof val === 'number') return val
+    if (typeof val === 'string') {
+      const n = parseFloat(val)
+      return Number.isFinite(n) ? n : def
+    }
+    return def
+  }
+
+  // Dynamic values - only fall back when value is null/undefined, not when 0 or empty string is valid
   const dynamicValues = {
-    title: title || 'How Does Our Product Rate?',
-    overallRating: overallRating || 4.7,
-    productName: productName || 'Our Product',
-    buyNowText: buyNowText || 'SHOP NOW',
-    buyNowLink: buyNowLink || '#',
-    highlights: highlights || '',
-    backgroundColor: backgroundColor || 'gradient',
-    // Rating values - properly handle all possible values including 0
-    ingredientsRating: typeof ingredientsRating === 'number' ? ingredientsRating : 0,
-    valueForCostRating: typeof valueForCostRating === 'number' ? valueForCostRating : 0,
-    manufacturerRating: typeof manufacturerRating === 'number' ? manufacturerRating : 0,
-    safetyRating: typeof safetyRating === 'number' ? safetyRating : 0,
+    title: title ?? 'How Does Our Product Rate?',
+    overallRating: norm(overallRating, 4.7),
+    productName: productName ?? 'Our Product',
+    buyNowText: buyNowText ?? 'SHOP NOW',
+    buyNowLink: buyNowLink ?? '#',
+    highlights: (highlights ?? '') as string | Array<string | { text?: string }>,
+    backgroundColor: (backgroundColor ?? 'gradient') as
+      | 'none'
+      | 'white'
+      | 'gray'
+      | 'blue'
+      | 'gradient',
+    ingredientsRating: norm(ingredientsRating, 0),
+    valueForCostRating: norm(valueForCostRating, 0),
+    manufacturerRating: norm(manufacturerRating, 0),
+    safetyRating: norm(safetyRating, 0),
   }
 
   console.log('🚀 Final Values Being Rendered:', dynamicValues)
 
-  // Handle productImage type (could be number or Media object)
-  const imageData = typeof productImage === 'object' && productImage !== null ? productImage : null
+  // Resolve productImage: support populated object or numeric ID
+  const [resolvedImage, setResolvedImage] = useState<MediaType | null>(
+    typeof productImage === 'object' && productImage !== null ? (productImage as MediaType) : null,
+  )
+
+  useEffect(() => {
+    let active = true
+    const run = async () => {
+      try {
+        if (typeof productImage === 'object' && productImage !== null) {
+          if (active) setResolvedImage(productImage as MediaType)
+          return
+        }
+        if (typeof productImage === 'number') {
+          const res = await fetch(`/api/media/${productImage}`, { cache: 'no-store' })
+          if (!res.ok) throw new Error(`Failed to load media ${productImage}`)
+          const data = await res.json()
+          if (active) setResolvedImage(data?.doc ?? null)
+        }
+      } catch (e) {
+        console.error('BrandHighlightsTable: media resolve failed', e)
+        if (active) setResolvedImage(null)
+      }
+    }
+    run()
+    return () => {
+      active = false
+    }
+  }, [productImage])
 
   const backgroundClasses = {
     none: '',
@@ -87,12 +129,8 @@ export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = (props)
         {/* Left Column - Product Image & Buy Button */}
         <div className="bh-product-section">
           <div className="bh-image-container">
-            {imageData?.url ? (
-              <img
-                src={imageData.url}
-                alt={imageData.alt || dynamicValues.productName || 'Product Image'}
-                className="bh-product-image"
-              />
+            {resolvedImage?.url ? (
+              <Media resource={resolvedImage} className="bh-product-image" />
             ) : (
               <div className="bh-image-placeholder">
                 <Award className="bh-placeholder-icon" />
@@ -131,9 +169,10 @@ export const BrandHighlightsTable: React.FC<BrandHighlightsTableProps> = (props)
                     .filter((line: string) => line.trim() !== '')
                 } else if (Array.isArray(dynamicValues.highlights)) {
                   // Array format - extract text from objects
-                  highlightsArray = (dynamicValues.highlights as any[])
-                    .map((item: any) => item.text || item)
-                    .filter((text: string) => text && text.trim() !== '')
+                  const items = dynamicValues.highlights as Array<string | { text?: string }>
+                  highlightsArray = items
+                    .map((item) => (typeof item === 'string' ? item : item.text || ''))
+                    .filter((text) => text && text.trim() !== '')
                 }
               }
 

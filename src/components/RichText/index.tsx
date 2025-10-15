@@ -130,7 +130,20 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         blockType="ratingTable"
         title={node.fields.title || 'Product Rating'}
         productImage={node.fields.productImage || null}
-        overallRating={node.fields.overallRating || 4.5}
+        // Prefer new field customRating; fall back to legacy overallRating for backward compatibility
+        customRating={(() => {
+          const f = node.fields as Record<string, unknown>
+          const raw = (typeof f.customRating !== 'undefined' ? f.customRating : f.overallRating) as
+            | number
+            | string
+            | undefined
+          if (typeof raw === 'number') return raw
+          if (typeof raw === 'string') {
+            const n = parseFloat(raw)
+            return Number.isFinite(n) ? n : 0
+          }
+          return 0
+        })()}
         ratingMetrics={node.fields.ratingMetrics || []}
         description={node.fields.description || undefined}
         backgroundColor={node.fields.backgroundColor || 'white'}
@@ -150,7 +163,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         displayOptions={node.fields.displayOptions || undefined}
       />
     ),
-    topOurChoose: ({ node }: { node: SerializedBlockNode }) => (
+    topOurChoose: ({ node: _node }: { node: SerializedBlockNode }) => (
       <div className="col-start-1 col-span-3">
         <TopOurChoose />
       </div>
