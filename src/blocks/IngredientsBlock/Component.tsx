@@ -10,61 +10,59 @@ import type { Media as MediaType } from '@/payload-types'
 const IngredientImage: React.FC<{ resource: MediaType | number | null | undefined }> = ({
   resource,
 }) => {
-  const [imageError, setImageError] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(true)
   const [resolved, setResolved] = React.useState<MediaType | null>(
     typeof resource === 'object' && resource !== null ? (resource as MediaType) : null,
   )
+  const [isResolving, setIsResolving] = React.useState(false)
+  const [hasError, setHasError] = React.useState(false)
 
   // Resolve numeric IDs to media documents
   React.useEffect(() => {
     let active = true
-    const run = async () => {
+    const resolve = async () => {
       try {
+        setHasError(false)
         if (typeof resource === 'object' && resource !== null) {
-          if (active) setResolved(resource)
+          if (active) {
+            setResolved(resource)
+            setIsResolving(false)
+          }
           return
         }
         if (typeof resource === 'number') {
+          if (active) setIsResolving(true)
           const res = await fetch(`/api/media/${resource}`, { cache: 'no-store' })
           if (!res.ok) throw new Error(`Failed to load media ${resource}`)
           const data = await res.json()
-          if (active) setResolved(data?.doc ?? null)
+          if (active) {
+            const doc = data?.doc ?? null
+            setResolved(doc)
+            setIsResolving(false)
+            setHasError(!doc)
+          }
+          return
+        }
+        // No resource provided
+        if (active) {
+          setResolved(null)
+          setIsResolving(false)
         }
       } catch (e) {
         console.error('IngredientsBlock: media resolve failed', e)
-        if (active) setResolved(null)
+        if (active) {
+          setResolved(null)
+          setIsResolving(false)
+          setHasError(true)
+        }
       }
     }
-    run()
+    resolve()
     return () => {
       active = false
     }
   }, [resource])
 
-  // Timeout handler for slow-loading images
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (isLoading) {
-        setImageError(true)
-        setIsLoading(false)
-      }
-    }, 10000) // 10 second timeout
-
-    return () => clearTimeout(timeout)
-  }, [isLoading])
-
-  // Handle successful load
-  React.useEffect(() => {
-    if (resource) {
-      const timer = setTimeout(() => {
-        setIsLoading(false)
-      }, 2000) // Assume loaded after 2 seconds
-      return () => clearTimeout(timer)
-    }
-  }, [resource])
-
-  if ((!resolved && !resource) || imageError) {
+  if ((!resolved && !resource) || hasError) {
     return (
       <div
         className="flex items-center justify-center aspect-square w-[140px] lg:w-[160px] max-w-full mx-auto rounded-full bg-white border border-gray-200"
@@ -89,7 +87,7 @@ const IngredientImage: React.FC<{ resource: MediaType | number | null | undefine
       className="flex items-center justify-center aspect-square w-[140px] lg:w-[160px] max-w-full mx-auto rounded-full bg-white border border-gray-200 relative"
       style={{ boxShadow: 'inset 0 0 0 6px #fff' }}
     >
-      {isLoading && (
+      {isResolving && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-full z-10">
           <div className="text-center text-gray-500">
             <div className="animate-spin w-3 h-3 border-2 border-gray-300 border-t-blue-600 rounded-full mx-auto mb-1"></div>
@@ -141,40 +139,52 @@ export const IngredientsBlock: React.FC<IngredientsBlockProps> = ({
       )}
 
       <div className="space-y-4">
-        {ingredients.map((ingredient, index) => (
-          <div
-            key={ingredient.id || index}
-            className="bg-white rounded-[16px] border border-[#eef2f7] p-4 md:p-5"
-            style={{ boxShadow: '0 6px 20px rgba(16,24,40,.06)' }}
-          >
-            {/* Grid layout - more compact */}
-            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 lg:gap-6 items-center">
-              {/* Image Container - smaller */}
-              <figure className="order-2 lg:order-1">
-                <IngredientImage resource={ingredient.image} />
-              </figure>
+        {ingredients.map((ingredient, index) => {
+          type IngredientItem = IngredientsBlockType['ingredients'][number]
+          const item = ingredient as IngredientItem
+          const imageId =
+            typeof item.image === 'number'
+              ? item.image
+              : typeof item.image === 'object'
+                ? item.image?.id
+                : undefined
+          const stableKey =
+            item.id ?? (imageId != null ? `img-${imageId}` : `name-${item.name}-${index}`)
+          return (
+            <div
+              key={stableKey}
+              className="bg-white rounded-[16px] border border-[#eef2f7] p-4 md:p-5"
+              style={{ boxShadow: '0 6px 20px rgba(16,24,40,.06)' }}
+            >
+              {/* Grid layout - more compact */}
+              <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 lg:gap-6 items-center">
+                {/* Image Container - smaller */}
+                <figure className="order-2 lg:order-1">
+                  <IngredientImage resource={item.image} />
+                </figure>
 
-              {/* Content - more compact */}
-              <div className="flex flex-col gap-3 order-1 lg:order-2">
-                {/* Pill/Title - smaller */}
-                <div
-                  className="text-white font-bold text-center px-4 py-2.5 rounded-full text-base md:text-lg"
-                  style={{
-                    background: '#3f4ed8',
-                    lineHeight: '1.2',
-                  }}
-                >
-                  {ingredient.name}
+                {/* Content - more compact */}
+                <div className="flex flex-col gap-3 order-1 lg:order-2">
+                  {/* Pill/Title - smaller */}
+                  <div
+                    className="text-white font-bold text-center px-4 py-2.5 rounded-full text-base md:text-lg"
+                    style={{
+                      background: '#3f4ed8',
+                      lineHeight: '1.2',
+                    }}
+                  >
+                    {item.name}
+                  </div>
+
+                  {/* Description - smaller text */}
+                  <p className="m-0 text-slate-600 leading-relaxed text-sm md:text-base">
+                    {item.description}
+                  </p>
                 </div>
-
-                {/* Description - smaller text */}
-                <p className="m-0 text-slate-600 leading-relaxed text-sm md:text-base">
-                  {ingredient.description}
-                </p>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
