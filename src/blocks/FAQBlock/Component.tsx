@@ -44,6 +44,129 @@ const parseFAQContent = (content: string) => {
   return faqs
 }
 
+// Parse Markdown headings (#, ##, ...) as collapsible sections: heading = question, body until next heading = answer
+const parseMarkdownHeadings = (content: string) => {
+  if (!content) return [] as { question: string; answer: string }[]
+  const lines = content.replace(/\r\n?/g, '\n').split('\n')
+  const items: { question: string; answer: string }[] = []
+  let currentQ: string | null = null
+  let currentA: string[] = []
+
+  const isHeading = (l: string) => /^#{1,6}\s+/.test(l.trim())
+  const extractHeading = (l: string) => l.trim().replace(/^#{1,6}\s+/, '')
+
+  const flush = () => {
+    if (currentQ) {
+      const answer = currentA.join('\n').trim()
+      items.push({ question: currentQ.trim(), answer })
+    }
+    currentQ = null
+    currentA = []
+  }
+
+  for (const raw of lines) {
+    if (isHeading(raw)) {
+      // New section
+      if (currentQ !== null) flush()
+      currentQ = extractHeading(raw)
+    } else {
+      if (currentQ !== null) currentA.push(raw)
+    }
+  }
+  if (currentQ !== null) flush()
+  // Only keep sections that actually had a heading
+  return items.filter((i) => i.question.length > 0)
+}
+
+// Minimal, safe-ish Markdown to HTML converter for fallback rendering
+// Supports: headings (#..###### ), bold **text**, italic *text*, links [text](url),
+// paragraphs and simple unordered/ordered lists. Escapes HTML first.
+const escapeHtml = (s: string) =>
+  s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
+const escapeAttr = (s: string) => s.replace(/"/g, '&quot;')
+
+const inlineMd = (s: string) => {
+  // links: [text](url) - only allow http/https, otherwise use '#'
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, label: string, url: string) => {
+    const safeUrl = /^https?:\/\//i.test(url) ? url : '#'
+    return `<a href="${escapeAttr(safeUrl)}" target="_blank" rel="noopener noreferrer">${label}</a>`
+  })
+  // bold
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  // italic (after bold to avoid conflicts)
+  s = s.replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>')
+  return s
+}
+
+const markdownToHtml = (md: string) => {
+  const lines = md.replace(/\r\n?/g, '\n').split('\n')
+  const out: string[] = []
+  let i = 0
+  while (i < lines.length) {
+    const rawLine = lines[i]
+    const line = rawLine.trim()
+
+    // headings
+    const h = line.match(/^(#{1,6})\s+(.*)$/)
+    if (h) {
+      const level = Math.min(6, h[1].length)
+      out.push(`<h${level}>${inlineMd(escapeHtml(h[2]))}</h${level}>`)
+      i++
+      continue
+    }
+
+    // unordered list
+    if (/^(?:-|\*)\s+/.test(line)) {
+      const items: string[] = []
+      while (i < lines.length) {
+        const l = lines[i].trim()
+        if (/^(?:-|\*)\s+/.test(l)) {
+          items.push(`<li>${inlineMd(escapeHtml(l.replace(/^(?:-|\*)\s+/, '')))}</li>`)
+          i++
+        } else break
+      }
+      out.push(`<ul>${items.join('')}</ul>`)
+      continue
+    }
+
+    // ordered list
+    if (/^\d+\.\s+/.test(line)) {
+      const items: string[] = []
+      while (i < lines.length) {
+        const l = lines[i].trim()
+        if (/^\d+\.\s+/.test(l)) {
+          items.push(`<li>${inlineMd(escapeHtml(l.replace(/^\d+\.\s+/, '')))}</li>`)
+          i++
+        } else break
+      }
+      out.push(`<ol>${items.join('')}</ol>`)
+      continue
+    }
+
+    // paragraph (consume consecutive non-empty lines)
+    if (line.length > 0) {
+      const para: string[] = []
+      while (i < lines.length && lines[i].trim().length > 0) {
+        para.push(lines[i])
+        i++
+      }
+      const html = inlineMd(escapeHtml(para.join('\n'))).replace(/\n/g, '<br/>')
+      out.push(`<p>${html}</p>`)
+      continue
+    }
+
+    // blank line
+    i++
+  }
+  return out.join('\n')
+}
+
 export const FAQBlock: React.FC<FAQBlockProps> = ({
   title,
   faqContent = '',
@@ -51,7 +174,9 @@ export const FAQBlock: React.FC<FAQBlockProps> = ({
   className = '',
 }) => {
   const [openItems, setOpenItems] = useState<Set<number>>(new Set())
-  const faqs = parseFAQContent(faqContent)
+  const faqsParsed = parseFAQContent(faqContent)
+  const useHeadingParse = faqsParsed.length === 0 && !!faqContent
+  const faqs = useHeadingParse ? parseMarkdownHeadings(faqContent) : faqsParsed
 
   const toggleItem = (index: number) => {
     const newOpenItems = new Set(openItems)
@@ -77,7 +202,20 @@ export const FAQBlock: React.FC<FAQBlockProps> = ({
           )}
 
           {isEmpty ? (
-            <div className="text-center text-gray-500 py-6">No FAQs provided yet.</div>
+            faqContent ? (
+              <div className="px-6 py-5 border border-gray-200 rounded-xl bg-white shadow-sm">
+                <div
+                  className="prose max-w-none text-gray-800"
+                  dangerouslySetInnerHTML={{ __html: markdownToHtml(faqContent) }}
+                />
+                <div className="mt-3 text-xs text-gray-400">
+                  Showing Markdown rendering. For collapsible Q/A, format questions as
+                  “**Question**”, “Q: Question”, or “1. Question”.
+                </div>
+              </div>
+            ) : (
+              <div className="text-center text-gray-500 py-6">No FAQs provided yet.</div>
+            )
           ) : (
             <div className="space-y-3">
               {faqs.map((faq, index) => {
@@ -97,21 +235,12 @@ export const FAQBlock: React.FC<FAQBlockProps> = ({
                           {faq.question}
                         </div>
                         <div className="flex-shrink-0">
-                          <svg
-                            className={`w-5 h-5 text-blue-600 transition-transform duration-200 ${
-                              isOpen ? 'rotate-180' : ''
-                            }`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                          <span
+                            className="inline-flex items-center justify-center w-6 h-6 border border-blue-600 text-blue-600 rounded"
+                            aria-hidden
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2.5}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
+                            {isOpen ? '−' : '+'}
+                          </span>
                         </div>
                       </div>
                     </button>
