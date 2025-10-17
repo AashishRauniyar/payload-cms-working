@@ -254,7 +254,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/privacy-policy"
+                  href="/privacy"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Privacy Policy
@@ -262,7 +262,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/terms-of-service"
+                  href="/terms"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Terms of Service
@@ -387,10 +387,10 @@ export function Footer() {
               © {currentYear} HealthScopeDaily. All rights reserved. | Made with ❤️ for your health
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
-              <Link href="/privacy-policy" className="hover:text-white transition-colors">
+              <Link href="/privacy" className="hover:text-white transition-colors">
                 Privacy
               </Link>
-              <Link href="/terms-of-service" className="hover:text-white transition-colors">
+              <Link href="/terms" className="hover:text-white transition-colors">
                 Terms
               </Link>
               <Link href="/sitemap" className="hover:text-white transition-colors">
