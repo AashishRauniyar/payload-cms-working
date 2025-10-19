@@ -240,19 +240,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/help" className="text-gray-300 hover:text-white transition-colors">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/newsletter"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Newsletter
-                </Link>
-              </li>
-              <li>
                 <Link
                   href="/privacy"
                   className="text-gray-300 hover:text-white transition-colors"
@@ -266,19 +253,6 @@ export function Footer() {
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/disclaimer"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Medical Disclaimer
-                </Link>
-              </li>
-              <li>
-                <Link href="/sitemap" className="text-gray-300 hover:text-white transition-colors">
-                  Sitemap
                 </Link>
               </li>
             </ul>
