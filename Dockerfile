@@ -132,23 +132,14 @@ ENV NODE_ENV=development \
     PAYLOAD_DISABLE_EMAIL=true \
     PAYLOAD_DISABLE_SHARP=true
 
-# Debug and build with verbose output
-RUN echo "Starting build process..." && \
-    echo "Node version: $(node -v)" && \
-    echo "NPM version: $(npm -v)" && \
-    echo "Current NODE_ENV: $NODE_ENV" && \
-    echo "Override NODE_ENV to development for build..." && \
-    export NODE_ENV=development && \
-    echo "New NODE_ENV: $NODE_ENV" && \
-    echo "Checking if cross-env is available:" && \
-    which cross-env || echo "cross-env not found in PATH" && \
-    echo "Attempting simple next build first..." && \
-    (NODE_ENV=development NODE_OPTIONS=--no-deprecation npx next build || \
-     echo "Direct next build failed, trying with cross-env..." && \
-     NODE_ENV=development cross-env NODE_OPTIONS=--no-deprecation next build || \
-     echo "Cross-env build failed, trying npm run build..." && \
-     NODE_ENV=development npm run build || \
-     echo "All build attempts failed!")
+# Build the application - use compile mode to avoid database connection issues
+RUN echo "Building application..." && \
+    NODE_ENV=production \
+    SKIP_MIGRATIONS=true \
+    PAYLOAD_DISABLE_EMAIL=true \
+    DATABASE_URI=postgresql://placeholder:placeholder@localhost:5432/placeholder \
+    PAYLOAD_SECRET=placeholder-secret-for-build \
+    npm run build:docker
 
 # Create media directory and ensure proper permissions
 RUN mkdir -p /app/public/media && \
