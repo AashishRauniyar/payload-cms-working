@@ -31,7 +31,8 @@
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "migrate:fresh": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:fresh",
-    "migrate:safe": "cross-env NODE_OPTIONS=--no-deprecation payload migrate || echo 'Migration failed, but continuing...'"
+    "migrate:safe": "cross-env NODE_OPTIONS=--no-deprecation payload migrate || echo 'Migration failed, but continuing...'",
+    "health-check": "node health-check.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
