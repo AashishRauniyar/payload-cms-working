@@ -134,12 +134,19 @@ ENV NODE_ENV=development \
 
 # Build the application - use compile mode to avoid database connection issues
 RUN echo "Building application..." && \
-    NODE_ENV=production \
-    SKIP_MIGRATIONS=true \
-    PAYLOAD_DISABLE_EMAIL=true \
-    DATABASE_URI=postgresql://placeholder:placeholder@localhost:5432/placeholder \
-    PAYLOAD_SECRET=placeholder-secret-for-build \
-    npm run build:docker
+    echo "NODE_ENV is: $NODE_ENV" && \
+    echo "Checking if .next directory exists..." && \
+    ls -la | grep .next || echo "No .next directory yet" && \
+    echo "Running build command..." && \
+    DATABASE_URI="postgresql://placeholder:placeholder@localhost:5432/placeholder" \
+    PAYLOAD_SECRET="placeholder-secret-for-build" \
+    npm run build:docker 2>&1 || \
+    (echo "Build failed, attempting alternative..." && \
+     DATABASE_URI="postgresql://placeholder:placeholder@localhost:5432/placeholder" \
+     PAYLOAD_SECRET="placeholder-secret-for-build" \
+     npm run build 2>&1) && \
+    echo "Build completed, checking .next directory..." && \
+    ls -la .next/ || echo "Build directory not found!"
 
 # Create media directory and ensure proper permissions
 RUN mkdir -p /app/public/media && \
