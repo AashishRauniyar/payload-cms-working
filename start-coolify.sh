@@ -9,7 +9,7 @@ export NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL:-http://localhost:3000}
 echo "🚀 Starting application in Coolify production mode..."
 echo "Using SERVER_URL: $NEXT_PUBLIC_SERVER_URL"
 
-# Use direct node command instead of npm scripts for better control
-node dist/server.js
+# Start Next.js in production mode
+exec pnpm start
 
 echo "✅ Server started successfully!"

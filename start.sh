@@ -41,4 +41,4 @@ fi
 
 # Start the application
 echo "🎯 Starting Next.js application..."
-exec node server.js
+exec pnpm start
