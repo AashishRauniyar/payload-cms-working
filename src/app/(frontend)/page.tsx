@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 // import LandingFooter from '@/components/ui/LandingFooter'
 // import type { Post, Media } from '@/payload-types'
 
@@ -296,6 +297,8 @@ const featuredTopics = [
 ]
 
 export default function LandingPage() {
+  const router = useRouter()
+  
   // State for advertisement visibility
   const [isAdVisible, setIsAdVisible] = useState(true)
 
@@ -1216,9 +1219,13 @@ export default function LandingPage() {
                   <input
                     type="text"
                     placeholder="Search supplements..."
-                    className="flex-1 px-6 py-4 border-2 border-gray-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 text-lg font-medium shadow-lg"
+                    className="flex-1 px-6 py-4 border-2 border-gray-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 text-lg font-medium shadow-lg cursor-pointer"
+                    onClick={() => router.push('/reviews')}
                   />
-                  <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-black text-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105">
+                  <button 
+                    onClick={() => router.push('/reviews')}
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-black text-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
+                  >
                     Search
                   </button>
                 </div>
