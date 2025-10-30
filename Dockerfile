@@ -262,10 +262,14 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
     DATABASE_URI=postgresql://placeholder:placeholder@localhost:5432/placeholder \
     PAYLOAD_SECRET=placeholder-secret-for-build
 
-# Produce Next build (use your script or plain build)
-# If build:safe still fails, switch to `pnpm build`
-RUN echo "Building application..." && \
-    pnpm run build:safe || (echo "build:safe failed -> trying plain build" && pnpm run build) && \
+# Ensure build-time env is visible while Next loads Payload config
+# (Already exported above via ENV)
+
+# Build (no safe wrapper). If it fails, print diagnostics.
+RUN set -eux; \
+    node -v; pnpm -v; \
+    node -e "try{require('sharp');console.log('sharp OK')}catch(e){console.log('sharp not found (ok if @img/sharp used)')}" || true; \
+    pnpm run build; \
     ls -la .next
 
 
