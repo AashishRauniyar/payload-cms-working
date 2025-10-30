@@ -246,15 +246,13 @@ COPY package.json pnpm-lock.yaml ./
 
 # Install ALL deps for build (respects lockfile)
 RUN echo "Installing dependencies with pnpm..." && \
-    pnpm install --frozen-lockfile && \
-    pnpm add -g cross-env
+    pnpm install --frozen-lockfile --prod=false
 
 # Copy the rest of the application
 COPY . .
 
-# Build-time env
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1 \
+# Build-time env (do not force production to ensure devDependencies are available)
+ENV NEXT_TELEMETRY_DISABLED=1 \
     PAYLOAD_CONFIG_PATH=src/payload.config.ts \
     SKIP_MIGRATIONS=true \
     PAYLOAD_DISABLE_EMAIL=true \
