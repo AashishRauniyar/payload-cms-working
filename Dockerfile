@@ -231,69 +231,62 @@
 # CMD ["/app/start.sh"]
 
 
-FROM node:18-alpine AS builder
+# ---------- Builder ----------
+    FROM node:18-alpine AS builder
 
-# System deps (sharp/libvips etc.)
-RUN apk add --no-cache python3 make g++ git libc6-compat vips-dev
-
-# Enable pnpm via Corepack
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-WORKDIR /app
-
-# Copy lockfiles first for better caching
-COPY package.json pnpm-lock.yaml ./
-# If you use workspaces:
-# COPY pnpm-workspace.yaml ./
-
-# Always install devDependencies for build, regardless of NODE_ENV
-RUN pnpm install --frozen-lockfile --prod=false
-
-# Copy the rest of the app
-COPY . .
-
-# --- Build-time ENV visible to the whole stage (important for Next+Payload) ---
-ENV NEXT_TELEMETRY_DISABLED=1 \
-    PAYLOAD_CONFIG_PATH=src/payload.config.ts \
-    SKIP_MIGRATIONS=true \
-    PAYLOAD_DISABLE_EMAIL=true \
-    PAYLOAD_DISABLE_SHARP=true \
-    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
-    DATABASE_URI=postgresql://placeholder:placeholder@localhost:5432/placeholder \
-    PAYLOAD_SECRET=placeholder-secret-for-build
-
-# Ensure build-time env is visible while Next loads Payload config
-# (Already exported above via ENV)
-
-# Build (no safe wrapper). If it fails, print diagnostics.
-RUN set -eux; \
-    node -v; pnpm -v; \
-    node -e "try{require('sharp');console.log('sharp OK')}catch(e){console.log('sharp not found (ok if @img/sharp used)')}" || true; \
-    pnpm run build; \
-    ls -la .next
-
-
-FROM node:18-alpine AS runner
-WORKDIR /app
-
-# System deps needed at runtime for sharp
-RUN apk add --no-cache libc6-compat vips-dev
-
-ENV NODE_ENV=production \
-    PORT=3019 \
-    HOSTNAME=0.0.0.0 \
-    NEXT_TELEMETRY_DISABLED=1
-
-# Standalone output — smallest runtime
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-
-# Healthcheck
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
-
-EXPOSE 3019
-
-# Start standalone server produced by Next
-CMD ["node", "server.js"]
+    # System deps for sharp/payload
+    RUN apk add --no-cache python3 make g++ git libc6-compat vips-dev
+    
+    # Enable pnpm
+    RUN corepack enable && corepack prepare pnpm@latest --activate
+    
+    WORKDIR /app
+    
+    # Lockfiles first for caching
+    COPY package.json pnpm-lock.yaml ./
+    # If you use workspaces:
+    # COPY pnpm-workspace.yaml ./
+    
+    # Install ALL deps (force dev deps even if NODE_ENV=production is injected)
+    RUN pnpm install --frozen-lockfile --prod=false
+    
+    # Project files
+    COPY . .
+    
+    # Build-time envs required when Next imports Payload config
+    ENV NEXT_TELEMETRY_DISABLED=1 \
+        PAYLOAD_CONFIG_PATH=src/payload.config.ts \
+        SKIP_MIGRATIONS=true \
+        PAYLOAD_DISABLE_EMAIL=true \
+        PAYLOAD_DISABLE_SHARP=true \
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
+        DATABASE_URI=postgresql://placeholder:placeholder@localhost:5432/placeholder \
+        PAYLOAD_SECRET=placeholder-secret-for-build
+    
+    # Build exactly like local (no "safe" wrapper)
+    RUN set -eux; \
+        node -v; pnpm -v; \
+        pnpm run build; \
+        ls -la .next
+    
+    # ---------- Runner ----------
+    FROM node:18-alpine AS runner
+    WORKDIR /app
+    
+    ENV NODE_ENV=production \
+        PORT=3019 \
+        HOSTNAME=0.0.0.0 \
+        NEXT_TELEMETRY_DISABLED=1
+    
+    # Standalone output (you already have output:'standalone' in next.config)
+    COPY --from=builder /app/public ./public
+    COPY --from=builder /app/.next/standalone ./
+    COPY --from=builder /app/.next/static ./.next/static
+    
+    # Health check
+    HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+      CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
+    
+    EXPOSE 3019
+    CMD ["node", "server.js"]
+    
