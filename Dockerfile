@@ -230,7 +230,6 @@
 # # Start the application using our startup script
 # CMD ["/app/start.sh"]
 
-
 # ---------- Builder ----------
     FROM node:18-alpine AS builder
 
