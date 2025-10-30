@@ -235,55 +235,152 @@
 #############################################
 
 # Use Node 18 for better Sharp compatibility
-FROM node:18-alpine
+# FROM node:18-alpine
 
-# Install necessary dependencies
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    git \
-    libc6-compat \
-    vips-dev
+# # Install necessary dependencies
+# RUN apk add --no-cache \
+#     python3 \
+#     make \
+#     g++ \
+#     git \
+#     libc6-compat \
+#     vips-dev
 
+# WORKDIR /app
+
+# # Copy package files first for better caching
+# COPY package.json ./
+
+# # Install ALL dependencies (including dev dependencies) for build
+# RUN echo "Installing dependencies..." && \
+#     npm install --legacy-peer-deps && \
+#     npm install -g cross-env
+
+# # Copy the rest of the application
+# COPY . .
+
+# # Set up environment variables for build
+# ENV NODE_ENV=development \
+#     NEXT_TELEMETRY_DISABLED=1 \
+#     PAYLOAD_CONFIG_PATH=src/payload.config.ts \
+#     SKIP_MIGRATIONS=true \
+#     PAYLOAD_DISABLE_EMAIL=true \
+#     PAYLOAD_DISABLE_SHARP=true
+
+# # Debug and build with verbose output
+# RUN echo "Starting build process..." && \
+#     echo "Node version: $(node -v)" && \
+#     echo "NPM version: $(npm -v)" && \
+#     echo "Current NODE_ENV: $NODE_ENV" && \
+#     echo "Override NODE_ENV to development for build..." && \
+#     export NODE_ENV=development && \
+#     echo "New NODE_ENV: $NODE_ENV" && \
+#     echo "Checking if cross-env is available:" && \
+#     which cross-env || echo "cross-env not found in PATH" && \
+#     echo "Attempting simple next build first..." && \
+#     (NODE_ENV=development NODE_OPTIONS=--no-deprecation npx next build || \
+#      echo "Direct next build failed, trying with cross-env..." && \
+#      NODE_ENV=development cross-env NODE_OPTIONS=--no-deprecation next build || \
+#      echo "Cross-env build failed, trying npm run build..." && \
+#      NODE_ENV=development npm run build || \
+#      echo "All build attempts failed!")
+
+# # Create media directory and ensure proper permissions
+# RUN mkdir -p /app/public/media && \
+
+
+# syntax=docker/dockerfile:1
+
+############################################
+# Base image used by all stages
+############################################
+FROM node:18-alpine AS base
+# Needed by some native modules
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files first for better caching
+############################################
+# Dependencies (build tooling + dev deps)
+############################################
+FROM base AS deps
+# Toolchain for native modules and libvips for sharp
+RUN apk add --no-cache python3 make g++ git vips-dev
+# Enable corepack so pnpm is available when lockfile exists
+RUN corepack enable
+
+# Copy only the manifests to leverage Docker layer caching
 COPY package.json ./
+COPY pnpm-lock.yaml* package-lock.json* ./
 
-# Install ALL dependencies (including dev dependencies) for build
-RUN echo "Installing dependencies..." && \
-    npm install --legacy-peer-deps && \
-    npm install -g cross-env
+# Install dependencies:
+# - pnpm if pnpm-lock.yaml exists
+# - otherwise npm (ci if lockfile exists)
+RUN if [ -f pnpm-lock.yaml ]; then \
+      pnpm install --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then \
+      npm ci --legacy-peer-deps; \
+    else \
+      npm install --legacy-peer-deps; \
+    fi
 
-# Copy the rest of the application
+############################################
+# Build (Next.js/Payload)
+############################################
+FROM deps AS build
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Copy the rest of the app
 COPY . .
 
-# Set up environment variables for build
-ENV NODE_ENV=development \
-    NEXT_TELEMETRY_DISABLED=1 \
-    PAYLOAD_CONFIG_PATH=src/payload.config.ts \
-    SKIP_MIGRATIONS=true \
-    PAYLOAD_DISABLE_EMAIL=true \
-    PAYLOAD_DISABLE_SHARP=true
+# Ensure media directory exists during build (no dangling &&)
+RUN mkdir -p /app/public/media
 
-# Debug and build with verbose output
-RUN echo "Starting build process..." && \
-    echo "Node version: $(node -v)" && \
-    echo "NPM version: $(npm -v)" && \
-    echo "Current NODE_ENV: $NODE_ENV" && \
-    echo "Override NODE_ENV to development for build..." && \
-    export NODE_ENV=development && \
-    echo "New NODE_ENV: $NODE_ENV" && \
-    echo "Checking if cross-env is available:" && \
-    which cross-env || echo "cross-env not found in PATH" && \
-    echo "Attempting simple next build first..." && \
-    (NODE_ENV=development NODE_OPTIONS=--no-deprecation npx next build || \
-     echo "Direct next build failed, trying with cross-env..." && \
-     NODE_ENV=development cross-env NODE_OPTIONS=--no-deprecation next build || \
-     echo "Cross-env build failed, trying npm run build..." && \
-     NODE_ENV=development npm run build || \
-     echo "All build attempts failed!")
+# Build with whichever package manager we installed above
+RUN if [ -f pnpm-lock.yaml ]; then \
+      pnpm run build; \
+    else \
+      npm run build; \
+    fi
 
-# Create media directory and ensure proper permissions
-RUN mkdir -p /app/public/media && \
+# Produce production-only node_modules for the runtime image
+RUN if [ -f pnpm-lock.yaml ]; then \
+      pnpm prune --prod; \
+    else \
+      npm prune --omit=dev; \
+    fi
+
+############################################
+# Runtime (slim, prod-only)
+############################################
+FROM base AS runner
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+# If your Payload config is compiled to JS, this is the safest default.
+# Override in Coolify if your project needs a different path.
+ENV PAYLOAD_CONFIG_PATH=dist/payload.config.js
+ENV PORT=3000
+
+# Runtime libvips for sharp
+RUN apk add --no-cache vips
+
+# App directory & media folder with correct permissions
+RUN mkdir -p /app/public/media
+# Copy built artifacts and prod dependencies from build stage
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+# If your build outputs server code / Payload compiled files
+COPY --from=build /app/dist ./dist
+# Optionally keep src if your app reads non-compiled assets at runtime
+COPY --from=build /app/src ./src
+
+# Use an unprivileged user
+RUN chown -R node:node /app
+USER node
+
+EXPOSE 3000
+
+# Rely on your package.json "start" script (e.g., next start or custom server)
+CMD ["npm", "run", "start"]
