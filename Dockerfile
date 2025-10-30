@@ -256,13 +256,14 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
     PAYLOAD_CONFIG_PATH=src/payload.config.ts \
     SKIP_MIGRATIONS=true \
     PAYLOAD_DISABLE_EMAIL=true \
-    PAYLOAD_DISABLE_SHARP=true
+    PAYLOAD_DISABLE_SHARP=true \
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
-# 🔴 Guarantee a real Next build happens with pnpm
-RUN echo "Building application with pnpm..." && \
+# 🔴 Build using safer script that handles types and sharp gracefully
+RUN echo "Building application with pnpm (safe mode)..." && \
     DATABASE_URI="postgresql://placeholder:placeholder@localhost:5432/placeholder" \
     PAYLOAD_SECRET="placeholder-secret-for-build" \
-    pnpm build && \
+    pnpm run build:safe && \
     echo "Build completed; listing .next" && \
     ls -la .next || (echo "❌ .next missing after build" && exit 1)
 
