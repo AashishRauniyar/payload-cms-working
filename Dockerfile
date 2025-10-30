@@ -231,78 +231,65 @@
 # CMD ["/app/start.sh"]
 
 
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
+# System deps (sharp/libvips etc.)
 RUN apk add --no-cache python3 make g++ git libc6-compat vips-dev
 
-# Enable pnpm
+# Enable pnpm via Corepack
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy lockfiles first
+# Copy lockfiles first for better caching
 COPY package.json pnpm-lock.yaml ./
-# If workspaces: COPY pnpm-workspace.yaml ./
+# If you use workspaces:
+# COPY pnpm-workspace.yaml ./
 
-# Install ALL deps for build (respects lockfile)
-RUN echo "Installing dependencies with pnpm..." && \
-    pnpm install --frozen-lockfile --prod=false
+# Always install devDependencies for build, regardless of NODE_ENV
+RUN pnpm install --frozen-lockfile --prod=false
 
-# Copy the rest of the application
+# Copy the rest of the app
 COPY . .
 
-# Build-time env (do not force production to ensure devDependencies are available)
+# --- Build-time ENV visible to the whole stage (important for Next+Payload) ---
 ENV NEXT_TELEMETRY_DISABLED=1 \
     PAYLOAD_CONFIG_PATH=src/payload.config.ts \
     SKIP_MIGRATIONS=true \
     PAYLOAD_DISABLE_EMAIL=true \
     PAYLOAD_DISABLE_SHARP=true \
-    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
+    DATABASE_URI=postgresql://placeholder:placeholder@localhost:5432/placeholder \
+    PAYLOAD_SECRET=placeholder-secret-for-build
 
-# 🔴 Build using safer script that handles types and sharp gracefully
-RUN echo "Building application with pnpm (safe mode)..." && \
-    DATABASE_URI="postgresql://placeholder:placeholder@localhost:5432/placeholder" \
-    PAYLOAD_SECRET="placeholder-secret-for-build" \
-    pnpm run build:safe && \
-    echo "Build completed; listing .next" && \
-    ls -la .next || (echo "❌ .next missing after build" && exit 1)
+# Produce Next build (use your script or plain build)
+# If build:safe still fails, switch to `pnpm build`
+RUN echo "Building application..." && \
+    pnpm run build:safe || (echo "build:safe failed -> trying plain build" && pnpm run build) && \
+    ls -la .next
 
-# Media dir
-RUN mkdir -p /app/public/media && chmod -R 755 /app/public/media
 
-# (Optional) debug artifacts
-RUN echo "=== BUILD ARTIFACTS DEBUG ===" && ls -la /app && ls -la .next || true && echo "=== END DEBUG ==="
+FROM node:18-alpine AS runner
+WORKDIR /app
 
-# Runtime env
+# System deps needed at runtime for sharp
+RUN apk add --no-cache libc6-compat vips-dev
+
 ENV NODE_ENV=production \
     PORT=3019 \
     HOSTNAME=0.0.0.0 \
     NEXT_TELEMETRY_DISABLED=1
 
-EXPOSE 3019
+# Standalone output — smallest runtime
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
+# Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
 
-# Keep your start.sh approach (migrations + flexible start)
-# (Use your existing start.sh content)
-# If it relies on .next/standalone/server.js, ensure next.config.js outputs standalone.
-RUN printf '#!/bin/sh\n\
-echo "🚀 Starting Payload CMS application..."\n\
-echo "NODE_ENV=$NODE_ENV PORT=$PORT"\n\
-if [ -n "$DATABASE_URI" ]; then echo "✅ DATABASE_URI set"; else echo "❌ DATABASE_URI missing"; exit 1; fi\n\
-echo "Running migrations (best-effort)..."\n\
-if [ -f "migrate.js" ]; then node migrate.js || true; \
-elif command -v npx >/dev/null 2>&1; then npx payload migrate || true; \
-fi\n\
-echo "✨ Migrations completed successfully!"\n\
-echo "✅ Starting server..."\n\
-if [ -f ".next/standalone/server.js" ]; then \
-  cp -r public .next/standalone/public 2>/dev/null || true; \
-  cp -r .next/static .next/standalone/.next/static 2>/dev/null || true; \
-  cd .next/standalone && HOSTNAME=0.0.0.0 PORT=3019 node server.js; \
-else \
-  HOSTNAME=0.0.0.0 PORT=3019 pnpm start; \
-fi\n' > /app/start.sh && chmod +x /app/start.sh
+EXPOSE 3019
 
-CMD ["/app/start.sh"]
+# Start standalone server produced by Next
+CMD ["node", "server.js"]
