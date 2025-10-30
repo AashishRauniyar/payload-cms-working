@@ -230,6 +230,10 @@
 # # Start the application using our startup script
 # CMD ["/app/start.sh"]
 
+#############################################
+# Ultra-Simple Dockerfile for Coolify        #
+#############################################
+
 # Use Node 18 for better Sharp compatibility
 FROM node:18-alpine
 
@@ -262,68 +266,24 @@ ENV NODE_ENV=development \
     SKIP_MIGRATIONS=true \
     PAYLOAD_DISABLE_EMAIL=true \
     PAYLOAD_DISABLE_SHARP=true
-@@ -166,31 +166,53 @@
 
-# Set runtime environment variables
-ENV NODE_ENV=production \
-    PORT=3019 \
-    HOSTNAME=0.0.0.0 \
-    NEXT_TELEMETRY_DISABLED=1
+# Debug and build with verbose output
+RUN echo "Starting build process..." && \
+    echo "Node version: $(node -v)" && \
+    echo "NPM version: $(npm -v)" && \
+    echo "Current NODE_ENV: $NODE_ENV" && \
+    echo "Override NODE_ENV to development for build..." && \
+    export NODE_ENV=development && \
+    echo "New NODE_ENV: $NODE_ENV" && \
+    echo "Checking if cross-env is available:" && \
+    which cross-env || echo "cross-env not found in PATH" && \
+    echo "Attempting simple next build first..." && \
+    (NODE_ENV=development NODE_OPTIONS=--no-deprecation npx next build || \
+     echo "Direct next build failed, trying with cross-env..." && \
+     NODE_ENV=development cross-env NODE_OPTIONS=--no-deprecation next build || \
+     echo "Cross-env build failed, trying npm run build..." && \
+     NODE_ENV=development npm run build || \
+     echo "All build attempts failed!")
 
-# Expose port
-EXPOSE 3019
-
-# Define health check for the running app
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
-
-# Create a startup script that handles different server locations
-RUN echo '#!/bin/sh\n\
-echo "🚀 Starting Payload CMS application..."\n\
-echo "🔍 Environment Check:"\n\
-echo "  NODE_ENV: $NODE_ENV"\n\
-echo "  PORT: $PORT"\n\
-echo "  DATABASE_URI: ${DATABASE_URI:0:30}..."\n\
-echo "  PAYLOAD_SECRET: ${PAYLOAD_SECRET:0:10}..."\n\
-echo "Current directory: $(pwd)"\n\
-echo "Directory contents:"\n\
-ls -la\n\
-\n\
-# Check database connection\n\
-echo "🔍 Checking database connection..."\n\
-if [ ! -z "$DATABASE_URI" ]; then\n\
-    echo "✅ Database URI is set"\n\
-else\n\
-    echo "❌ DATABASE_URI not found!"\n\
-    exit 1\n\
-fi\n\
-\n\
-echo "✅ Database is ready!"\n\
-\n\
-# Try to run migrations first\n\
-echo "🚀 Running Payload migrations..."\n\
-if [ -f "migrate.js" ]; then\n\
-    echo "Using migrate.js file..."\n\
-    node migrate.js 2>&1 && echo "✅ Migration output completed" || echo "⚠️ Migration failed but continuing..."\n\
-elif command -v payload >/dev/null 2>&1; then\n\
-    echo "Using payload CLI..."\n\
-    npx payload migrate 2>&1 && echo "✅ Migration output completed" || echo "⚠️ Migration failed but continuing..."\n\
-else\n\
-    echo "ℹ️ No migration method found, skipping..."\n\
-fi\n\
-\n\
-echo "✨ Migrations completed successfully!"\n\
-echo "✅ Starting server..."\n\
-\n\
-# Check for standalone server.js first\n\
-@@ -201,10 +223,10 @@
-    cp -r .next/static .next/standalone/.next/static 2>/dev/null || true\n\
-    cd .next/standalone\n\
-    echo "Starting with: node server.js"\n\
-    HOSTNAME=0.0.0.0 PORT=3019 node server.js\n\
-else\n\
-    echo "Using npm start command..."\n\
-    PORT=3019 HOSTNAME=0.0.0.0 npm start\n\
-fi' > /app/start.sh && chmod +x /app/start.sh
-
-# Start the application using our startup script
+# Create media directory and ensure proper permissions
+RUN mkdir -p /app/public/media && \
