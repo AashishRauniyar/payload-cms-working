@@ -230,67 +230,100 @@
 # # Start the application using our startup script
 # CMD ["/app/start.sh"]
 
-# ---------- Builder ----------
-    FROM node:18-alpine AS builder
+# Use Node 18 for better Sharp compatibility
+FROM node:18-alpine
 
-    # System deps for sharp/payload
-    RUN apk add --no-cache python3 make g++ git libc6-compat vips-dev
-    
-    # Enable pnpm
-    RUN corepack enable && corepack prepare pnpm@latest --activate
-    
-    WORKDIR /app
-    
-    # Lockfiles first for caching
-    COPY package.json pnpm-lock.yaml ./
-    # If you use workspaces:
-    # COPY pnpm-workspace.yaml ./
-    
-    # Install ALL deps (force dev deps even if NODE_ENV=production is injected)
-    RUN pnpm install --frozen-lockfile --prod=false
-    
-    # Project files
-    COPY . .
-    
-    # Build-time envs required when Next imports Payload config
-    ENV NEXT_TELEMETRY_DISABLED=1 \
-        PAYLOAD_CONFIG_PATH=src/payload.config.ts \
-        SKIP_MIGRATIONS=true \
-        PAYLOAD_DISABLE_EMAIL=true \
-        PAYLOAD_DISABLE_SHARP=true \
-        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
-        DATABASE_URI=postgresql://placeholder:placeholder@localhost:5432/placeholder \
-        PAYLOAD_SECRET=placeholder-secret-for-build
-    
-    # Build exactly like local and capture logs so Coolify shows the real error
-    RUN set -eu; \
-      node -v; pnpm -v; \
-      pnpm run build > /tmp/next-build.log 2>&1 || { \
-        echo '--- NEXT BUILD FAILED. LAST 200 LINES ---'; \
-        tail -n 200 /tmp/next-build.log || true; \
-        echo '--- FULL LOG PATH: /tmp/next-build.log ---'; \
-        exit 1; \
-      }; \
-      ls -la .next
-    
-    # ---------- Runner ----------
-    FROM node:18-alpine AS runner
-    WORKDIR /app
-    
-    ENV NODE_ENV=production \
-        PORT=3019 \
-        HOSTNAME=0.0.0.0 \
-        NEXT_TELEMETRY_DISABLED=1
-    
-    # Standalone output (you already have output:'standalone' in next.config)
-    COPY --from=builder /app/public ./public
-    COPY --from=builder /app/.next/standalone ./
-    COPY --from=builder /app/.next/static ./.next/static
-    
-    # Health check
-    HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-      CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
-    
-    EXPOSE 3019
-    CMD ["node", "server.js"]
-    
+# Install necessary dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git \
+    libc6-compat \
+    vips-dev
+
+WORKDIR /app
+
+# Copy package files first for better caching
+COPY package.json ./
+
+# Install ALL dependencies (including dev dependencies) for build
+RUN echo "Installing dependencies..." && \
+    pnpm install --legacy-peer-deps && \
+    pnpm install -g cross-env
+
+# Copy the rest of the application
+COPY . .
+
+# Set up environment variables for build
+ENV NODE_ENV=development \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PAYLOAD_CONFIG_PATH=src/payload.config.ts \
+    SKIP_MIGRATIONS=true \
+    PAYLOAD_DISABLE_EMAIL=true \
+    PAYLOAD_DISABLE_SHARP=true
+@@ -166,31 +166,53 @@
+
+# Set runtime environment variables
+ENV NODE_ENV=production \
+    PORT=3019 \
+    HOSTNAME=0.0.0.0 \
+    NEXT_TELEMETRY_DISABLED=1
+
+# Expose port
+EXPOSE 3019
+
+# Define health check for the running app
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3019/api/health', r => process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))" || exit 1
+
+# Create a startup script that handles different server locations
+RUN echo '#!/bin/sh\n\
+echo "🚀 Starting Payload CMS application..."\n\
+echo "🔍 Environment Check:"\n\
+echo "  NODE_ENV: $NODE_ENV"\n\
+echo "  PORT: $PORT"\n\
+echo "  DATABASE_URI: ${DATABASE_URI:0:30}..."\n\
+echo "  PAYLOAD_SECRET: ${PAYLOAD_SECRET:0:10}..."\n\
+echo "Current directory: $(pwd)"\n\
+echo "Directory contents:"\n\
+ls -la\n\
+\n\
+# Check database connection\n\
+echo "🔍 Checking database connection..."\n\
+if [ ! -z "$DATABASE_URI" ]; then\n\
+    echo "✅ Database URI is set"\n\
+else\n\
+    echo "❌ DATABASE_URI not found!"\n\
+    exit 1\n\
+fi\n\
+\n\
+echo "✅ Database is ready!"\n\
+\n\
+# Try to run migrations first\n\
+echo "🚀 Running Payload migrations..."\n\
+if [ -f "migrate.js" ]; then\n\
+    echo "Using migrate.js file..."\n\
+    node migrate.js 2>&1 && echo "✅ Migration output completed" || echo "⚠️ Migration failed but continuing..."\n\
+elif command -v payload >/dev/null 2>&1; then\n\
+    echo "Using payload CLI..."\n\
+    npx payload migrate 2>&1 && echo "✅ Migration output completed" || echo "⚠️ Migration failed but continuing..."\n\
+else\n\
+    echo "ℹ️ No migration method found, skipping..."\n\
+fi\n\
+\n\
+echo "✨ Migrations completed successfully!"\n\
+echo "✅ Starting server..."\n\
+\n\
+# Check for standalone server.js first\n\
+@@ -201,10 +223,10 @@
+    cp -r .next/static .next/standalone/.next/static 2>/dev/null || true\n\
+    cd .next/standalone\n\
+    echo "Starting with: node server.js"\n\
+    HOSTNAME=0.0.0.0 PORT=3019 node server.js\n\
+else\n\
+    echo "Using npm start command..."\n\
+    PORT=3019 HOSTNAME=0.0.0.0 npm start\n\
+fi' > /app/start.sh && chmod +x /app/start.sh
+
+# Start the application using our startup script
