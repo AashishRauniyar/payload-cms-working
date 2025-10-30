@@ -262,11 +262,16 @@
         DATABASE_URI=postgresql://placeholder:placeholder@localhost:5432/placeholder \
         PAYLOAD_SECRET=placeholder-secret-for-build
     
-    # Build exactly like local (no "safe" wrapper)
-    RUN set -eux; \
-        node -v; pnpm -v; \
-        pnpm run build; \
-        ls -la .next
+    # Build exactly like local and capture logs so Coolify shows the real error
+    RUN set -eu; \
+      node -v; pnpm -v; \
+      pnpm run build > /tmp/next-build.log 2>&1 || { \
+        echo '--- NEXT BUILD FAILED. LAST 200 LINES ---'; \
+        tail -n 200 /tmp/next-build.log || true; \
+        echo '--- FULL LOG PATH: /tmp/next-build.log ---'; \
+        exit 1; \
+      }; \
+      ls -la .next
     
     # ---------- Runner ----------
     FROM node:18-alpine AS runner
