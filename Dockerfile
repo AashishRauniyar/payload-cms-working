@@ -359,7 +359,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # If your Payload config is compiled to JS, this is the safest default.
 # Override in Coolify if your project needs a different path.
 ENV PAYLOAD_CONFIG_PATH=dist/payload.config.js
-ENV PORT=3000
+ENV PORT=3019
 
 # Runtime libvips for sharp
 RUN apk add --no-cache vips
@@ -380,7 +380,7 @@ COPY --from=build /app/src ./src
 RUN chown -R node:node /app
 USER node
 
-EXPOSE 3000
+EXPOSE 3019
 
 # Rely on your package.json "start" script (e.g., next start or custom server)
 CMD ["npm", "run", "start"]
