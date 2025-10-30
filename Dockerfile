@@ -253,8 +253,8 @@ COPY package.json ./
 
 # Install ALL dependencies (including dev dependencies) for build
 RUN echo "Installing dependencies..." && \
-    pnpm install --legacy-peer-deps && \
-    pnpm install -g cross-env
+    npm install --legacy-peer-deps && \
+    npm install -g cross-env
 
 # Copy the rest of the application
 COPY . .
