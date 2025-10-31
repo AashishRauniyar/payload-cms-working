@@ -8,11 +8,11 @@ services:
       POSTGRES_USER: payload
       POSTGRES_PASSWORD: password123
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U payload -d payload']
+      test: ["CMD-SHELL", "pg_isready -U payload -d payload"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -22,12 +22,12 @@ services:
 
   # Payload CMS Application
   app:
-    build:
+    build: 
       context: .
       dockerfile: Dockerfile
     container_name: payload-app
     ports:
-      - '3019:3019'
+      - "3019:3019"
     environment:
       - DATABASE_URI=postgresql://payload:password123@postgres:5432/payload
       - PAYLOAD_SECRET=your-32-character-secret-key-here-change-me-for-production
@@ -53,7 +53,7 @@ services:
         echo '🚀 Starting Payload CMS application...' &&
         node migrate.js &&
         echo '✅ Starting server...' &&
-        exec npm start
+        exec node server.js
       "
 
 volumes:
