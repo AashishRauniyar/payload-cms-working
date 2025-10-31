@@ -3,9 +3,6 @@
 
 FROM node:22.12.0-alpine AS base
 
-# Install pnpm globally
-RUN npm install -g pnpm@9
-
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
@@ -18,7 +15,7 @@ COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; \
+  elif [ -f pnpm-lock.yaml ]; then npm install --legacy-peer-deps; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -29,18 +26,15 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build-time environment variables
-ENV NODE_ENV=development
+# Next.js collects completely anonymous telemetry data about general usage.
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
-ENV SKIP_MIGRATIONS=true
-ENV PAYLOAD_DISABLE_EMAIL=true
 
-# Build the application using the correct package manager and build script
+# Build the application using regular build
+ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
 RUN \
-  if [ -f yarn.lock ]; then yarn run build:docker; \
-  elif [ -f package-lock.json ]; then npm run build:docker; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm run build:docker; \
+  if [ -f yarn.lock ]; then yarn run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then npm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
