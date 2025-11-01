@@ -86,14 +86,14 @@ RUN mkdir -p /app/public/media /app/uploads && \
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 3019
 
-ENV PORT=3000
+ENV PORT=3019
 ENV HOSTNAME="0.0.0.0"
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD node -e "http.get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
+  CMD node -e "http.get('http://healthylifestyletips.online/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
 
 # Use the entrypoint script to handle initialization
 ENTRYPOINT ["./docker-entrypoint.sh"]
