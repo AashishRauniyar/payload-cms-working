@@ -28,6 +28,10 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+      args:
+        BUILD_DATABASE_URI: postgresql://placeholder:placeholder@placeholder:5432/placeholder
+        BUILD_PAYLOAD_SECRET: build-time-secret-only-not-for-production
+        BUILD_NODE_ENV: production
     container_name: nextjs-payload-app
     restart: always
     ports:
