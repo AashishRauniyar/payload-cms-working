@@ -1,8 +1,11 @@
+version: '3.8'
+
 services:
   # PostgreSQL Database
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16
     container_name: payload-postgres
+    restart: always
     environment:
       POSTGRES_DB: payload
       POSTGRES_USER: payload
@@ -15,46 +18,41 @@ services:
       test: ["CMD-SHELL", "pg_isready -U payload -d payload"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 5
       start_period: 10s
     networks:
       - payload-network
 
-  # Payload CMS Application
-  app:
+  # Next.js with Payload CMS Application
+  nextjs_payload:
     build: 
       context: .
       dockerfile: Dockerfile
-    container_name: payload-app
+    container_name: nextjs-payload-app
+    restart: always
     ports:
-      - "3019:3019"
+      - "3000:3000"
     environment:
-      - DATABASE_URI=postgresql://payload:password123@postgres:5432/payload
-      - PAYLOAD_SECRET=your-32-character-secret-key-here-change-me-for-production
-      - NODE_ENV=production
-      - NEXT_PUBLIC_SERVER_URL=https://healthylifestyletips.online
-      - NEXT_PUBLIC_SITE_NAME=Healthy Lifestyle Tips
-      - NEXT_PUBLIC_SITE_DESCRIPTION=Your trusted source for evidence-based health and wellness information
-      - CRON_SECRET=YOUR_CRON_SECRET_HERE
-      - PREVIEW_SECRET=your-preview-secret-here-change-me
-      - NEXT_TELEMETRY_DISABLED=1
+      DATABASE_URI: postgresql://payload:password123@postgres:5432/payload
+      PAYLOAD_SECRET: your-32-character-secret-key-here-change-me-for-production-abc123def456
+      NODE_ENV: production
+      NEXT_PUBLIC_SERVER_URL: https://healthylifestyletips.online
+      NEXT_PUBLIC_SITE_NAME: Healthy Lifestyle Tips
+      NEXT_PUBLIC_SITE_DESCRIPTION: Your trusted source for evidence-based health and wellness information
+      CRON_SECRET: YOUR_CRON_SECRET_HERE_CHANGE_FOR_PRODUCTION
+      PREVIEW_SECRET: your-preview-secret-here-change-me-for-production
+      NEXT_TELEMETRY_DISABLED: 1
+      PAYLOAD_DISABLE_EMAIL: true
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
     volumes:
       - media_data:/app/public/media
       - uploads_data:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
-    restart: unless-stopped
     networks:
       - payload-network
-    # Run migrations then start the server
-    command: >
-      sh -c "
-        echo '🚀 Starting Payload CMS application...' &&
-        node migrate.js &&
-        echo '✅ Starting server...' &&
-        exec node server.js
-      "
 
 volumes:
   postgres_data:

@@ -107,16 +107,6 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
 
 // Generate static params for better performance (optional)
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-
-  const categories = await payload.find({
-    collection: 'blog-categories',
-    depth: 0,
-    limit: 100,
-    where: {},
-  })
-
-  return categories.docs.map((category) => ({
-    slug: category.slug,
-  }))
+  // Skip static generation during Docker build
+  return []
 }
