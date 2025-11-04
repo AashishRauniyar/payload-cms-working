@@ -1,7 +1,7 @@
-# Multi-stage Docker build for Next.js with Payload CMS
-# Optimized for production deployment
+# Multi-stage Docker build for Payload CMS production
+# Based on official Payload documentation and Next.js with-docker example
 
-FROM node:20.18.1-alpine AS base
+FROM node:22.12.0-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -15,7 +15,7 @@ COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm@^9 && pnpm install --frozen-lockfile; \
+  elif [ -f pnpm-lock.yaml ]; then npm install --legacy-peer-deps; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -29,21 +29,12 @@ COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build arguments for secure build-time configuration
-ARG BUILD_DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
-ARG BUILD_PAYLOAD_SECRET=build-time-secret-only
-ARG BUILD_NODE_ENV=production
-
-# Build the application with secure build-time variables
+# Build the application using regular build
+ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
 RUN \
-  export DATABASE_URI=${BUILD_DATABASE_URI} && \
-  export PAYLOAD_SECRET=${BUILD_PAYLOAD_SECRET} && \
-  export SKIP_MIGRATIONS=true && \
-  export PAYLOAD_DISABLE_EMAIL=true && \
-  export NODE_ENV=${BUILD_NODE_ENV} && \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm@^9 && pnpm run build; \
+  elif [ -f pnpm-lock.yaml ]; then npm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -78,7 +69,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=builder --chown=nextjs:nodejs /app/migrate.js ./migrate.js
-COPY --from=builder --chown=nextjs:nodejs /app/docker-entrypoint.sh ./docker-entrypoint.sh
 
 # Copy node_modules with payload CLI for migrations
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
@@ -86,8 +76,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 # Ensure media directories exist and have correct permissions
 RUN mkdir -p /app/public/media /app/uploads && \
     chown -R nextjs:nodejs /app/public /app/uploads /app/.next && \
-    chmod -R 755 /app/public/media /app/uploads && \
-    chmod +x /app/docker-entrypoint.sh
+    chmod -R 755 /app/public/media /app/uploads
 
 USER nextjs
 
@@ -96,9 +85,9 @@ EXPOSE 3019
 ENV PORT=3019
 ENV HOSTNAME="0.0.0.0"
 
-# Add health check (using localhost for container health)
+# Add health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD node -e "const http = require('http'); const req = http.get('http://localhost:3019/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }); req.on('error', () => process.exit(1));" || exit 1
+  CMD node -e "http.get('http://localhost:3019/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
 
-# Use the entrypoint script to handle initialization
-ENTRYPOINT ["./docker-entrypoint.sh"]
+# server.js is created by next build from the standalone output
+CMD ["node", "server.js"]

@@ -41,12 +41,17 @@ run_migrations() {
 echo "🔍 Environment: $NODE_ENV"
 echo "🔍 Database: ${DATABASE_URI%@*}@***"
 
-# Wait for database to be ready
-wait_for_db
-
-# Run migrations if needed
-if [ "$SKIP_MIGRATIONS" != "true" ]; then
-    run_migrations
+# Check if we should skip all database operations
+if [ "$SKIP_MIGRATIONS" = "true" ] && [ "$SKIP_DB_WAIT" = "true" ]; then
+    echo "⚠️  Skipping database wait and migrations (SKIP_DB_WAIT=true)"
+else
+    # Wait for database to be ready
+    wait_for_db
+    
+    # Run migrations if needed
+    if [ "$SKIP_MIGRATIONS" != "true" ]; then
+        run_migrations
+    fi
 fi
 
 # Start the Next.js server
