@@ -1,0 +1,42 @@
+# Simple Dockerfile for Coolify deployment
+FROM node:18-alpine
+
+# Install dependencies
+RUN apk add --no-cache \
+  g++ \
+  git \
+  libc6-compat \
+  make \
+  python3
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json ./
+
+# Install dependencies with npm for better native module compatibility
+RUN npm install
+
+# Copy application files
+COPY . .
+
+# Set environment variables
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PAYLOAD_CONFIG_PATH=dist/payload.config.js \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0
+
+# Build the application
+RUN echo "Building application..." && \
+    npm run build
+
+# Ensure proper permissions
+RUN mkdir -p /app/public/media && \
+    chmod -R 755 /app/public/media
+
+# Expose the port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]

@@ -42,7 +42,7 @@ export const PostHero: React.FC<{
                 />
               </svg>
               <Link href="/posts" className="text-gray-400 hover:text-gray-600">
-                Blog
+                Reviews
               </Link>
               {categories && categories.length > 0 && (
                 <>

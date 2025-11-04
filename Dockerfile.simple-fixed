@@ -1,0 +1,31 @@
+# Use the official Node.js 18 image with Alpine
+FROM node:18-alpine
+
+# Install dependencies
+RUN apk add --no-cache python3 make g++ git libc6-compat vips-dev
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files first for better layer caching
+COPY package.json ./
+
+# Install dependencies
+RUN npm install --no-optional --legacy-peer-deps
+
+# Copy the rest of the application
+COPY . .
+
+# Set environment variables for production
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000
+
+# Build the application with specific flags for better compatibility
+RUN npm run build
+
+# Expose the port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]

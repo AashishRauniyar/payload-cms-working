@@ -1,0 +1,35 @@
+# Coolify Environment Template
+# Copy this file to .env.production for Coolify deployment
+
+# Required variables
+NODE_ENV=production
+PAYLOAD_CONFIG_PATH=dist/payload.config.js
+MONGODB_URI=mongodb+srv://username:password@your-mongodb-url/your-db-name
+PAYLOAD_SECRET=your-secure-random-string
+NEXT_PUBLIC_SERVER_URL=https://your-app-domain.com
+
+# Draft mode (optional)
+PAYLOAD_PUBLIC_DRAFT_SECRET=your-draft-secret
+
+# Media storage (choose local or S3)
+
+# For local storage (default)
+PAYLOAD_PUBLIC_SERVER_URL=https://your-app-domain.com
+
+# For S3 storage (uncomment and configure if using S3)
+#S3_BUCKET=your-bucket-name
+#S3_REGION=your-bucket-region
+#S3_ACCESS_KEY_ID=your-access-key
+#S3_SECRET_ACCESS_KEY=your-secret-key
+#PAYLOAD_PUBLIC_CLOUD_FRONT_URL=https://your-cloudfront-url.cloudfront.net
+
+# Build options
+#ANALYZE=true
+#NODE_OPTIONS=--max-old-space-size=4096
+
+# Additional options
+# SMTP_HOST=your-smtp-host
+# SMTP_PORT=587
+# SMTP_USER=your-smtp-user
+# SMTP_PASS=your-smtp-password
+# SMTP_FROM=your-from-email@example.com

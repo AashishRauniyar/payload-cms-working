@@ -6,15 +6,7 @@ import { redirect } from 'next/navigation'
 
 import configPromise from '@payload-config'
 
-export async function GET(
-  req: {
-    cookies: {
-      get: (name: string) => {
-        value: string
-      }
-    }
-  } & Request,
-): Promise<Response> {
+export async function GET(req: Request): Promise<Response> {
   const payload = await getPayload({ config: configPromise })
 
   const { searchParams } = new URL(req.url)
@@ -28,7 +20,8 @@ export async function GET(
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 
-  if (!path || !collection || !slug) {
+  // Allow preview without slug for new/draft posts
+  if (!path || !collection) {
     return new Response('Insufficient search params', { status: 404 })
   }
 

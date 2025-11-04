@@ -5,13 +5,29 @@ import Navbar from './Navbar'
 import type { Category } from '@/payload-types'
 
 export async function NavbarWrapper() {
-  const payload = await getPayload({ config: configPromise })
+  try {
+    const payload = await getPayload({ config: configPromise })
 
-  const categories = await payload.find({
-    collection: 'categories',
-    limit: 100,
-    pagination: false,
-  })
+    // Check if categories collection exists
+    const collections = payload.config.collections
+    const hasCategories = collections.some((collection) => collection.slug === 'categories')
 
-  return <Navbar categories={categories.docs as Category[]} />
+    if (!hasCategories) {
+      return <Navbar categories={[]} />
+    }
+
+    const categories = await payload.find({
+      collection: 'categories',
+      limit: 100,
+      pagination: false,
+    })
+
+    // Ensure categories.docs is an array
+    const categoryDocs = categories?.docs || []
+
+    return <Navbar categories={categoryDocs as Category[]} />
+  } catch (error) {
+    // Silently handle error and return fallback
+    return <Navbar categories={[]} />
+  }
 }

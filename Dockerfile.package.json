@@ -1,0 +1,20 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "description": "Website template for Payload",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "start": "next start",
+    "postbuild": "echo 'Build completed successfully'"
+  },
+  "dependencies": {
+    "next": "15.4.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "overrides": {
+    "sharp": "0.32.0"
+  }
+}

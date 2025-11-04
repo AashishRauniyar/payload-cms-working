@@ -4,6 +4,8 @@ import Link from 'next/link'
 import LandingFooter from '@/components/ui/LandingFooter'
 import type { Post, Media } from '@/payload-types'
 
+export const dynamic = 'force-dynamic'
+
 // Props interface for the landing page
 interface LandingPageProps {
   featuredPosts?: Post[]

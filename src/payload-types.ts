@@ -69,8 +69,10 @@ export interface Config {
   collections: {
     pages: Page;
     posts: Post;
+    'blog-posts': BlogPost;
     media: Media;
     categories: Category;
+    'blog-categories': BlogCategory;
     users: User;
     redirects: Redirect;
     forms: Form;
@@ -85,8 +87,10 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    'blog-posts': BlogPostsSelect<false> | BlogPostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    'blog-categories': BlogCategoriesSelect<false> | BlogCategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -198,10 +202,13 @@ export interface Page {
     | ArchiveBlock
     | FormBlock
     | ProsConsBlock
+    | ReviewsBlock
     | ThreeBottlesBlock
     | BrandHighlightsTableBlock
     | RatingTableBlock
     | TableBlock
+    | TopOurChoose
+    | IngredientsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -267,6 +274,7 @@ export interface Post {
   slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
+  deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
 }
 /**
@@ -423,6 +431,89 @@ export interface User {
    * Professional title (e.g., "Medical Doctor", "Registered Dietitian")
    */
   title?: string | null;
+  /**
+   * Years of experience
+   */
+  experience?: number | null;
+  /**
+   * Add your social media profiles to display on your author page
+   */
+  socialMedia?: {
+    linkedin?: {
+      /**
+       * Your LinkedIn profile URL
+       */
+      url?: string | null;
+      /**
+       * LinkedIn logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    twitter?: {
+      /**
+       * Your Twitter/X profile URL
+       */
+      url?: string | null;
+      /**
+       * Twitter/X logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    facebook?: {
+      /**
+       * Your Facebook profile URL
+       */
+      url?: string | null;
+      /**
+       * Facebook logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    instagram?: {
+      /**
+       * Your Instagram profile URL
+       */
+      url?: string | null;
+      /**
+       * Instagram logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    youtube?: {
+      /**
+       * Your YouTube channel URL
+       */
+      url?: string | null;
+      /**
+       * YouTube logo (optional - will use default if not provided)
+       */
+      logo?: (number | null) | Media;
+    };
+    website?: {
+      /**
+       * Your personal or professional website URL
+       */
+      url?: string | null;
+      /**
+       * Website favicon or logo (optional)
+       */
+      logo?: (number | null) | Media;
+    };
+    /**
+     * Add other social media platforms not listed above
+     */
+    other?:
+      | {
+          platform: string;
+          url: string;
+          /**
+           * Platform logo or icon
+           */
+          logo?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -544,7 +635,57 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
+  /**
+   * Upload an image or select from media library
+   */
   media: number | Media;
+  /**
+   * Optional caption for the image
+   */
+  caption?: string | null;
+  /**
+   * How to align the image on the page
+   */
+  alignment?: ('left' | 'center' | 'right' | 'full') | null;
+  /**
+   * Maximum width of the image
+   */
+  size?: ('small' | 'medium' | 'large' | 'xlarge' | 'full') | null;
+  /**
+   * Force a specific aspect ratio (crops image if needed)
+   */
+  aspectRatio?: ('auto' | 'square' | 'landscape' | 'portrait' | 'wide') | null;
+  /**
+   * Add rounded corners to the image
+   */
+  borderRadius?: ('none' | 'small' | 'medium' | 'large' | 'full') | null;
+  /**
+   * Add a drop shadow to the image
+   */
+  shadow?: ('none' | 'small' | 'medium' | 'large' | 'xlarge') | null;
+  /**
+   * Add a border around the image
+   */
+  border?: boolean | null;
+  /**
+   * Allow the image to be clicked to open in full size or navigate
+   */
+  enableLink?: boolean | null;
+  /**
+   * What happens when the image is clicked
+   */
+  linkType?: ('lightbox' | 'external' | 'internal') | null;
+  /**
+   * URL to navigate to when image is clicked
+   */
+  externalUrl?: string | null;
+  /**
+   * Control spacing around the image
+   */
+  spacing?: {
+    marginTop?: ('none' | 'small' | 'medium' | 'large' | 'xlarge') | null;
+    marginBottom?: ('none' | 'small' | 'medium' | 'large' | 'xlarge') | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -806,6 +947,47 @@ export interface ProsConsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ReviewsBlock".
+ */
+export interface ReviewsBlock {
+  blockHeader?: {
+    title?: string | null;
+    subtitle?: string | null;
+  };
+  reviews?:
+    | {
+        name: string;
+        gender?: ('male' | 'female') | null;
+        age?: number | null;
+        /**
+         * Upload a profile image for this reviewer (optional)
+         */
+        profileImage?: (number | null) | Media;
+        /**
+         * Whole numbers only (1, 2, 3, 4, or 5 stars)
+         */
+        rating: number;
+        reviewText: string;
+        id?: string | null;
+      }[]
+    | null;
+  displayOptions?: {
+    layout?: ('stacked' | 'grid') | null;
+    /**
+     * Alternate between light cream and white backgrounds
+     */
+    alternateBackground?: boolean | null;
+    /**
+     * Add dashed borders between review cards
+     */
+    showDashedBorders?: boolean | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'reviewsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ThreeBottlesBlock".
  */
 export interface ThreeBottlesBlock {
@@ -906,9 +1088,9 @@ export interface RatingTableBlock {
    */
   productImage: number | Media;
   /**
-   * Overall star rating out of 5 stars
+   * Enter the star rating (0-5) for this product.
    */
-  overallRating: number;
+  customRating: number;
   /**
    * Add rating metrics with percentage values
    */
@@ -972,6 +1154,179 @@ export interface TableBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'tableBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TopOurChoose".
+ */
+export interface TopOurChoose {
+  /**
+   * Optional title for the rating section
+   */
+  title?: string | null;
+  productName: string;
+  /**
+   * Main product image to display in the center
+   */
+  productImage: number | Media;
+  /**
+   * Overall rating score (0-5)
+   */
+  overallRating: number;
+  ratings: {
+    category: string;
+    /**
+     * Rating score (0-5)
+     */
+    rating: number;
+    evidence: 'Gold Star Evidence' | 'Strong Evidence' | 'Good Evidence' | 'Limited Evidence';
+    id?: string | null;
+  }[];
+  buttons?:
+    | {
+        label: string;
+        style: 'primary' | 'secondary' | 'success' | 'warning' | 'outline';
+        /**
+         * Choose where this button should link to
+         */
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  backgroundColor?: ('none' | 'gray' | 'blue' | 'green' | 'orange') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'topOurChoose';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IngredientsBlock".
+ */
+export interface IngredientsBlock {
+  /**
+   * Optional title for the ingredients section
+   */
+  title?: string | null;
+  ingredients: {
+    name: string;
+    /**
+     * Circular image showing the ingredient
+     */
+    image: number | Media;
+    /**
+     * Brief description of the ingredient and its benefits
+     */
+    description: string;
+    id?: string | null;
+  }[];
+  /**
+   * Choose how to display the ingredient cards
+   */
+  layout?: ('stacked' | 'grid-2' | 'grid-3') | null;
+  backgroundColor?: ('none' | 'gray' | 'blue' | 'green') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ingredientsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts".
+ */
+export interface BlogPost {
+  id: number;
+  title: string;
+  /**
+   * Brief description of the blog post (used in listing pages)
+   */
+  excerpt?: string | null;
+  /**
+   * Featured image for the blog post
+   */
+  featuredImage?: (number | null) | Media;
+  /**
+   * If checked, the featured image will be used only on listing cards and not displayed at the top of the article.
+   */
+  hideFeaturedImageInArticle?: boolean | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  status?: ('draft' | 'published') | null;
+  relatedBlogPosts?: (number | BlogPost)[] | null;
+  blogCategories?: (number | BlogCategory)[] | null;
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  authors?: (number | User)[] | null;
+  populatedAuthors?:
+    | {
+        id?: string | null;
+        name?: string | null;
+      }[]
+    | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories".
+ */
+export interface BlogCategory {
+  id: number;
+  name: string;
+  /**
+   * Description of this blog category
+   */
+  description?: string | null;
+  /**
+   * Hex color code for category badge (e.g., #3B82F6)
+   */
+  color?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1155,12 +1510,20 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
+        relationTo: 'blog-posts';
+        value: number | BlogPost;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'blog-categories';
+        value: number | BlogCategory;
       } | null)
     | ({
         relationTo: 'users';
@@ -1265,10 +1628,13 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         prosConsBlock?: T | ProsConsBlockSelect<T>;
+        reviewsBlock?: T | ReviewsBlockSelect<T>;
         threeBottlesBlock?: T | ThreeBottlesBlockSelect<T>;
         brandHighlightsTable?: T | BrandHighlightsTableBlockSelect<T>;
         ratingTable?: T | RatingTableBlockSelect<T>;
         tableBlock?: T | TableBlockSelect<T>;
+        topOurChoose?: T | TopOurChooseSelect<T>;
+        ingredientsBlock?: T | IngredientsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1340,6 +1706,22 @@ export interface ContentBlockSelect<T extends boolean = true> {
  */
 export interface MediaBlockSelect<T extends boolean = true> {
   media?: T;
+  caption?: T;
+  alignment?: T;
+  size?: T;
+  aspectRatio?: T;
+  borderRadius?: T;
+  shadow?: T;
+  border?: T;
+  enableLink?: T;
+  linkType?: T;
+  externalUrl?: T;
+  spacing?:
+    | T
+    | {
+        marginTop?: T;
+        marginBottom?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1379,6 +1761,38 @@ export interface ProsConsBlockSelect<T extends boolean = true> {
   tableData?: T;
   style?: T;
   backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ReviewsBlock_select".
+ */
+export interface ReviewsBlockSelect<T extends boolean = true> {
+  blockHeader?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+      };
+  reviews?:
+    | T
+    | {
+        name?: T;
+        gender?: T;
+        age?: T;
+        profileImage?: T;
+        rating?: T;
+        reviewText?: T;
+        id?: T;
+      };
+  displayOptions?:
+    | T
+    | {
+        layout?: T;
+        alternateBackground?: T;
+        showDashedBorders?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1433,7 +1847,7 @@ export interface BrandHighlightsTableBlockSelect<T extends boolean = true> {
 export interface RatingTableBlockSelect<T extends boolean = true> {
   title?: T;
   productImage?: T;
-  overallRating?: T;
+  customRating?: T;
   ratingMetrics?:
     | T
     | {
@@ -1457,6 +1871,62 @@ export interface TableBlockSelect<T extends boolean = true> {
   tableStyle?: T;
   responsive?: T;
   caption?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TopOurChoose_select".
+ */
+export interface TopOurChooseSelect<T extends boolean = true> {
+  title?: T;
+  productName?: T;
+  productImage?: T;
+  overallRating?: T;
+  ratings?:
+    | T
+    | {
+        category?: T;
+        rating?: T;
+        evidence?: T;
+        id?: T;
+      };
+  buttons?:
+    | T
+    | {
+        label?: T;
+        style?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  backgroundColor?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IngredientsBlock_select".
+ */
+export interface IngredientsBlockSelect<T extends boolean = true> {
+  title?: T;
+  ingredients?:
+    | T
+    | {
+        name?: T;
+        image?: T;
+        description?: T;
+        id?: T;
+      };
+  layout?: T;
+  backgroundColor?: T;
   id?: T;
   blockName?: T;
 }
@@ -1490,6 +1960,48 @@ export interface PostsSelect<T extends boolean = true> {
   slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts_select".
+ */
+export interface BlogPostsSelect<T extends boolean = true> {
+  title?: T;
+  excerpt?: T;
+  featuredImage?: T;
+  hideFeaturedImageInArticle?: T;
+  content?: T;
+  status?: T;
+  relatedBlogPosts?: T;
+  blogCategories?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  authors?: T;
+  populatedAuthors?:
+    | T
+    | {
+        id?: T;
+        name?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
   _status?: T;
 }
 /**
@@ -1609,6 +2121,19 @@ export interface CategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories_select".
+ */
+export interface BlogCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  color?: T;
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -1616,6 +2141,55 @@ export interface UsersSelect<T extends boolean = true> {
   avatar?: T;
   bio?: T;
   title?: T;
+  experience?: T;
+  socialMedia?:
+    | T
+    | {
+        linkedin?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        twitter?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        facebook?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        instagram?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        youtube?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        website?:
+          | T
+          | {
+              url?: T;
+              logo?: T;
+            };
+        other?:
+          | T
+          | {
+              platform?: T;
+              url?: T;
+              logo?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -2008,6 +2582,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'posts';
           value: number | Post;
+        } | null)
+      | ({
+          relationTo: 'blog-posts';
+          value: number | BlogPost;
         } | null);
     global?: string | null;
     user?: (number | null) | User;
@@ -2072,10 +2650,6 @@ export interface FAQBlock {
  * via the `definition` "CustomCTABlock".
  */
 export interface CustomCTABlock {
-  /**
-   * Main headline text for the CTA section
-   */
-  ctaText: string;
   /**
    * Text that appears on the CTA button
    */

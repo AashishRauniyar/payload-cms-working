@@ -10,10 +10,13 @@ import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { ProsConsBlock } from '../../blocks/ProsConsBlock/config'
 import { RatingTableBlock } from '../../blocks/RatingTable/config'
+import { ReviewsBlock } from '../../blocks/ReviewsBlock/config'
 import { TableBlockConfig } from '../../blocks/TableBlock/config'
 import { ThreeBottlesBlock } from '../../blocks/ThreeBottles/config'
+import { TopOurChoose } from '../../blocks/TopOurChoose/config'
+import { IngredientsBlock } from '../../blocks/IngredientsBlock/config'
 import { hero } from '@/heros/config'
-import { slugField } from '@/fields/slug'
+import { slugField } from '@/fields/slug/index'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
@@ -87,10 +90,13 @@ export const Pages: CollectionConfig<'pages'> = {
                 Archive,
                 FormBlock,
                 ProsConsBlock,
+                ReviewsBlock,
                 ThreeBottlesBlock,
                 BrandHighlightsTableBlock,
                 RatingTableBlock,
                 TableBlockConfig,
+                TopOurChoose,
+                IngredientsBlock,
               ],
               required: true,
               admin: {
@@ -146,7 +152,7 @@ export const Pages: CollectionConfig<'pages'> = {
   versions: {
     drafts: {
       autosave: {
-        interval: 100, // We set this interval for optimal live preview
+        interval: 5000, // Auto-save every 5 seconds - prevents issues while typing fast
       },
       schedulePublish: true,
     },

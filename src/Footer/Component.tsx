@@ -240,21 +240,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/help" className="text-gray-300 hover:text-white transition-colors">
-                  Help Center
-                </Link>
-              </li>
-              <li>
                 <Link
-                  href="/newsletter"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Newsletter
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy-policy"
+                  href="/privacy"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Privacy Policy
@@ -262,23 +249,10 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/terms-of-service"
+                  href="/terms"
                   className="text-gray-300 hover:text-white transition-colors"
                 >
                   Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/disclaimer"
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  Medical Disclaimer
-                </Link>
-              </li>
-              <li>
-                <Link href="/sitemap" className="text-gray-300 hover:text-white transition-colors">
-                  Sitemap
                 </Link>
               </li>
             </ul>
@@ -387,10 +361,10 @@ export function Footer() {
               © {currentYear} HealthScopeDaily. All rights reserved. | Made with ❤️ for your health
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
-              <Link href="/privacy-policy" className="hover:text-white transition-colors">
+              <Link href="/privacy" className="hover:text-white transition-colors">
                 Privacy
               </Link>
-              <Link href="/terms-of-service" className="hover:text-white transition-colors">
+              <Link href="/terms" className="hover:text-white transition-colors">
                 Terms
               </Link>
               <Link href="/sitemap" className="hover:text-white transition-colors">

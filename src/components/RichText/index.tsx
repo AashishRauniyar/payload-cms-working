@@ -19,6 +19,9 @@ import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
 import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
+import { ReviewsBlock } from '@/blocks/ReviewsBlock/Component'
+import { TopOurChoose } from '@/blocks/TopOurChoose/Component'
+import { IngredientsBlock } from '@/blocks/IngredientsBlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -31,6 +34,9 @@ import type {
   CustomCTABlock as CustomCTABlockProps,
   RatingTableBlock as RatingTableBlockProps,
   ThreeBottlesBlock as ThreeBottlesBlockProps,
+  ReviewsBlock as ReviewsBlockProps,
+  TopOurChoose as TopOurChooseProps,
+  IngredientsBlock as IngredientsBlockProps,
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
@@ -50,6 +56,9 @@ type NodeTypes =
       | CustomCTABlockProps
       | RatingTableBlockProps
       | ThreeBottlesBlockProps
+      | ReviewsBlockProps
+      | TopOurChooseProps
+      | IngredientsBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -66,16 +75,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
   ...LinkJSXConverter({ internalDocToHref }),
   blocks: {
     banner: ({ node }) => <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
-    mediaBlock: ({ node }) => (
-      <MediaBlock
-        className="col-start-1 col-span-3"
-        imgClassName="m-0"
-        {...node.fields}
-        captionClassName="mx-auto max-w-[48rem]"
-        enableGutter={false}
-        disableInnerContainer={true}
-      />
-    ),
+    mediaBlock: ({ node }) => <MediaBlock className="col-start-1 col-span-3" {...node.fields} />,
     code: ({ node }) => <CodeBlock className="col-start-2" {...node.fields} />,
     cta: ({ node }) => <CallToActionBlock {...node.fields} />,
     prosConsBlock: ({ node }) => (
@@ -86,7 +86,6 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         prosTitle={node.fields.prosTitle || 'Pros'}
         consTitle={node.fields.consTitle || 'Cons'}
         tableData={node.fields.tableData || ''}
-        style={node.fields.style || 'default'}
         backgroundColor={node.fields.backgroundColor || 'none'}
       />
     ),
@@ -120,7 +119,6 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
       <CustomCTABlock
         className="col-start-1 col-span-3"
         disableInnerContainer={true}
-        ctaText={node.fields.ctaText || undefined}
         buttonText={node.fields.buttonText || undefined}
         buttonLink={node.fields.buttonLink || '#'}
       />
@@ -132,7 +130,20 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         blockType="ratingTable"
         title={node.fields.title || 'Product Rating'}
         productImage={node.fields.productImage || null}
-        overallRating={node.fields.overallRating || 4.5}
+        // Prefer new field customRating; fall back to legacy overallRating for backward compatibility
+        customRating={(() => {
+          const f = node.fields as Record<string, unknown>
+          const raw = (typeof f.customRating !== 'undefined' ? f.customRating : f.overallRating) as
+            | number
+            | string
+            | undefined
+          if (typeof raw === 'number') return raw
+          if (typeof raw === 'string') {
+            const n = parseFloat(raw)
+            return Number.isFinite(n) ? n : 0
+          }
+          return 0
+        })()}
         ratingMetrics={node.fields.ratingMetrics || []}
         description={node.fields.description || undefined}
         backgroundColor={node.fields.backgroundColor || 'white'}
@@ -143,6 +154,28 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         className="col-start-1 col-span-3"
         disableInnerContainer={true}
         {...node.fields}
+      />
+    ),
+    reviewsBlock: ({ node }: { node: SerializedBlockNode }) => (
+      <ReviewsBlock
+        blockHeader={node.fields.blockHeader || undefined}
+        reviews={node.fields.reviews || []}
+        displayOptions={node.fields.displayOptions || undefined}
+      />
+    ),
+    topOurChoose: ({ node: _node }: { node: SerializedBlockNode }) => (
+      <div className="col-start-1 col-span-3">
+        <TopOurChoose />
+      </div>
+    ),
+    ingredientsBlock: ({ node }: { node: SerializedBlockNode }) => (
+      <IngredientsBlock
+        className="col-start-1 col-span-3"
+        disableInnerContainer={true}
+        title={node.fields.title || undefined}
+        ingredients={node.fields.ingredients || []}
+        layout={node.fields.layout || 'stacked'}
+        backgroundColor={node.fields.backgroundColor || 'none'}
       />
     ),
   },
@@ -158,13 +191,13 @@ export default function RichText(props: Props) {
   const { className, enableProse = true, enableGutter = true, ...rest } = props
   return (
     <ConvertRichText
-      converters={jsxConverters}
+      converters={jsxConverters} //global rich text
       className={cn(
         'payload-richtext',
         {
           container: enableGutter,
           'max-w-none': !enableGutter,
-          'mx-auto prose md:prose-md dark:prose-invert': enableProse,
+          'mx-auto prose md:prose-md': enableProse,
         },
         className,
       )}

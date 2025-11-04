@@ -9,10 +9,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_pages_blocks_content_columns_size" AS ENUM('oneThird', 'half', 'twoThirds', 'full');
   CREATE TYPE "public"."enum_pages_blocks_content_columns_link_type" AS ENUM('reference', 'custom');
   CREATE TYPE "public"."enum_pages_blocks_content_columns_link_appearance" AS ENUM('default', 'outline');
+  CREATE TYPE "public"."enum_pages_blocks_media_block_alignment" AS ENUM('left', 'center', 'right', 'full');
+  CREATE TYPE "public"."enum_pages_blocks_media_block_size" AS ENUM('small', 'medium', 'large', 'xlarge', 'full');
+  CREATE TYPE "public"."enum_pages_blocks_media_block_aspect_ratio" AS ENUM('auto', 'square', 'landscape', 'portrait', 'wide');
+  CREATE TYPE "public"."enum_pages_blocks_media_block_border_radius" AS ENUM('none', 'small', 'medium', 'large', 'full');
+  CREATE TYPE "public"."enum_pages_blocks_media_block_shadow" AS ENUM('none', 'small', 'medium', 'large', 'xlarge');
+  CREATE TYPE "public"."enum_pages_blocks_media_block_link_type" AS ENUM('lightbox', 'external', 'internal');
+  CREATE TYPE "public"."enum_pages_blocks_media_block_spacing_margin_top" AS ENUM('none', 'small', 'medium', 'large', 'xlarge');
+  CREATE TYPE "public"."enum_pages_blocks_media_block_spacing_margin_bottom" AS ENUM('none', 'small', 'medium', 'large', 'xlarge');
   CREATE TYPE "public"."enum_pages_blocks_archive_populate_by" AS ENUM('collection', 'selection');
   CREATE TYPE "public"."enum_pages_blocks_archive_relation_to" AS ENUM('posts');
   CREATE TYPE "public"."enum_pages_blocks_pros_cons_block_style" AS ENUM('default', 'table', 'stacked', 'cards');
   CREATE TYPE "public"."enum_pages_blocks_pros_cons_block_background_color" AS ENUM('none', 'gray', 'blue', 'green');
+  CREATE TYPE "public"."enum_pages_blocks_reviews_block_reviews_gender" AS ENUM('male', 'female');
+  CREATE TYPE "public"."enum_pages_blocks_reviews_block_display_options_layout" AS ENUM('stacked', 'grid');
   CREATE TYPE "public"."enum_pages_blocks_three_bottles_block_products_color" AS ENUM('blue', 'red', 'gray');
   CREATE TYPE "public"."enum_pages_blocks_three_bottles_block_bg" AS ENUM('white', 'gray');
   CREATE TYPE "public"."enum_pages_blocks_brand_highlights_table_background_color" AS ENUM('none', 'white', 'gray', 'blue', 'gradient');
@@ -20,6 +30,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_pages_blocks_rating_table_background_color" AS ENUM('none', 'white', 'gray', 'blue', 'gradient');
   CREATE TYPE "public"."enum_pages_blocks_table_block_table_style" AS ENUM('default', 'striped', 'bordered', 'compact', 'card');
   CREATE TYPE "public"."enum_pages_blocks_table_block_responsive" AS ENUM('scroll', 'stack', 'hide');
+  CREATE TYPE "public"."enum_pages_blocks_top_our_choose_ratings_evidence" AS ENUM('Gold Star Evidence', 'Strong Evidence', 'Good Evidence', 'Limited Evidence');
+  CREATE TYPE "public"."enum_pages_blocks_top_our_choose_buttons_style" AS ENUM('primary', 'secondary', 'success', 'warning', 'outline');
+  CREATE TYPE "public"."enum_pages_blocks_top_our_choose_buttons_link_type" AS ENUM('reference', 'custom');
+  CREATE TYPE "public"."enum_pages_blocks_top_our_choose_background_color" AS ENUM('none', 'gray', 'blue', 'green', 'orange');
+  CREATE TYPE "public"."enum_pages_blocks_ingredients_block_layout" AS ENUM('stacked', 'grid-2', 'grid-3');
+  CREATE TYPE "public"."enum_pages_blocks_ingredients_block_background_color" AS ENUM('none', 'gray', 'blue', 'green');
   CREATE TYPE "public"."enum_pages_hero_type" AS ENUM('none', 'highImpact', 'mediumImpact', 'lowImpact');
   CREATE TYPE "public"."enum_pages_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__pages_v_version_hero_links_link_type" AS ENUM('reference', 'custom');
@@ -29,10 +45,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum__pages_v_blocks_content_columns_size" AS ENUM('oneThird', 'half', 'twoThirds', 'full');
   CREATE TYPE "public"."enum__pages_v_blocks_content_columns_link_type" AS ENUM('reference', 'custom');
   CREATE TYPE "public"."enum__pages_v_blocks_content_columns_link_appearance" AS ENUM('default', 'outline');
+  CREATE TYPE "public"."enum__pages_v_blocks_media_block_alignment" AS ENUM('left', 'center', 'right', 'full');
+  CREATE TYPE "public"."enum__pages_v_blocks_media_block_size" AS ENUM('small', 'medium', 'large', 'xlarge', 'full');
+  CREATE TYPE "public"."enum__pages_v_blocks_media_block_aspect_ratio" AS ENUM('auto', 'square', 'landscape', 'portrait', 'wide');
+  CREATE TYPE "public"."enum__pages_v_blocks_media_block_border_radius" AS ENUM('none', 'small', 'medium', 'large', 'full');
+  CREATE TYPE "public"."enum__pages_v_blocks_media_block_shadow" AS ENUM('none', 'small', 'medium', 'large', 'xlarge');
+  CREATE TYPE "public"."enum__pages_v_blocks_media_block_link_type" AS ENUM('lightbox', 'external', 'internal');
+  CREATE TYPE "public"."enum__pages_v_blocks_media_block_spacing_margin_top" AS ENUM('none', 'small', 'medium', 'large', 'xlarge');
+  CREATE TYPE "public"."enum__pages_v_blocks_media_block_spacing_margin_bottom" AS ENUM('none', 'small', 'medium', 'large', 'xlarge');
   CREATE TYPE "public"."enum__pages_v_blocks_archive_populate_by" AS ENUM('collection', 'selection');
   CREATE TYPE "public"."enum__pages_v_blocks_archive_relation_to" AS ENUM('posts');
   CREATE TYPE "public"."enum__pages_v_blocks_pros_cons_block_style" AS ENUM('default', 'table', 'stacked', 'cards');
   CREATE TYPE "public"."enum__pages_v_blocks_pros_cons_block_background_color" AS ENUM('none', 'gray', 'blue', 'green');
+  CREATE TYPE "public"."enum__pages_v_blocks_reviews_block_reviews_gender" AS ENUM('male', 'female');
+  CREATE TYPE "public"."enum__pages_v_blocks_reviews_block_display_options_layout" AS ENUM('stacked', 'grid');
   CREATE TYPE "public"."enum__pages_v_blocks_three_bottles_block_products_color" AS ENUM('blue', 'red', 'gray');
   CREATE TYPE "public"."enum__pages_v_blocks_three_bottles_block_bg" AS ENUM('white', 'gray');
   CREATE TYPE "public"."enum__pages_v_blocks_brand_highlights_table_background_color" AS ENUM('none', 'white', 'gray', 'blue', 'gradient');
@@ -40,6 +66,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum__pages_v_blocks_rating_table_background_color" AS ENUM('none', 'white', 'gray', 'blue', 'gradient');
   CREATE TYPE "public"."enum__pages_v_blocks_table_block_table_style" AS ENUM('default', 'striped', 'bordered', 'compact', 'card');
   CREATE TYPE "public"."enum__pages_v_blocks_table_block_responsive" AS ENUM('scroll', 'stack', 'hide');
+  CREATE TYPE "public"."enum__pages_v_blocks_top_our_choose_ratings_evidence" AS ENUM('Gold Star Evidence', 'Strong Evidence', 'Good Evidence', 'Limited Evidence');
+  CREATE TYPE "public"."enum__pages_v_blocks_top_our_choose_buttons_style" AS ENUM('primary', 'secondary', 'success', 'warning', 'outline');
+  CREATE TYPE "public"."enum__pages_v_blocks_top_our_choose_buttons_link_type" AS ENUM('reference', 'custom');
+  CREATE TYPE "public"."enum__pages_v_blocks_top_our_choose_background_color" AS ENUM('none', 'gray', 'blue', 'green', 'orange');
+  CREATE TYPE "public"."enum__pages_v_blocks_ingredients_block_layout" AS ENUM('stacked', 'grid-2', 'grid-3');
+  CREATE TYPE "public"."enum__pages_v_blocks_ingredients_block_background_color" AS ENUM('none', 'gray', 'blue', 'green');
   CREATE TYPE "public"."enum__pages_v_version_hero_type" AS ENUM('none', 'highImpact', 'mediumImpact', 'lowImpact');
   CREATE TYPE "public"."enum__pages_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum_posts_status" AS ENUM('draft', 'published');
@@ -110,6 +142,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_path" text NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"media_id" integer,
+  	"caption" varchar,
+  	"alignment" "enum_pages_blocks_media_block_alignment" DEFAULT 'center',
+  	"size" "enum_pages_blocks_media_block_size" DEFAULT 'medium',
+  	"aspect_ratio" "enum_pages_blocks_media_block_aspect_ratio" DEFAULT 'auto',
+  	"border_radius" "enum_pages_blocks_media_block_border_radius" DEFAULT 'none',
+  	"shadow" "enum_pages_blocks_media_block_shadow" DEFAULT 'none',
+  	"border" boolean DEFAULT false,
+  	"enable_link" boolean DEFAULT false,
+  	"link_type" "enum_pages_blocks_media_block_link_type" DEFAULT 'lightbox',
+  	"external_url" varchar,
+  	"spacing_margin_top" "enum_pages_blocks_media_block_spacing_margin_top" DEFAULT 'small',
+  	"spacing_margin_bottom" "enum_pages_blocks_media_block_spacing_margin_bottom" DEFAULT 'small',
   	"block_name" varchar
   );
   
@@ -147,6 +191,31 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"table_data" varchar,
   	"style" "enum_pages_blocks_pros_cons_block_style" DEFAULT 'table',
   	"background_color" "enum_pages_blocks_pros_cons_block_background_color" DEFAULT 'none',
+  	"block_name" varchar
+  );
+  
+  CREATE TABLE "pages_blocks_reviews_block_reviews" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"name" varchar,
+  	"gender" "enum_pages_blocks_reviews_block_reviews_gender" DEFAULT 'male',
+  	"age" numeric DEFAULT 34,
+  	"profile_image_id" integer,
+  	"rating" numeric DEFAULT 4,
+  	"review_text" varchar
+  );
+  
+  CREATE TABLE "pages_blocks_reviews_block" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"_path" text NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"block_header_title" varchar DEFAULT 'Customer Reviews',
+  	"block_header_subtitle" varchar,
+  	"display_options_layout" "enum_pages_blocks_reviews_block_display_options_layout" DEFAULT 'stacked',
+  	"display_options_alternate_background" boolean DEFAULT true,
+  	"display_options_show_dashed_borders" boolean DEFAULT true,
   	"block_name" varchar
   );
   
@@ -227,6 +296,60 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"table_style" "enum_pages_blocks_table_block_table_style" DEFAULT 'default',
   	"responsive" "enum_pages_blocks_table_block_responsive" DEFAULT 'scroll',
   	"caption" varchar,
+  	"block_name" varchar
+  );
+  
+  CREATE TABLE "pages_blocks_top_our_choose_ratings" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"category" varchar,
+  	"rating" numeric,
+  	"evidence" "enum_pages_blocks_top_our_choose_ratings_evidence" DEFAULT 'Strong Evidence'
+  );
+  
+  CREATE TABLE "pages_blocks_top_our_choose_buttons" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"label" varchar,
+  	"style" "enum_pages_blocks_top_our_choose_buttons_style" DEFAULT 'primary',
+  	"link_type" "enum_pages_blocks_top_our_choose_buttons_link_type" DEFAULT 'reference',
+  	"link_new_tab" boolean,
+  	"link_url" varchar,
+  	"link_label" varchar
+  );
+  
+  CREATE TABLE "pages_blocks_top_our_choose" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"_path" text NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"title" varchar,
+  	"product_name" varchar DEFAULT 'Primal RX Gummies',
+  	"product_image_id" integer,
+  	"overall_rating" numeric DEFAULT 4.3,
+  	"background_color" "enum_pages_blocks_top_our_choose_background_color" DEFAULT 'none',
+  	"block_name" varchar
+  );
+  
+  CREATE TABLE "pages_blocks_ingredients_block_ingredients" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"name" varchar,
+  	"image_id" integer,
+  	"description" varchar
+  );
+  
+  CREATE TABLE "pages_blocks_ingredients_block" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"_path" text NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"title" varchar,
+  	"layout" "enum_pages_blocks_ingredients_block_layout" DEFAULT 'stacked',
+  	"background_color" "enum_pages_blocks_ingredients_block_background_color" DEFAULT 'none',
   	"block_name" varchar
   );
   
@@ -321,6 +444,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_path" text NOT NULL,
   	"id" serial PRIMARY KEY NOT NULL,
   	"media_id" integer,
+  	"caption" varchar,
+  	"alignment" "enum__pages_v_blocks_media_block_alignment" DEFAULT 'center',
+  	"size" "enum__pages_v_blocks_media_block_size" DEFAULT 'medium',
+  	"aspect_ratio" "enum__pages_v_blocks_media_block_aspect_ratio" DEFAULT 'auto',
+  	"border_radius" "enum__pages_v_blocks_media_block_border_radius" DEFAULT 'none',
+  	"shadow" "enum__pages_v_blocks_media_block_shadow" DEFAULT 'none',
+  	"border" boolean DEFAULT false,
+  	"enable_link" boolean DEFAULT false,
+  	"link_type" "enum__pages_v_blocks_media_block_link_type" DEFAULT 'lightbox',
+  	"external_url" varchar,
+  	"spacing_margin_top" "enum__pages_v_blocks_media_block_spacing_margin_top" DEFAULT 'small',
+  	"spacing_margin_bottom" "enum__pages_v_blocks_media_block_spacing_margin_bottom" DEFAULT 'small',
   	"_uuid" varchar,
   	"block_name" varchar
   );
@@ -361,6 +496,33 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"table_data" varchar,
   	"style" "enum__pages_v_blocks_pros_cons_block_style" DEFAULT 'table',
   	"background_color" "enum__pages_v_blocks_pros_cons_block_background_color" DEFAULT 'none',
+  	"_uuid" varchar,
+  	"block_name" varchar
+  );
+  
+  CREATE TABLE "_pages_v_blocks_reviews_block_reviews" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"name" varchar,
+  	"gender" "enum__pages_v_blocks_reviews_block_reviews_gender" DEFAULT 'male',
+  	"age" numeric DEFAULT 34,
+  	"profile_image_id" integer,
+  	"rating" numeric DEFAULT 4,
+  	"review_text" varchar,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_pages_v_blocks_reviews_block" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"_path" text NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"block_header_title" varchar DEFAULT 'Customer Reviews',
+  	"block_header_subtitle" varchar,
+  	"display_options_layout" "enum__pages_v_blocks_reviews_block_display_options_layout" DEFAULT 'stacked',
+  	"display_options_alternate_background" boolean DEFAULT true,
+  	"display_options_show_dashed_borders" boolean DEFAULT true,
   	"_uuid" varchar,
   	"block_name" varchar
   );
@@ -447,6 +609,65 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"table_style" "enum__pages_v_blocks_table_block_table_style" DEFAULT 'default',
   	"responsive" "enum__pages_v_blocks_table_block_responsive" DEFAULT 'scroll',
   	"caption" varchar,
+  	"_uuid" varchar,
+  	"block_name" varchar
+  );
+  
+  CREATE TABLE "_pages_v_blocks_top_our_choose_ratings" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"category" varchar,
+  	"rating" numeric,
+  	"evidence" "enum__pages_v_blocks_top_our_choose_ratings_evidence" DEFAULT 'Strong Evidence',
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_pages_v_blocks_top_our_choose_buttons" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"label" varchar,
+  	"style" "enum__pages_v_blocks_top_our_choose_buttons_style" DEFAULT 'primary',
+  	"link_type" "enum__pages_v_blocks_top_our_choose_buttons_link_type" DEFAULT 'reference',
+  	"link_new_tab" boolean,
+  	"link_url" varchar,
+  	"link_label" varchar,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_pages_v_blocks_top_our_choose" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"_path" text NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"title" varchar,
+  	"product_name" varchar DEFAULT 'Primal RX Gummies',
+  	"product_image_id" integer,
+  	"overall_rating" numeric DEFAULT 4.3,
+  	"background_color" "enum__pages_v_blocks_top_our_choose_background_color" DEFAULT 'none',
+  	"_uuid" varchar,
+  	"block_name" varchar
+  );
+  
+  CREATE TABLE "_pages_v_blocks_ingredients_block_ingredients" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"name" varchar,
+  	"image_id" integer,
+  	"description" varchar,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_pages_v_blocks_ingredients_block" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"_path" text NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"title" varchar,
+  	"layout" "enum__pages_v_blocks_ingredients_block_layout" DEFAULT 'stacked',
+  	"background_color" "enum__pages_v_blocks_ingredients_block_background_color" DEFAULT 'none',
   	"_uuid" varchar,
   	"block_name" varchar
   );
@@ -637,6 +858,15 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
+  CREATE TABLE "users_social_media_other" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"platform" varchar NOT NULL,
+  	"url" varchar NOT NULL,
+  	"logo_id" integer
+  );
+  
   CREATE TABLE "users_sessions" (
   	"_order" integer NOT NULL,
   	"_parent_id" integer NOT NULL,
@@ -651,6 +881,19 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"avatar_id" integer,
   	"bio" varchar,
   	"title" varchar,
+  	"experience" numeric,
+  	"social_media_linkedin_url" varchar,
+  	"social_media_linkedin_logo_id" integer,
+  	"social_media_twitter_url" varchar,
+  	"social_media_twitter_logo_id" integer,
+  	"social_media_facebook_url" varchar,
+  	"social_media_facebook_logo_id" integer,
+  	"social_media_instagram_url" varchar,
+  	"social_media_instagram_logo_id" integer,
+  	"social_media_youtube_url" varchar,
+  	"social_media_youtube_logo_id" integer,
+  	"social_media_website_url" varchar,
+  	"social_media_website_logo_id" integer,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"email" varchar NOT NULL,
@@ -1005,6 +1248,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "pages_blocks_form_block" ADD CONSTRAINT "pages_blocks_form_block_form_id_forms_id_fk" FOREIGN KEY ("form_id") REFERENCES "public"."forms"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "pages_blocks_form_block" ADD CONSTRAINT "pages_blocks_form_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "pages_blocks_pros_cons_block" ADD CONSTRAINT "pages_blocks_pros_cons_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "pages_blocks_reviews_block_reviews" ADD CONSTRAINT "pages_blocks_reviews_block_reviews_profile_image_id_media_id_fk" FOREIGN KEY ("profile_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "pages_blocks_reviews_block_reviews" ADD CONSTRAINT "pages_blocks_reviews_block_reviews_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages_blocks_reviews_block"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "pages_blocks_reviews_block" ADD CONSTRAINT "pages_blocks_reviews_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "pages_blocks_three_bottles_block_products" ADD CONSTRAINT "pages_blocks_three_bottles_block_products_media_id_media_id_fk" FOREIGN KEY ("media_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "pages_blocks_three_bottles_block_products" ADD CONSTRAINT "pages_blocks_three_bottles_block_products_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages_blocks_three_bottles_block"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "pages_blocks_three_bottles_block" ADD CONSTRAINT "pages_blocks_three_bottles_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
@@ -1014,6 +1260,13 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "pages_blocks_rating_table" ADD CONSTRAINT "pages_blocks_rating_table_product_image_id_media_id_fk" FOREIGN KEY ("product_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "pages_blocks_rating_table" ADD CONSTRAINT "pages_blocks_rating_table_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "pages_blocks_table_block" ADD CONSTRAINT "pages_blocks_table_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "pages_blocks_top_our_choose_ratings" ADD CONSTRAINT "pages_blocks_top_our_choose_ratings_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages_blocks_top_our_choose"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "pages_blocks_top_our_choose_buttons" ADD CONSTRAINT "pages_blocks_top_our_choose_buttons_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages_blocks_top_our_choose"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "pages_blocks_top_our_choose" ADD CONSTRAINT "pages_blocks_top_our_choose_product_image_id_media_id_fk" FOREIGN KEY ("product_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "pages_blocks_top_our_choose" ADD CONSTRAINT "pages_blocks_top_our_choose_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "pages_blocks_ingredients_block_ingredients" ADD CONSTRAINT "pages_blocks_ingredients_block_ingredients_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "pages_blocks_ingredients_block_ingredients" ADD CONSTRAINT "pages_blocks_ingredients_block_ingredients_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages_blocks_ingredients_block"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "pages_blocks_ingredients_block" ADD CONSTRAINT "pages_blocks_ingredients_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "pages" ADD CONSTRAINT "pages_hero_media_id_media_id_fk" FOREIGN KEY ("hero_media_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "pages" ADD CONSTRAINT "pages_meta_image_id_media_id_fk" FOREIGN KEY ("meta_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "pages_rels" ADD CONSTRAINT "pages_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
@@ -1031,6 +1284,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "_pages_v_blocks_form_block" ADD CONSTRAINT "_pages_v_blocks_form_block_form_id_forms_id_fk" FOREIGN KEY ("form_id") REFERENCES "public"."forms"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_pages_v_blocks_form_block" ADD CONSTRAINT "_pages_v_blocks_form_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_pages_v_blocks_pros_cons_block" ADD CONSTRAINT "_pages_v_blocks_pros_cons_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_reviews_block_reviews" ADD CONSTRAINT "_pages_v_blocks_reviews_block_reviews_profile_image_id_media_id_fk" FOREIGN KEY ("profile_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_reviews_block_reviews" ADD CONSTRAINT "_pages_v_blocks_reviews_block_reviews_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v_blocks_reviews_block"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_reviews_block" ADD CONSTRAINT "_pages_v_blocks_reviews_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_pages_v_blocks_three_bottles_block_products" ADD CONSTRAINT "_pages_v_blocks_three_bottles_block_products_media_id_media_id_fk" FOREIGN KEY ("media_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_pages_v_blocks_three_bottles_block_products" ADD CONSTRAINT "_pages_v_blocks_three_bottles_block_products_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v_blocks_three_bottles_block"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_pages_v_blocks_three_bottles_block" ADD CONSTRAINT "_pages_v_blocks_three_bottles_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v"("id") ON DELETE cascade ON UPDATE no action;
@@ -1040,6 +1296,13 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "_pages_v_blocks_rating_table" ADD CONSTRAINT "_pages_v_blocks_rating_table_product_image_id_media_id_fk" FOREIGN KEY ("product_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_pages_v_blocks_rating_table" ADD CONSTRAINT "_pages_v_blocks_rating_table_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_pages_v_blocks_table_block" ADD CONSTRAINT "_pages_v_blocks_table_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_top_our_choose_ratings" ADD CONSTRAINT "_pages_v_blocks_top_our_choose_ratings_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v_blocks_top_our_choose"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_top_our_choose_buttons" ADD CONSTRAINT "_pages_v_blocks_top_our_choose_buttons_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v_blocks_top_our_choose"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_top_our_choose" ADD CONSTRAINT "_pages_v_blocks_top_our_choose_product_image_id_media_id_fk" FOREIGN KEY ("product_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_top_our_choose" ADD CONSTRAINT "_pages_v_blocks_top_our_choose_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_ingredients_block_ingredients" ADD CONSTRAINT "_pages_v_blocks_ingredients_block_ingredients_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_ingredients_block_ingredients" ADD CONSTRAINT "_pages_v_blocks_ingredients_block_ingredients_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v_blocks_ingredients_block"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_pages_v_blocks_ingredients_block" ADD CONSTRAINT "_pages_v_blocks_ingredients_block_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_pages_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_pages_v" ADD CONSTRAINT "_pages_v_parent_id_pages_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."pages"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_pages_v" ADD CONSTRAINT "_pages_v_version_hero_media_id_media_id_fk" FOREIGN KEY ("version_hero_media_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_pages_v" ADD CONSTRAINT "_pages_v_version_meta_image_id_media_id_fk" FOREIGN KEY ("version_meta_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
@@ -1066,8 +1329,16 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "categories_breadcrumbs" ADD CONSTRAINT "categories_breadcrumbs_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."categories"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "categories" ADD CONSTRAINT "categories_image_id_media_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "categories" ADD CONSTRAINT "categories_parent_id_categories_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."categories"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "users_social_media_other" ADD CONSTRAINT "users_social_media_other_logo_id_media_id_fk" FOREIGN KEY ("logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "users_social_media_other" ADD CONSTRAINT "users_social_media_other_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "users_sessions" ADD CONSTRAINT "users_sessions_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "users" ADD CONSTRAINT "users_avatar_id_media_id_fk" FOREIGN KEY ("avatar_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "users" ADD CONSTRAINT "users_social_media_linkedin_logo_id_media_id_fk" FOREIGN KEY ("social_media_linkedin_logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "users" ADD CONSTRAINT "users_social_media_twitter_logo_id_media_id_fk" FOREIGN KEY ("social_media_twitter_logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "users" ADD CONSTRAINT "users_social_media_facebook_logo_id_media_id_fk" FOREIGN KEY ("social_media_facebook_logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "users" ADD CONSTRAINT "users_social_media_instagram_logo_id_media_id_fk" FOREIGN KEY ("social_media_instagram_logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "users" ADD CONSTRAINT "users_social_media_youtube_logo_id_media_id_fk" FOREIGN KEY ("social_media_youtube_logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "users" ADD CONSTRAINT "users_social_media_website_logo_id_media_id_fk" FOREIGN KEY ("social_media_website_logo_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "redirects_rels" ADD CONSTRAINT "redirects_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."redirects"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "redirects_rels" ADD CONSTRAINT "redirects_rels_pages_fk" FOREIGN KEY ("pages_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "redirects_rels" ADD CONSTRAINT "redirects_rels_posts_fk" FOREIGN KEY ("posts_id") REFERENCES "public"."posts"("id") ON DELETE cascade ON UPDATE no action;
@@ -1136,6 +1407,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "pages_blocks_pros_cons_block_order_idx" ON "pages_blocks_pros_cons_block" USING btree ("_order");
   CREATE INDEX "pages_blocks_pros_cons_block_parent_id_idx" ON "pages_blocks_pros_cons_block" USING btree ("_parent_id");
   CREATE INDEX "pages_blocks_pros_cons_block_path_idx" ON "pages_blocks_pros_cons_block" USING btree ("_path");
+  CREATE INDEX "pages_blocks_reviews_block_reviews_order_idx" ON "pages_blocks_reviews_block_reviews" USING btree ("_order");
+  CREATE INDEX "pages_blocks_reviews_block_reviews_parent_id_idx" ON "pages_blocks_reviews_block_reviews" USING btree ("_parent_id");
+  CREATE INDEX "pages_blocks_reviews_block_reviews_profile_image_idx" ON "pages_blocks_reviews_block_reviews" USING btree ("profile_image_id");
+  CREATE INDEX "pages_blocks_reviews_block_order_idx" ON "pages_blocks_reviews_block" USING btree ("_order");
+  CREATE INDEX "pages_blocks_reviews_block_parent_id_idx" ON "pages_blocks_reviews_block" USING btree ("_parent_id");
+  CREATE INDEX "pages_blocks_reviews_block_path_idx" ON "pages_blocks_reviews_block" USING btree ("_path");
   CREATE INDEX "pages_blocks_three_bottles_block_products_order_idx" ON "pages_blocks_three_bottles_block_products" USING btree ("_order");
   CREATE INDEX "pages_blocks_three_bottles_block_products_parent_id_idx" ON "pages_blocks_three_bottles_block_products" USING btree ("_parent_id");
   CREATE INDEX "pages_blocks_three_bottles_block_products_media_idx" ON "pages_blocks_three_bottles_block_products" USING btree ("media_id");
@@ -1155,6 +1432,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "pages_blocks_table_block_order_idx" ON "pages_blocks_table_block" USING btree ("_order");
   CREATE INDEX "pages_blocks_table_block_parent_id_idx" ON "pages_blocks_table_block" USING btree ("_parent_id");
   CREATE INDEX "pages_blocks_table_block_path_idx" ON "pages_blocks_table_block" USING btree ("_path");
+  CREATE INDEX "pages_blocks_top_our_choose_ratings_order_idx" ON "pages_blocks_top_our_choose_ratings" USING btree ("_order");
+  CREATE INDEX "pages_blocks_top_our_choose_ratings_parent_id_idx" ON "pages_blocks_top_our_choose_ratings" USING btree ("_parent_id");
+  CREATE INDEX "pages_blocks_top_our_choose_buttons_order_idx" ON "pages_blocks_top_our_choose_buttons" USING btree ("_order");
+  CREATE INDEX "pages_blocks_top_our_choose_buttons_parent_id_idx" ON "pages_blocks_top_our_choose_buttons" USING btree ("_parent_id");
+  CREATE INDEX "pages_blocks_top_our_choose_order_idx" ON "pages_blocks_top_our_choose" USING btree ("_order");
+  CREATE INDEX "pages_blocks_top_our_choose_parent_id_idx" ON "pages_blocks_top_our_choose" USING btree ("_parent_id");
+  CREATE INDEX "pages_blocks_top_our_choose_path_idx" ON "pages_blocks_top_our_choose" USING btree ("_path");
+  CREATE INDEX "pages_blocks_top_our_choose_product_image_idx" ON "pages_blocks_top_our_choose" USING btree ("product_image_id");
+  CREATE INDEX "pages_blocks_ingredients_block_ingredients_order_idx" ON "pages_blocks_ingredients_block_ingredients" USING btree ("_order");
+  CREATE INDEX "pages_blocks_ingredients_block_ingredients_parent_id_idx" ON "pages_blocks_ingredients_block_ingredients" USING btree ("_parent_id");
+  CREATE INDEX "pages_blocks_ingredients_block_ingredients_image_idx" ON "pages_blocks_ingredients_block_ingredients" USING btree ("image_id");
+  CREATE INDEX "pages_blocks_ingredients_block_order_idx" ON "pages_blocks_ingredients_block" USING btree ("_order");
+  CREATE INDEX "pages_blocks_ingredients_block_parent_id_idx" ON "pages_blocks_ingredients_block" USING btree ("_parent_id");
+  CREATE INDEX "pages_blocks_ingredients_block_path_idx" ON "pages_blocks_ingredients_block" USING btree ("_path");
   CREATE INDEX "pages_hero_hero_media_idx" ON "pages" USING btree ("hero_media_id");
   CREATE INDEX "pages_meta_meta_image_idx" ON "pages" USING btree ("meta_image_id");
   CREATE INDEX "pages_slug_idx" ON "pages" USING btree ("slug");
@@ -1193,6 +1484,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_pages_v_blocks_pros_cons_block_order_idx" ON "_pages_v_blocks_pros_cons_block" USING btree ("_order");
   CREATE INDEX "_pages_v_blocks_pros_cons_block_parent_id_idx" ON "_pages_v_blocks_pros_cons_block" USING btree ("_parent_id");
   CREATE INDEX "_pages_v_blocks_pros_cons_block_path_idx" ON "_pages_v_blocks_pros_cons_block" USING btree ("_path");
+  CREATE INDEX "_pages_v_blocks_reviews_block_reviews_order_idx" ON "_pages_v_blocks_reviews_block_reviews" USING btree ("_order");
+  CREATE INDEX "_pages_v_blocks_reviews_block_reviews_parent_id_idx" ON "_pages_v_blocks_reviews_block_reviews" USING btree ("_parent_id");
+  CREATE INDEX "_pages_v_blocks_reviews_block_reviews_profile_image_idx" ON "_pages_v_blocks_reviews_block_reviews" USING btree ("profile_image_id");
+  CREATE INDEX "_pages_v_blocks_reviews_block_order_idx" ON "_pages_v_blocks_reviews_block" USING btree ("_order");
+  CREATE INDEX "_pages_v_blocks_reviews_block_parent_id_idx" ON "_pages_v_blocks_reviews_block" USING btree ("_parent_id");
+  CREATE INDEX "_pages_v_blocks_reviews_block_path_idx" ON "_pages_v_blocks_reviews_block" USING btree ("_path");
   CREATE INDEX "_pages_v_blocks_three_bottles_block_products_order_idx" ON "_pages_v_blocks_three_bottles_block_products" USING btree ("_order");
   CREATE INDEX "_pages_v_blocks_three_bottles_block_products_parent_id_idx" ON "_pages_v_blocks_three_bottles_block_products" USING btree ("_parent_id");
   CREATE INDEX "_pages_v_blocks_three_bottles_block_products_media_idx" ON "_pages_v_blocks_three_bottles_block_products" USING btree ("media_id");
@@ -1212,6 +1509,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_pages_v_blocks_table_block_order_idx" ON "_pages_v_blocks_table_block" USING btree ("_order");
   CREATE INDEX "_pages_v_blocks_table_block_parent_id_idx" ON "_pages_v_blocks_table_block" USING btree ("_parent_id");
   CREATE INDEX "_pages_v_blocks_table_block_path_idx" ON "_pages_v_blocks_table_block" USING btree ("_path");
+  CREATE INDEX "_pages_v_blocks_top_our_choose_ratings_order_idx" ON "_pages_v_blocks_top_our_choose_ratings" USING btree ("_order");
+  CREATE INDEX "_pages_v_blocks_top_our_choose_ratings_parent_id_idx" ON "_pages_v_blocks_top_our_choose_ratings" USING btree ("_parent_id");
+  CREATE INDEX "_pages_v_blocks_top_our_choose_buttons_order_idx" ON "_pages_v_blocks_top_our_choose_buttons" USING btree ("_order");
+  CREATE INDEX "_pages_v_blocks_top_our_choose_buttons_parent_id_idx" ON "_pages_v_blocks_top_our_choose_buttons" USING btree ("_parent_id");
+  CREATE INDEX "_pages_v_blocks_top_our_choose_order_idx" ON "_pages_v_blocks_top_our_choose" USING btree ("_order");
+  CREATE INDEX "_pages_v_blocks_top_our_choose_parent_id_idx" ON "_pages_v_blocks_top_our_choose" USING btree ("_parent_id");
+  CREATE INDEX "_pages_v_blocks_top_our_choose_path_idx" ON "_pages_v_blocks_top_our_choose" USING btree ("_path");
+  CREATE INDEX "_pages_v_blocks_top_our_choose_product_image_idx" ON "_pages_v_blocks_top_our_choose" USING btree ("product_image_id");
+  CREATE INDEX "_pages_v_blocks_ingredients_block_ingredients_order_idx" ON "_pages_v_blocks_ingredients_block_ingredients" USING btree ("_order");
+  CREATE INDEX "_pages_v_blocks_ingredients_block_ingredients_parent_id_idx" ON "_pages_v_blocks_ingredients_block_ingredients" USING btree ("_parent_id");
+  CREATE INDEX "_pages_v_blocks_ingredients_block_ingredients_image_idx" ON "_pages_v_blocks_ingredients_block_ingredients" USING btree ("image_id");
+  CREATE INDEX "_pages_v_blocks_ingredients_block_order_idx" ON "_pages_v_blocks_ingredients_block" USING btree ("_order");
+  CREATE INDEX "_pages_v_blocks_ingredients_block_parent_id_idx" ON "_pages_v_blocks_ingredients_block" USING btree ("_parent_id");
+  CREATE INDEX "_pages_v_blocks_ingredients_block_path_idx" ON "_pages_v_blocks_ingredients_block" USING btree ("_path");
   CREATE INDEX "_pages_v_parent_idx" ON "_pages_v" USING btree ("parent_id");
   CREATE INDEX "_pages_v_version_hero_version_hero_media_idx" ON "_pages_v" USING btree ("version_hero_media_id");
   CREATE INDEX "_pages_v_version_meta_version_meta_image_idx" ON "_pages_v" USING btree ("version_meta_image_id");
@@ -1280,9 +1591,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "categories_parent_idx" ON "categories" USING btree ("parent_id");
   CREATE INDEX "categories_updated_at_idx" ON "categories" USING btree ("updated_at");
   CREATE INDEX "categories_created_at_idx" ON "categories" USING btree ("created_at");
+  CREATE INDEX "users_social_media_other_order_idx" ON "users_social_media_other" USING btree ("_order");
+  CREATE INDEX "users_social_media_other_parent_id_idx" ON "users_social_media_other" USING btree ("_parent_id");
+  CREATE INDEX "users_social_media_other_logo_idx" ON "users_social_media_other" USING btree ("logo_id");
   CREATE INDEX "users_sessions_order_idx" ON "users_sessions" USING btree ("_order");
   CREATE INDEX "users_sessions_parent_id_idx" ON "users_sessions" USING btree ("_parent_id");
   CREATE INDEX "users_avatar_idx" ON "users" USING btree ("avatar_id");
+  CREATE INDEX "users_social_media_linkedin_social_media_linkedin_logo_idx" ON "users" USING btree ("social_media_linkedin_logo_id");
+  CREATE INDEX "users_social_media_twitter_social_media_twitter_logo_idx" ON "users" USING btree ("social_media_twitter_logo_id");
+  CREATE INDEX "users_social_media_facebook_social_media_facebook_logo_idx" ON "users" USING btree ("social_media_facebook_logo_id");
+  CREATE INDEX "users_social_media_instagram_social_media_instagram_logo_idx" ON "users" USING btree ("social_media_instagram_logo_id");
+  CREATE INDEX "users_social_media_youtube_social_media_youtube_logo_idx" ON "users" USING btree ("social_media_youtube_logo_id");
+  CREATE INDEX "users_social_media_website_social_media_website_logo_idx" ON "users" USING btree ("social_media_website_logo_id");
   CREATE INDEX "users_updated_at_idx" ON "users" USING btree ("updated_at");
   CREATE INDEX "users_created_at_idx" ON "users" USING btree ("created_at");
   CREATE UNIQUE INDEX "users_email_idx" ON "users" USING btree ("email");
@@ -1405,12 +1725,19 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "pages_blocks_archive" CASCADE;
   DROP TABLE "pages_blocks_form_block" CASCADE;
   DROP TABLE "pages_blocks_pros_cons_block" CASCADE;
+  DROP TABLE "pages_blocks_reviews_block_reviews" CASCADE;
+  DROP TABLE "pages_blocks_reviews_block" CASCADE;
   DROP TABLE "pages_blocks_three_bottles_block_products" CASCADE;
   DROP TABLE "pages_blocks_three_bottles_block" CASCADE;
   DROP TABLE "pages_blocks_brand_highlights_table" CASCADE;
   DROP TABLE "pages_blocks_rating_table_rating_metrics" CASCADE;
   DROP TABLE "pages_blocks_rating_table" CASCADE;
   DROP TABLE "pages_blocks_table_block" CASCADE;
+  DROP TABLE "pages_blocks_top_our_choose_ratings" CASCADE;
+  DROP TABLE "pages_blocks_top_our_choose_buttons" CASCADE;
+  DROP TABLE "pages_blocks_top_our_choose" CASCADE;
+  DROP TABLE "pages_blocks_ingredients_block_ingredients" CASCADE;
+  DROP TABLE "pages_blocks_ingredients_block" CASCADE;
   DROP TABLE "pages" CASCADE;
   DROP TABLE "pages_rels" CASCADE;
   DROP TABLE "_pages_v_version_hero_links" CASCADE;
@@ -1422,12 +1749,19 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "_pages_v_blocks_archive" CASCADE;
   DROP TABLE "_pages_v_blocks_form_block" CASCADE;
   DROP TABLE "_pages_v_blocks_pros_cons_block" CASCADE;
+  DROP TABLE "_pages_v_blocks_reviews_block_reviews" CASCADE;
+  DROP TABLE "_pages_v_blocks_reviews_block" CASCADE;
   DROP TABLE "_pages_v_blocks_three_bottles_block_products" CASCADE;
   DROP TABLE "_pages_v_blocks_three_bottles_block" CASCADE;
   DROP TABLE "_pages_v_blocks_brand_highlights_table" CASCADE;
   DROP TABLE "_pages_v_blocks_rating_table_rating_metrics" CASCADE;
   DROP TABLE "_pages_v_blocks_rating_table" CASCADE;
   DROP TABLE "_pages_v_blocks_table_block" CASCADE;
+  DROP TABLE "_pages_v_blocks_top_our_choose_ratings" CASCADE;
+  DROP TABLE "_pages_v_blocks_top_our_choose_buttons" CASCADE;
+  DROP TABLE "_pages_v_blocks_top_our_choose" CASCADE;
+  DROP TABLE "_pages_v_blocks_ingredients_block_ingredients" CASCADE;
+  DROP TABLE "_pages_v_blocks_ingredients_block" CASCADE;
   DROP TABLE "_pages_v" CASCADE;
   DROP TABLE "_pages_v_rels" CASCADE;
   DROP TABLE "posts_populated_authors" CASCADE;
@@ -1439,6 +1773,7 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "media" CASCADE;
   DROP TABLE "categories_breadcrumbs" CASCADE;
   DROP TABLE "categories" CASCADE;
+  DROP TABLE "users_social_media_other" CASCADE;
   DROP TABLE "users_sessions" CASCADE;
   DROP TABLE "users" CASCADE;
   DROP TABLE "redirects" CASCADE;
@@ -1480,10 +1815,20 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_pages_blocks_content_columns_size";
   DROP TYPE "public"."enum_pages_blocks_content_columns_link_type";
   DROP TYPE "public"."enum_pages_blocks_content_columns_link_appearance";
+  DROP TYPE "public"."enum_pages_blocks_media_block_alignment";
+  DROP TYPE "public"."enum_pages_blocks_media_block_size";
+  DROP TYPE "public"."enum_pages_blocks_media_block_aspect_ratio";
+  DROP TYPE "public"."enum_pages_blocks_media_block_border_radius";
+  DROP TYPE "public"."enum_pages_blocks_media_block_shadow";
+  DROP TYPE "public"."enum_pages_blocks_media_block_link_type";
+  DROP TYPE "public"."enum_pages_blocks_media_block_spacing_margin_top";
+  DROP TYPE "public"."enum_pages_blocks_media_block_spacing_margin_bottom";
   DROP TYPE "public"."enum_pages_blocks_archive_populate_by";
   DROP TYPE "public"."enum_pages_blocks_archive_relation_to";
   DROP TYPE "public"."enum_pages_blocks_pros_cons_block_style";
   DROP TYPE "public"."enum_pages_blocks_pros_cons_block_background_color";
+  DROP TYPE "public"."enum_pages_blocks_reviews_block_reviews_gender";
+  DROP TYPE "public"."enum_pages_blocks_reviews_block_display_options_layout";
   DROP TYPE "public"."enum_pages_blocks_three_bottles_block_products_color";
   DROP TYPE "public"."enum_pages_blocks_three_bottles_block_bg";
   DROP TYPE "public"."enum_pages_blocks_brand_highlights_table_background_color";
@@ -1491,6 +1836,12 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_pages_blocks_rating_table_background_color";
   DROP TYPE "public"."enum_pages_blocks_table_block_table_style";
   DROP TYPE "public"."enum_pages_blocks_table_block_responsive";
+  DROP TYPE "public"."enum_pages_blocks_top_our_choose_ratings_evidence";
+  DROP TYPE "public"."enum_pages_blocks_top_our_choose_buttons_style";
+  DROP TYPE "public"."enum_pages_blocks_top_our_choose_buttons_link_type";
+  DROP TYPE "public"."enum_pages_blocks_top_our_choose_background_color";
+  DROP TYPE "public"."enum_pages_blocks_ingredients_block_layout";
+  DROP TYPE "public"."enum_pages_blocks_ingredients_block_background_color";
   DROP TYPE "public"."enum_pages_hero_type";
   DROP TYPE "public"."enum_pages_status";
   DROP TYPE "public"."enum__pages_v_version_hero_links_link_type";
@@ -1500,10 +1851,20 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum__pages_v_blocks_content_columns_size";
   DROP TYPE "public"."enum__pages_v_blocks_content_columns_link_type";
   DROP TYPE "public"."enum__pages_v_blocks_content_columns_link_appearance";
+  DROP TYPE "public"."enum__pages_v_blocks_media_block_alignment";
+  DROP TYPE "public"."enum__pages_v_blocks_media_block_size";
+  DROP TYPE "public"."enum__pages_v_blocks_media_block_aspect_ratio";
+  DROP TYPE "public"."enum__pages_v_blocks_media_block_border_radius";
+  DROP TYPE "public"."enum__pages_v_blocks_media_block_shadow";
+  DROP TYPE "public"."enum__pages_v_blocks_media_block_link_type";
+  DROP TYPE "public"."enum__pages_v_blocks_media_block_spacing_margin_top";
+  DROP TYPE "public"."enum__pages_v_blocks_media_block_spacing_margin_bottom";
   DROP TYPE "public"."enum__pages_v_blocks_archive_populate_by";
   DROP TYPE "public"."enum__pages_v_blocks_archive_relation_to";
   DROP TYPE "public"."enum__pages_v_blocks_pros_cons_block_style";
   DROP TYPE "public"."enum__pages_v_blocks_pros_cons_block_background_color";
+  DROP TYPE "public"."enum__pages_v_blocks_reviews_block_reviews_gender";
+  DROP TYPE "public"."enum__pages_v_blocks_reviews_block_display_options_layout";
   DROP TYPE "public"."enum__pages_v_blocks_three_bottles_block_products_color";
   DROP TYPE "public"."enum__pages_v_blocks_three_bottles_block_bg";
   DROP TYPE "public"."enum__pages_v_blocks_brand_highlights_table_background_color";
@@ -1511,6 +1872,12 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum__pages_v_blocks_rating_table_background_color";
   DROP TYPE "public"."enum__pages_v_blocks_table_block_table_style";
   DROP TYPE "public"."enum__pages_v_blocks_table_block_responsive";
+  DROP TYPE "public"."enum__pages_v_blocks_top_our_choose_ratings_evidence";
+  DROP TYPE "public"."enum__pages_v_blocks_top_our_choose_buttons_style";
+  DROP TYPE "public"."enum__pages_v_blocks_top_our_choose_buttons_link_type";
+  DROP TYPE "public"."enum__pages_v_blocks_top_our_choose_background_color";
+  DROP TYPE "public"."enum__pages_v_blocks_ingredients_block_layout";
+  DROP TYPE "public"."enum__pages_v_blocks_ingredients_block_background_color";
   DROP TYPE "public"."enum__pages_v_version_hero_type";
   DROP TYPE "public"."enum__pages_v_version_status";
   DROP TYPE "public"."enum_posts_status";

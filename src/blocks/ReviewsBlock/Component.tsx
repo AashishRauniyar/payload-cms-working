@@ -1,0 +1,345 @@
+// import React from 'react'
+// import { Media } from '@/components/Media'
+// import type { Media as MediaType } from '@/payload-types'
+
+// // Define the types for the new simplified structure
+// interface ReviewsBlockType {
+//   blockHeader?: {
+//     title?: string | null
+//     subtitle?: string | null
+//   } | null
+//   reviews?: ReviewItem[] | null
+//   displayOptions?: {
+//     layout?: string | null
+//     alternateBackground?: boolean | null
+//     showDashedBorders?: boolean | null
+//     borderStyle?: string | null
+//     spacing?: string | null
+//     maxWidth?: string | null
+//   } | null
+// }
+
+// interface ReviewItem {
+//   name?: string | null
+//   gender?: string | null
+//   age?: number | null
+//   profileImage?: MediaType | number | null
+//   rating?: number | null
+//   reviewText?: string | null
+// }
+
+// // Star Rating Component - Making stars bigger
+// const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
+//   return (
+//     <div className="flex justify-center mt-3 gap-1">
+//       {[...Array(5)].map((_, i) => (
+//         <span
+//           key={i}
+//           className={`w-6 h-6 text-lg ${i < rating ? 'text-orange-400' : 'text-gray-300'}`}
+//         >
+//           ★
+//         </span>
+//       ))}
+//     </div>
+//   )
+// }
+
+// // Profile Image Component
+// const ProfileImage: React.FC<{
+//   profileImage?: MediaType | number | null
+//   gender?: string | null
+//   name?: string | null
+// }> = ({ profileImage, gender, name }) => {
+//   // Check if we have uploaded media
+//   const hasUploadedImage = profileImage && typeof profileImage === 'object'
+
+//   const getFallbackImageUrl = () => {
+//     const initials =
+//       name
+//         ?.split(' ')
+//         .map((n: string) => n[0])
+//         .join('') || '?'
+//     const bgColor = gender === 'female' ? 'ff69b4' : '4169e1' // Pink for female, Blue for male
+//     return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=${bgColor}&color=fff&size=150&font-size=0.33`
+//   }
+
+//   return (
+//     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+//       {hasUploadedImage ? (
+//         <Media
+//           resource={profileImage}
+//           alt={name || 'Reviewer'}
+//           className="w-full h-full object-cover rounded-full"
+//           imgClassName="w-full h-full object-cover rounded-full"
+//         />
+//       ) : (
+//         <img
+//           src={getFallbackImageUrl()}
+//           alt={name || 'Reviewer'}
+//           className="w-full h-full object-cover rounded-full"
+//         />
+//       )}
+//     </div>
+//   )
+// }
+
+// // Individual Review Card Component - With alternating backgrounds
+// const TestimonialCard: React.FC<{
+//   review: ReviewItem
+//   index: number
+// }> = ({ review, index }) => {
+//   const { name, gender, age, profileImage, rating, reviewText } = review
+
+//   // Even numbered reviews (2nd, 4th, 6th etc) get the cream background
+//   const isEvenReview = (index + 1) % 2 === 0
+//   const backgroundColor = isEvenReview ? 'bg-[#FBF9F4]' : 'bg-white'
+
+//   return (
+//     <div className={`border-2 border-dashed border-gray-400 p-6 mb-8 ${backgroundColor}`}>
+//       <div className="flex items-start gap-4">
+//         {/* Profile Image */}
+//         <div className="flex-shrink-0">
+//           <ProfileImage profileImage={profileImage} gender={gender} name={name} />
+
+//           {/* Star Rating */}
+//           <StarRating rating={rating || 4} />
+
+//           {/* Name and Demographics */}
+//           <div className="text-center mt-2">
+//             <div className="font-bold text-gray-800 text-sm">{name || 'Anonymous'}</div>
+//             <div className="text-gray-500 text-xs">
+//               {gender === 'female' ? 'Female' : 'Male'} {age}
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Testimonial Text */}
+//         <div className="flex-1">
+//           <p className="text-gray-700 text-sm leading-relaxed italic">&quot;{reviewText}&quot;</p>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+// // Main Component
+// export const ReviewsBlock: React.FC<ReviewsBlockType> = (props) => {
+//   const { blockHeader, reviews, displayOptions } = props
+
+//   if (!reviews || reviews.length === 0) {
+//     return null
+//   }
+
+//   // Get container max width classes - Making it match full blog content width
+//   const getMaxWidthClasses = () => {
+//     switch (displayOptions?.maxWidth) {
+//       case 'small':
+//         return 'max-w-4xl'
+//       case 'medium':
+//         return 'max-w-6xl'
+//       case 'large':
+//         return 'max-w-7xl'
+//       case 'xlarge':
+//         return 'max-w-full'
+//       default:
+//         return 'max-w-none' // No max width constraint - matches blog content
+//     }
+//   }
+
+//   return (
+//     <div className={`${getMaxWidthClasses()} mx-auto px-6 py-6 w-full`}>
+//       {/* Header */}
+//       {blockHeader && (
+//         <div className="text-center mb-12">
+//           {blockHeader.title && (
+//             <div className="text-3xl font-bold text-gray-900 mb-4">{blockHeader.title}</div>
+//           )}
+//           {blockHeader.subtitle && (
+//             <div className="text-lg text-gray-600 max-w-2xl mx-auto">{blockHeader.subtitle}</div>
+//           )}
+//         </div>
+//       )}
+
+//       {/* Reviews Container - Full width within container */}
+//       <div className="space-y-6 w-full">
+//         {reviews.map((review: ReviewItem, index: number) => (
+//           <TestimonialCard key={index} review={review} index={index} />
+//         ))}
+//       </div>
+//     </div>
+//   )
+// }
+
+import React from 'react'
+import { Media } from '@/components/Media'
+import type { Media as MediaType } from '@/payload-types'
+
+// Define the types for the new simplified structure
+interface ReviewsBlockType {
+  blockHeader?: {
+    title?: string | null
+    subtitle?: string | null
+  } | null
+  reviews?: ReviewItem[] | null
+  displayOptions?: {
+    layout?: string | null
+    alternateBackground?: boolean | null
+    showDashedBorders?: boolean | null
+    borderStyle?: string | null
+    spacing?: string | null
+    maxWidth?: string | null
+  } | null
+}
+
+interface ReviewItem {
+  name?: string | null
+  gender?: string | null
+  age?: number | null
+  profileImage?: MediaType | number | null
+  rating?: number | null
+  reviewText?: string | null
+}
+
+// Star Rating Component - Making stars bigger
+const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
+  return (
+    <div className="flex justify-center mt-3 gap-1">
+      {[...Array(5)].map((_, i) => (
+        <span
+          key={i}
+          className={`w-6 h-6 text-lg ${i < rating ? 'text-orange-400' : 'text-gray-300'}`}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  )
+}
+
+// Profile Image Component
+const ProfileImage: React.FC<{
+  profileImage?: MediaType | number | null
+  gender?: string | null
+  name?: string | null
+}> = ({ profileImage, gender, name }) => {
+  // Check if we have uploaded media
+  const hasUploadedImage = profileImage && typeof profileImage === 'object'
+
+  const getFallbackImageUrl = () => {
+    const initials =
+      name
+        ?.split(' ')
+        .map((n: string) => n[0])
+        .join('') || '?'
+    const bgColor = gender === 'female' ? 'ff69b4' : '4169e1' // Pink for female, Blue for male
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=${bgColor}&color=fff&size=150&font-size=0.33`
+  }
+
+  return (
+    <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-100">
+      {hasUploadedImage ? (
+        <div className="absolute inset-0 w-full h-full">
+          <Media
+            resource={profileImage}
+            alt={name || 'Reviewer'}
+            className="absolute inset-0 w-full h-full object-cover"
+            imgClassName="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
+      ) : (
+        <img
+          src={getFallbackImageUrl()}
+          alt={name || 'Reviewer'}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+    </div>
+  )
+}
+
+// Individual Review Card Component - With alternating backgrounds
+const TestimonialCard: React.FC<{
+  review: ReviewItem
+  index: number
+}> = ({ review, index }) => {
+  const { name, gender, age, profileImage, rating, reviewText } = review
+
+  // Even numbered reviews (2nd, 4th, 6th etc) get the cream background
+  const isEvenReview = (index + 1) % 2 === 0
+  const backgroundColor = isEvenReview ? 'bg-[#FBF9F4]' : 'bg-white'
+
+  return (
+    <div className={`border-2 border-dashed border-gray-400 p-6 mb-8 ${backgroundColor}`}>
+      <div className="flex items-start gap-4">
+        {/* Profile Image */}
+        <div className="flex-shrink-0">
+          <ProfileImage profileImage={profileImage} gender={gender} name={name} />
+
+          {/* Star Rating */}
+          <StarRating rating={rating || 4} />
+
+          {/* Name and Demographics */}
+          <div className="text-center mt-2">
+            <div className="font-bold text-gray-800 text-sm">{name || 'Anonymous'}</div>
+            <div className="text-gray-500 text-xs">
+              {gender === 'female' ? 'Female' : 'Male'} {age}
+            </div>
+          </div>
+        </div>
+
+        {/* Testimonial Text */}
+        <div className="flex-1">
+          <p className="text-gray-700 text-sm leading-relaxed italic">&quot;{reviewText}&quot;</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Main Component
+export const ReviewsBlock: React.FC<ReviewsBlockType> = (props) => {
+  const { blockHeader, reviews, displayOptions } = props
+
+  if (!reviews || reviews.length === 0) {
+    return null
+  }
+
+  // Get container max width classes - Making it match full blog content width
+  const getMaxWidthClasses = () => {
+    switch (displayOptions?.maxWidth) {
+      case 'small':
+        return 'max-w-4xl'
+      case 'medium':
+        return 'max-w-6xl'
+      case 'large':
+        return 'max-w-7xl'
+      case 'xlarge':
+        return 'max-w-full'
+      default:
+        return 'max-w-none' // No max width constraint - matches blog content
+    }
+  }
+
+  return (
+    <div className={`${getMaxWidthClasses()} mx-auto px-6 py-6 w-full`}>
+      {/* Header */}
+      {blockHeader && (
+        <div className="text-center mb-12">
+          {blockHeader.title && (
+            <div className="text-3xl font-bold text-gray-900 mb-4">{blockHeader.title}</div>
+          )}
+          {blockHeader.subtitle && (
+            <div className="text-lg text-gray-600 max-w-2xl mx-auto">{blockHeader.subtitle}</div>
+          )}
+        </div>
+      )}
+
+      {/* Reviews Container - Full width within container */}
+      <div className="space-y-6 w-full">
+        {reviews.map((review: ReviewItem, index: number) => (
+          <TestimonialCard key={index} review={review} index={index} />
+        ))}
+      </div>
+    </div>
+  )
+}

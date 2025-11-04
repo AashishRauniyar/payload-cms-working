@@ -1,15 +1,230 @@
+// import React from 'react'
+// import { getMediaUrl as buildMediaUrl } from '@/utilities/getMediaUrl'
+
+// type Product = {
+//   name: string
+//   rating: number
+//   media?:
+//     | {
+//         url?: string
+//       }
+//     | number
+//     | null
+//   color?: 'blue' | 'red' | 'gray'
+//   ing?: string
+//   benefits?: string
+//   csat?: string
+// }
+
+// interface ThreeBottlesProps {
+//   h1?: string
+//   h2?: string
+//   h3?: string
+//   bg?: 'white' | 'gray'
+//   products?: Product[]
+//   disableInnerContainer?: boolean
+//   className?: string
+// }
+
+// const getMediaUrl = (media: Product['media']): string => {
+//   if (!media) return ''
+//   if (typeof media === 'number') return ''
+//   const url = media?.url || ''
+//   return buildMediaUrl(url)
+// }
+
+// const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
+//   const fullStars = Math.floor(rating)
+//   const hasHalfStar = rating % 1 !== 0
+//   return (
+//     <div className="flex items-center gap-1 justify-center">
+//       {[...Array(5)].map((_, i) => (
+//         <span
+//           key={i}
+//           className={`text-lg ${
+//             i < fullStars
+//               ? 'text-yellow-400'
+//               : i === fullStars && hasHalfStar
+//                 ? 'text-yellow-400'
+//                 : 'text-gray-300'
+//           }`}
+//         >
+//           ★
+//         </span>
+//       ))}
+//       <span className="ml-2 text-white font-semibold text-lg">{rating}</span>
+//     </div>
+//   )
+// }
+
+// const PlaceholderBottle: React.FC<{ color?: 'blue' | 'red' | 'gray' }> = ({ color = 'blue' }) => {
+//   const colorClass =
+//     color === 'red' ? 'bg-red-600' : color === 'gray' ? 'bg-gray-900' : 'bg-blue-500'
+//   const accentClass =
+//     color === 'red' ? 'bg-red-500' : color === 'gray' ? 'bg-gray-700' : 'bg-blue-400'
+//   const capClass = color === 'red' ? 'bg-gray-800' : 'bg-gray-200'
+
+//   return (
+//     <div className="w-24 h-32 rounded-lg relative overflow-hidden flex items-center justify-center">
+//       <div className={`absolute inset-0 ${colorClass} rounded-lg`} />
+//       <div
+//         className={`absolute top-2 left-1/2 -translate-x-1/2 w-16 h-4 ${capClass} rounded-full`}
+//       />
+//       <div
+//         className={`absolute bottom-8 left-1/2 -translate-x-1/2 w-12 h-16 ${accentClass} rounded`}
+//       />
+//     </div>
+//   )
+// }
+
+// export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
+//   const DEFAULT_PRODUCTS: Product[] = [
+//     {
+//       name: 'Virectin',
+//       rating: 4.5,
+//       color: 'blue',
+//       ing: 'L-Arginine, Zinc, Fenugreek, Tongkat Ali, Epimedium',
+//       benefits: 'Supports overall vitality, stamina, and wellness',
+//       csat: 'High, with many repeat customers',
+//     },
+//     {
+//       name: 'Prime Potence',
+//       rating: 4.3,
+//       color: 'red',
+//       ing: 'Ginseng, Tribulus Terrestris Extract, Horny Goat Weed etc.',
+//       benefits: 'May increase your confidence and overall mood',
+//       csat: 'Generally positive, varies by user',
+//     },
+//     {
+//       name: 'Male Extra',
+//       rating: 4.2,
+//       color: 'gray',
+//       ing: 'L-Arginine HCL, Cordyceps, L-Methionine, etc.',
+//       benefits: 'Supports circulation and physical health.',
+//       csat: 'Satisfactory, generally positive feedback',
+//     },
+//   ]
+
+//   const {
+//     h1 = "2025'S TOP MALE",
+//     h2 = 'ENHANCEMENT',
+//     h3 = 'SUPPLEMENTS',
+//     bg = 'white',
+//     products,
+//     disableInnerContainer,
+//     className,
+//   } = props
+
+//   const productList: Product[] =
+//     Array.isArray(products) && products.length > 0 ? products.slice(0, 3) : DEFAULT_PRODUCTS
+
+//   const content = (
+//     <div className="max-w-6xl mx-auto p-6">
+//       {/* Header */}
+//       <div className="flex items-start gap-8 mb-8">
+//         <div className="flex-shrink-0">
+//           <div className="text-3xl font-bold text-black leading-tight">
+//             {h1}
+//             <br />
+//             {h2}
+//             <br />
+//             {h3}
+//           </div>
+//         </div>
+
+//         {/* Product Images */}
+//         <div className="flex gap-12 items-center flex-1 justify-center">
+//           {productList.map((product, idx) => {
+//             const mediaUrl = getMediaUrl(product.media)
+//             return (
+//               <div className="text-center" key={idx}>
+//                 <div className="w-32 h-40 bg-gray-100 rounded-lg mb-4 flex items-center justify-center border">
+//                   {mediaUrl ? (
+//                     <img
+//                       src={mediaUrl}
+//                       alt={product.name}
+//                       className="max-h-36 max-w-28 object-contain"
+//                     />
+//                   ) : (
+//                     <PlaceholderBottle color={product.color} />
+//                   )}
+//                 </div>
+//                 <div className="font-semibold text-lg">{product.name}</div>
+//               </div>
+//             )
+//           })}
+//         </div>
+//       </div>
+
+//       {/* Comparison Table */}
+//       <div className="w-full">
+//         {/* Header Row */}
+//         <div className="flex bg-green-500 text-white">
+//           <div className="w-1/4 p-4 font-semibold text-lg">What To Look For</div>
+//           {productList.map((p, i) => {
+//             const rating = Number.isFinite(p?.rating)
+//               ? Math.max(0, Math.min(5, Number(p.rating)))
+//               : 0
+//             return (
+//               <div className="w-1/4 p-4 text-center" key={`rating-${i}`}>
+//                 <StarRating rating={rating} />
+//               </div>
+//             )
+//           })}
+//         </div>
+
+//         {/* Main Ingredients Row */}
+//         <div className="flex border-b border-gray-300 bg-blue-50">
+//           <div className="w-1/4 p-4 font-semibold">Main Ingredients</div>
+//           {productList.map((p, i) => (
+//             <div className="w-1/4 p-4 text-center text-sm" key={`ing-${i}`}>
+//               {p.ing || ''}
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Key Benefits Row */}
+//         <div className="flex border-b border-gray-300">
+//           <div className="w-1/4 p-4 bg-cyan-100 font-semibold">Key Benefits</div>
+//           {productList.map((p, i) => (
+//             <div className="w-1/4 p-4 text-center text-sm" key={`benefit-${i}`}>
+//               {p.benefits || ''}
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Customer Satisfaction Row */}
+//         <div className="flex border-b border-gray-300">
+//           <div className="w-1/4 p-4 bg-gray-50 font-semibold">Customer Satisfaction</div>
+//           {productList.map((p, i) => (
+//             <div className="w-1/4 p-4 text-center text-sm" key={`csat-${i}`}>
+//               {p.csat || ''}
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   )
+
+//   const bgClass = bg === 'gray' ? 'bg-gray-50' : 'bg-white'
+
+//   if (disableInnerContainer) {
+//     return <section className={`${bgClass} ${className || ''}`}>{content}</section>
+//   }
+
+//   return <section className={`${bgClass} ${className || ''}`}>{content}</section>
+// }
+
+// export default ThreeBottles
+
 import React from 'react'
-import { getMediaUrl as buildMediaUrl } from '@/utilities/getMediaUrl'
+import { Media } from '@/components/Media'
+import type { Media as MediaType } from '@/payload-types'
 
 type Product = {
   name: string
   rating: number
-  media?:
-    | {
-        url?: string
-      }
-    | number
-    | null
+  media?: MediaType | number | null
   color?: 'blue' | 'red' | 'gray'
   ing?: string
   benefits?: string
@@ -26,33 +241,55 @@ interface ThreeBottlesProps {
   className?: string
 }
 
-const getMediaUrl = (media: Product['media']): string => {
-  if (!media) return ''
-  if (typeof media === 'number') return ''
-  const url = media?.url || ''
-  return buildMediaUrl(url)
-}
-
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
   const fullStars = Math.floor(rating)
-  const hasHalfStar = rating % 1 !== 0
+  const decimal = rating - fullStars
+  const hasPartialStar = decimal > 0
+  const emptyStars = 5 - fullStars - (hasPartialStar ? 1 : 0)
+
+  // Convert decimal to percentage for gradient
+  const fillPercentage = Math.round(decimal * 100)
+
   return (
     <div className="flex items-center gap-1 justify-center">
-      {[...Array(5)].map((_, i) => (
-        <span
-          key={i}
-          className={`text-lg ${
-            i < fullStars
-              ? 'text-yellow-400'
-              : i === fullStars && hasHalfStar
-                ? 'text-yellow-400'
-                : 'text-gray-300'
-          }`}
-        >
-          ★
-        </span>
+      {/* Full stars */}
+      {[...Array(fullStars)].map((_, i) => (
+        <svg key={`full-${i}`} className="w-4 h-4 text-amber-400 fill-current" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
       ))}
-      <span className="ml-2 text-white font-semibold text-lg">{rating}</span>
+
+      {/* Partial star - shows exact percentage fill */}
+      {hasPartialStar && (
+        <svg key="partial" className="w-4 h-4 text-amber-400" viewBox="0 0 20 20">
+          <defs>
+            <linearGradient
+              id={`partial-fill-${rating}`}
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              x2="20"
+              y1="0"
+              y2="0"
+            >
+              <stop offset={`${fillPercentage}%`} stopColor="#fbbf24" />
+              <stop offset={`${fillPercentage}%`} stopColor="#d1d5db" />
+            </linearGradient>
+          </defs>
+          <path
+            fill={`url(#partial-fill-${rating})`}
+            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+          />
+        </svg>
+      )}
+
+      {/* Empty stars */}
+      {[...Array(emptyStars)].map((_, i) => (
+        <svg key={`empty-${i}`} className="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+
+      <span className="ml-2 text-white font-medium text-sm">{rating}</span>
     </div>
   )
 }
@@ -65,46 +302,15 @@ const PlaceholderBottle: React.FC<{ color?: 'blue' | 'red' | 'gray' }> = ({ colo
   const capClass = color === 'red' ? 'bg-gray-800' : 'bg-gray-200'
 
   return (
-    <div className="w-24 h-32 rounded-lg relative overflow-hidden flex items-center justify-center">
-      <div className={`absolute inset-0 ${colorClass} rounded-lg`} />
-      <div
-        className={`absolute top-2 left-1/2 -translate-x-1/2 w-16 h-4 ${capClass} rounded-full`}
-      />
-      <div
-        className={`absolute bottom-8 left-1/2 -translate-x-1/2 w-12 h-16 ${accentClass} rounded`}
-      />
+    <div className="w-20 h-28 relative overflow-hidden flex items-center justify-center mx-auto">
+      <div className={`absolute inset-0 ${colorClass}`} />
+      <div className={`absolute top-2 left-1/2 -translate-x-1/2 w-12 h-3 ${capClass}`} />
+      <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 w-10 h-16 ${accentClass}`} />
     </div>
   )
 }
 
 export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
-  const DEFAULT_PRODUCTS: Product[] = [
-    {
-      name: 'Virectin',
-      rating: 4.5,
-      color: 'blue',
-      ing: 'L-Arginine, Zinc, Fenugreek, Tongkat Ali, Epimedium',
-      benefits: 'Supports overall vitality, stamina, and wellness',
-      csat: 'High, with many repeat customers',
-    },
-    {
-      name: 'Prime Potence',
-      rating: 4.3,
-      color: 'red',
-      ing: 'Ginseng, Tribulus Terrestris Extract, Horny Goat Weed etc.',
-      benefits: 'May increase your confidence and overall mood',
-      csat: 'Generally positive, varies by user',
-    },
-    {
-      name: 'Male Extra',
-      rating: 4.2,
-      color: 'gray',
-      ing: 'L-Arginine HCL, Cordyceps, L-Methionine, etc.',
-      benefits: 'Supports circulation and physical health.',
-      csat: 'Satisfactory, generally positive feedback',
-    },
-  ]
-
   const {
     h1 = "2025'S TOP MALE",
     h2 = 'ENHANCEMENT',
@@ -116,92 +322,186 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
   } = props
 
   const productList: Product[] =
-    Array.isArray(products) && products.length > 0 ? products.slice(0, 3) : DEFAULT_PRODUCTS
+    Array.isArray(products) && products.length > 0 ? products.slice(0, 3) : []
 
   const content = (
-    <div className="max-w-6xl mx-auto p-6">
-      {/* Header */}
-      <div className="flex items-start gap-8 mb-8">
-        <div className="flex-shrink-0">
-          <div className="text-3xl font-bold text-black leading-tight">
+    <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+      {/* Header Section */}
+      <div className="flex flex-col lg:flex-row items-start lg:justify-between mb-8 sm:mb-12 lg:mb-16">
+        <div className="flex-shrink-0 mb-8 lg:mb-0">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-white text-blue-600 leading-tight tracking-tight">
             {h1}
             <br />
-            {h2}
+            <span className="text-blue-600">{h2}</span>
             <br />
-            {h3}
-          </div>
+            <span className="text-xl sm:text-2xl md:text-3xl text-blue-600">{h3}</span>
+          </h1>
+          <div className="w-12 sm:w-16 h-1 bg-blue-600 mt-3 sm:mt-4"></div>
         </div>
 
-        {/* Product Images */}
-        <div className="flex gap-12 items-center flex-1 justify-center">
-          {productList.map((product, idx) => {
-            const mediaUrl = getMediaUrl(product.media)
-            return (
-              <div className="text-center" key={idx}>
-                <div className="w-32 h-40 bg-gray-100 rounded-lg mb-4 flex items-center justify-center border">
-                  {mediaUrl ? (
-                    <img
-                      src={mediaUrl}
-                      alt={product.name}
-                      className="max-h-36 max-w-28 object-contain"
-                    />
-                  ) : (
-                    <PlaceholderBottle color={product.color} />
-                  )}
-                </div>
-                <div className="font-semibold text-lg">{product.name}</div>
+        {/* Simplified Product Images - Responsive Grid */}
+        <div className="w-full lg:w-auto grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-24 lg:flex lg:flex-1 lg:justify-center">
+          {productList.map((product, idx) => (
+            <div className="text-center" key={idx}>
+              {/* Simple image container with light background */}
+              <div className="relative w-full h-36 sm:h-40 md:h-44 lg:h-48 rounded-lg flex items-center justify-center mb-2 sm:mb-3 md:mb-4">
+                {product.media && typeof product.media === 'object' ? (
+                  <Media
+                    resource={product.media}
+                    alt={product.name}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : (
+                  <PlaceholderBottle color={product.color} />
+                )}
+
+                {/* #1 badge for first product */}
+                {idx === 0 && (
+                  <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-yellow-400 text-yellow-900 text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
+                    #1
+                  </div>
+                )}
               </div>
-            )
-          })}
+
+              {/* Product name */}
+              <div className="font-bold text-xs sm:text-sm md:text-base lg:text-lg text-gray-900 break-words">
+                {product.name}
+              </div>
+              <div className="hidden sm:block text-xs md:text-sm text-gray-500 mt-1">
+                Premium Formula
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Comparison Table */}
-      <div className="w-full">
+      {/* Comparison Table - Mobile: Stacked Cards, Desktop: Table */}
+
+      {/* Desktop Table View (hidden on mobile) */}
+      <div className="hidden md:block border border-gray-200 bg-white rounded-lg overflow-hidden">
         {/* Header Row */}
-        <div className="flex bg-green-500 text-white">
-          <div className="w-1/4 p-4 font-semibold text-lg">What To Look For</div>
-          {productList.map((p, i) => {
-            const rating = Number.isFinite(p?.rating)
-              ? Math.max(0, Math.min(5, Number(p.rating)))
-              : 0
-            return (
-              <div className="w-1/4 p-4 text-center" key={`rating-${i}`}>
-                <StarRating rating={rating} />
-              </div>
-            )
-          })}
+        <div className="bg-blue-600 text-gray-900">
+          <div className="flex">
+            <div className="w-1/4 p-3 lg:p-5 font-bold text-sm lg:text-lg border-r text-white border-blue-700">
+              What To Look For
+            </div>
+            {productList.map((p, i) => {
+              const raw = (p as Record<string, unknown>).rating as number | string | undefined
+              const parsed = typeof raw === 'string' ? parseFloat(raw) : raw
+              const rating = Number.isFinite(parsed) ? Math.max(0, Math.min(5, Number(parsed))) : 0
+              return (
+                <div
+                  className="w-1/4 p-3 lg:p-5 text-center border-r border-blue-700 text-white last:border-r-0"
+                  key={`rating-${i}`}
+                >
+                  <div className="font-bold mb-2 lg:mb-3 text-white text-sm lg:text-base">
+                    {p.name}
+                  </div>
+                  <StarRating rating={rating} />
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         {/* Main Ingredients Row */}
-        <div className="flex border-b border-gray-300 bg-blue-50">
-          <div className="w-1/4 p-4 font-semibold">Main Ingredients</div>
-          {productList.map((p, i) => (
-            <div className="w-1/4 p-4 text-center text-sm" key={`ing-${i}`}>
-              {p.ing || ''}
+        <div className="bg-blue-50 border-b border-gray-200">
+          <div className="flex">
+            <div className="w-1/4 p-3 lg:p-5 font-semibold text-sm lg:text-base text-gray-900 bg-blue-100 border-r border-gray-200">
+              Main Ingredients
             </div>
-          ))}
+            {productList.map((p, i) => (
+              <div
+                className="w-1/4 p-3 lg:p-5 text-center text-xs lg:text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
+                key={`ing-${i}`}
+              >
+                {p.ing || ''}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Key Benefits Row */}
-        <div className="flex border-b border-gray-300">
-          <div className="w-1/4 p-4 bg-cyan-100 font-semibold">Key Benefits</div>
-          {productList.map((p, i) => (
-            <div className="w-1/4 p-4 text-center text-sm" key={`benefit-${i}`}>
-              {p.benefits || ''}
+        <div className="border-b border-gray-200">
+          <div className="flex">
+            <div className="w-1/4 p-3 lg:p-5 font-semibold text-sm lg:text-base text-gray-900 bg-gray-50 border-r border-gray-200">
+              Key Benefits
             </div>
-          ))}
+            {productList.map((p, i) => (
+              <div
+                className="w-1/4 p-3 lg:p-5 text-center text-xs lg:text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
+                key={`benefit-${i}`}
+              >
+                {p.benefits || ''}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Customer Satisfaction Row */}
-        <div className="flex border-b border-gray-300">
-          <div className="w-1/4 p-4 bg-gray-50 font-semibold">Customer Satisfaction</div>
-          {productList.map((p, i) => (
-            <div className="w-1/4 p-4 text-center text-sm" key={`csat-${i}`}>
-              {p.csat || ''}
+        <div>
+          <div className="flex">
+            <div className="w-1/4 p-3 lg:p-5 font-semibold text-sm lg:text-base text-gray-900 bg-green-50 border-r border-gray-200">
+              Customer Satisfaction
             </div>
-          ))}
+            {productList.map((p, i) => (
+              <div
+                className="w-1/4 p-3 lg:p-5 text-center text-xs lg:text-sm text-gray-700 border-r border-gray-200 last:border-r-0"
+                key={`csat-${i}`}
+              >
+                {p.csat || ''}
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Mobile Card View (visible only on mobile) */}
+      <div className="md:hidden space-y-6">
+        {productList.map((product, idx) => {
+          const raw = (product as Record<string, unknown>).rating as number | string | undefined
+          const parsed = typeof raw === 'string' ? parseFloat(raw) : raw
+          const rating = Number.isFinite(parsed) ? Math.max(0, Math.min(5, Number(parsed))) : 0
+          return (
+            <div
+              key={`mobile-card-${idx}`}
+              className="border border-gray-200 bg-white rounded-lg overflow-hidden shadow-sm"
+            >
+              {/* Card Header */}
+              <div className="bg-blue-600 p-4 text-white">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-lg">{product.name}</h3>
+                  {idx === 0 && (
+                    <div className="bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">
+                      #1
+                    </div>
+                  )}
+                </div>
+                <StarRating rating={rating} />
+              </div>
+
+              {/* Card Body */}
+              <div className="divide-y divide-gray-200">
+                <div className="p-4 bg-blue-50">
+                  <div className="font-semibold text-sm text-gray-900 mb-2">Main Ingredients</div>
+                  <div className="text-sm text-gray-700">{product.ing || 'N/A'}</div>
+                </div>
+
+                <div className="p-4">
+                  <div className="font-semibold text-sm text-gray-900 mb-2">Key Benefits</div>
+                  <div className="text-sm text-gray-700">{product.benefits || 'N/A'}</div>
+                </div>
+
+                <div className="p-4 bg-green-50">
+                  <div className="font-semibold text-sm text-gray-900 mb-2">
+                    Customer Satisfaction
+                  </div>
+                  <div className="text-sm text-gray-700">{product.csat || 'N/A'}</div>
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -214,5 +514,3 @@ export const ThreeBottles: React.FC<ThreeBottlesProps> = (props) => {
 
   return <section className={`${bgClass} ${className || ''}`}>{content}</section>
 }
-
-export default ThreeBottles

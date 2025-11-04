@@ -1,32 +1,34 @@
 import React from 'react'
+import { Check, X } from 'lucide-react'
+import './styles.css'
 
 interface ProsConsItem {
   point: string
 }
 
-interface ProsConsBlockProps {
+interface ProsConsTableProps {
   title?: string
-  prosTitle: string
-  consTitle: string
-  tableData: string
-  style: 'default' | 'stacked' | 'cards' | 'table'
-  backgroundColor: 'none' | 'gray' | 'blue' | 'green'
+  prosTitle?: string
+  consTitle?: string
+  tableData?: string
+  backgroundColor?: 'none' | 'gray' | 'blue' | 'green'
   disableInnerContainer?: boolean
   className?: string
 }
 
-export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
+export function ProsConsBlock({
   title,
-  prosTitle,
-  consTitle,
+  prosTitle = 'PROS',
+  consTitle = 'CONS',
   tableData,
-  style,
-  backgroundColor,
-  disableInnerContainer,
-  className,
-}) => {
+  backgroundColor = 'none',
+  disableInnerContainer = false,
+  className = '',
+}: ProsConsTableProps) {
   // Function to parse markdown table for pros/cons
   const parseProsCons = (markdown: string) => {
+    if (!markdown) return { pros: [], cons: [] }
+
     const lines = markdown
       .trim()
       .split('\n')
@@ -60,254 +62,117 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
     return { pros, cons }
   }
 
-  // Process table data to extract pros and cons
-  const { pros: processedPros, cons: processedCons } = parseProsCons(tableData || '')
+  // Default data if no tableData provided
+  const defaultPros = [
+    { point: 'Supports liver detox, digestion, and energy in one formula.' },
+    { point: 'Made with 14 plant-based ingredients backed by science.' },
+    { point: 'Only two capsules are needed per day.' },
+    { point: 'Vegan, non-GMO, and free from major allergens.' },
+    { point: 'Third-party tested for quality and purity.' },
+    { point: 'Backed with a 90-day satisfaction guarantee.' },
+  ]
+
+  const defaultCons = [
+    { point: 'Only sold through the official Snap Supplements website.' },
+    { point: 'It goes out of stock fast, due to high demand.' },
+  ]
+
+  // Process table data to extract pros and cons, or use defaults
+  const { pros: parsedPros, cons: parsedCons } = tableData
+    ? parseProsCons(tableData)
+    : { pros: [], cons: [] }
+  const prosData = parsedPros.length > 0 ? parsedPros : defaultPros
+  const consData = parsedCons.length > 0 ? parsedCons : defaultCons
+
   const backgroundClasses = {
-    none: '',
+    none: 'bg-white',
     gray: 'bg-gray-50',
     blue: 'bg-blue-50',
     green: 'bg-green-50',
   }
 
-  const containerClasses = {
-    default: 'grid md:grid-cols-2 gap-4',
-    stacked: 'space-y-4',
-    cards: 'grid md:grid-cols-2 gap-4',
-    table: '',
-  }
-
-  // const prosCardClasses = {
-  //   default:
-  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-  //   stacked:
-  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-  //   cards:
-  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-  //   table: '',
-  // }
-
-  // const consCardClasses = {
-  //   default:
-  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-  //   stacked:
-  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-  //   cards:
-  //     'border border-gray-200 rounded-xl bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200',
-  //   table: '',
-  // }
-
-  // Render table format
-  if (style === 'table') {
-    const maxRows = Math.max(processedPros.length, processedCons.length)
-
-    const content = (
-      <div className={containerClasses[style]}>
-        <table className="w-full">
-          <thead className="bg-transparent border-b border-gray-200">
-            <tr>
-              <th className="px-0 py-2 text-left font-semibold text-green-700 align-middle border-0">
-                <div className="flex items-center">
-                  <img src="/images/pros.png" alt="Pros" className="h-14 md:h-16 w-auto mr-3" />
-                  <span className="text-2xl md:text-3xl">{prosTitle}</span>
-                </div>
-              </th>
-              <th className="px-0 py-2 text-left font-semibold text-red-700 align-middle border-0">
-                <div className="flex items-center">
-                  <img src="/images/cons.png" alt="Cons" className="h-14 md:h-16 w-auto mr-3" />
-                  <span className="text-2xl md:text-3xl">{consTitle}</span>
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.from({ length: maxRows }, (_, index) => (
-              <tr key={index} className="border-0">
-                <td className="px-0 py-2 text-gray-700 align-top border-0">
-                  {processedPros[index] ? (
-                    <div className="flex items-start">
-                      <img
-                        src="/images/tick.png"
-                        alt="Tick"
-                        className="w-4 h-4 mt-1 mr-2 flex-shrink-0"
-                      />
-                      {processedPros[index].point}
-                    </div>
-                  ) : (
-                    <span className="text-gray-400">—</span>
-                  )}
-                </td>
-                <td className="px-0 py-2 text-gray-700 align-top border-0">
-                  {processedCons[index] ? (
-                    <div className="flex items-start">
-                      <img
-                        src="/images/cross.png"
-                        alt="Cross"
-                        className="w-4 h-4 mt-1 mr-2 flex-shrink-0"
-                      />
-                      {processedCons[index].point}
-                    </div>
-                  ) : (
-                    <span className="text-gray-400">—</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )
-
-    if (disableInnerContainer) {
-      return (
-        <section className={`py-4 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-          {title && <h2 className="text-3xl font-bold text-center mb-4 text-gray-800">{title}</h2>}
-          {content}
-        </section>
-      )
-    }
-
-    return (
-      <section className={`py-0 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-        <div className="max-w-6xl mx-auto">
-          {title && <h2 className="text-3xl font-bold text-center mb-4 text-gray-800">{title}</h2>}
-          {content}
-        </div>
-      </section>
-    )
-  }
-
-  // Original content for other styles
   const content = (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Pros Card */}
-      <div
-        className="relative bg-white rounded-3xl p-8 pt-16 min-h-[480px]"
-        style={{ border: '4px solid #22C55E' }}
-      >
-        {/* Circular Header Badge */}
-        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-          <div
-            className="w-20 h-20 rounded-full flex items-center justify-center border-4 border-white shadow-sm"
-            style={{ backgroundColor: '#22C55E' }}
-          >
-            <div className="flex items-center space-x-1">
-              <span className="text-white font-bold text-sm tracking-wide">{prosTitle}</span>
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
+    <div className="pros-cons-container w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+      {/* Title - Responsive Typography */}
+      {title && (
+        <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-center mb-6 sm:mb-8 lg:mb-12 text-gray-800 px-4">
+          {title}
+        </h2>
+      )}
+
+      {/* Cards Container - Responsive Grid */}
+      <div className="pros-cons-grid grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 xl:gap-16">
+        {/* PROS Card */}
+        <div className="relative order-1 lg:order-1">
+          {/* Card Container - Responsive Padding */}
+          <div className="pros-cons-card bg-white border-2 border-green-400 rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 pt-12 sm:pt-14 lg:pt-16 relative shadow-sm hover:shadow-md transition-shadow duration-300">
+            {/* Header Circle - Responsive Sizing */}
+            <div className="pros-cons-header-circle absolute -top-8 sm:-top-10 lg:-top-12 left-1/2 transform -translate-x-1/2">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-white border-3 sm:border-4 border-green-400 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <Check
+                    className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white"
+                    strokeWidth={3}
+                  />
+                </div>
+              </div>
+              <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap">
+                {prosTitle}
+              </div>
+            </div>
+
+            {/* Content - Responsive Spacing */}
+            <div className="space-y-3 sm:space-y-4 lg:space-y-6 mt-2 sm:mt-4">
+              {prosData.map((item, index) => (
+                <div key={index} className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-green-500 rounded-full flex items-center justify-center">
+                    <Check
+                      className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white"
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg flex-1 break-words items-center">
+                    {item.point}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Content Rows */}
-        <div className="space-y-6">
-          {/* Render actual pros */}
-          {processedPros.slice(0, 6).map((pro, index) => (
-            <div key={index} className="flex items-center">
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#22C55E' }}
-              >
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+        {/* CONS Card */}
+        <div className="relative order-2 lg:order-2">
+          {/* Card Container - Responsive Padding */}
+          <div className="pros-cons-card bg-white border-2 border-red-400 rounded-lg sm:rounded-xl p-4 sm:p-6 lg:p-8 pt-12 sm:pt-14 lg:pt-16 relative shadow-sm hover:shadow-md transition-shadow duration-300">
+            {/* Header Circle - Responsive Sizing */}
+            <div className="pros-cons-header-circle absolute -top-8 sm:-top-10 lg:-top-12 left-1/2 transform -translate-x-1/2">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-white border-3 sm:border-4 border-red-500 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 bg-red-500 rounded-full flex items-center justify-center">
+                  <X className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={3} />
+                </div>
               </div>
-              <div className="flex-1 h-0.5 ml-4" style={{ backgroundColor: '#D1D5DB' }}></div>
-            </div>
-          ))}
-
-          {/* Fill remaining slots to ensure 6 rows */}
-          {Array.from({ length: Math.max(0, 6 - processedPros.length) }, (_, index) => (
-            <div key={`empty-pros-${index}`} className="flex items-center">
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#22C55E' }}
-              >
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+              <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap">
+                {consTitle}
               </div>
-              <div className="flex-1 h-0.5 ml-4" style={{ backgroundColor: '#D1D5DB' }}></div>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Cons Card */}
-      <div
-        className="relative bg-white rounded-3xl p-8 pt-16 min-h-[480px]"
-        style={{ border: '4px solid #EF4444' }}
-      >
-        {/* Circular Header Badge */}
-        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-          <div
-            className="w-20 h-20 rounded-full flex items-center justify-center border-4 border-white shadow-sm"
-            style={{ backgroundColor: '#EF4444' }}
-          >
-            <div className="flex items-center space-x-1">
-              <span className="text-white font-bold text-sm tracking-wide">{consTitle}</span>
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
+            {/* Content - Responsive Spacing */}
+            <div className="space-y-3 sm:space-y-4 lg:space-y-6 mt-2 sm:mt-4">
+              {consData.map((item, index) => (
+                <div key={index} className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-red-500 rounded-full flex items-center justify-center">
+                    <X
+                      className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white"
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                  <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg flex-1 break-words">
+                    {item.point}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-
-        {/* Content Rows */}
-        <div className="space-y-6">
-          {/* Render actual cons */}
-          {processedCons.slice(0, 6).map((con, index) => (
-            <div key={index} className="flex items-center">
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#EF4444' }}
-              >
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="flex-1 h-0.5 ml-4" style={{ backgroundColor: '#D1D5DB' }}></div>
-            </div>
-          ))}
-
-          {/* Fill remaining slots to ensure 6 rows */}
-          {Array.from({ length: Math.max(0, 6 - processedCons.length) }, (_, index) => (
-            <div key={`empty-cons-${index}`} className="flex items-center">
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#EF4444' }}
-              >
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="flex-1 h-0.5 ml-4" style={{ backgroundColor: '#D1D5DB' }}></div>
-            </div>
-          ))}
         </div>
       </div>
     </div>
@@ -315,19 +180,19 @@ export const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
 
   if (disableInnerContainer) {
     return (
-      <section className={`py-12 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-        {title && <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
+      <section
+        className={`${backgroundClasses[backgroundColor]} py-6 sm:py-8 lg:py-12 xl:py-16 px-2 sm:px-4 lg:px-6 xl:px-8 ${className}`}
+      >
         {content}
       </section>
     )
   }
 
   return (
-    <section className={`py-12 px-0 ${backgroundClasses[backgroundColor]} ${className || ''}`}>
-      <div className="max-w-6xl mx-auto">
-        {title && <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">{title}</h2>}
-        {content}
-      </div>
+    <section
+      className={`${backgroundClasses[backgroundColor]} py-6 sm:py-8 lg:py-12 xl:py-16 px-2 sm:px-4 lg:px-6 xl:px-8 ${className}`}
+    >
+      {content}
     </section>
   )
 }

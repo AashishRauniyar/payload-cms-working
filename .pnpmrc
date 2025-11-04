@@ -1,0 +1,6 @@
+# pnpm configuration for Sharp and native modules
+shamefully-hoist=true
+public-hoist-pattern[]=*sharp*
+public-hoist-pattern[]=*@img/sharp*
+node-linker=hoisted
+strict-peer-dependencies=false

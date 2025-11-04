@@ -9,6 +9,7 @@ import React from 'react'
 import PageClient from './page.client'
 import { notFound } from 'next/navigation'
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 600
 
 type Args = {
@@ -31,6 +32,7 @@ export default async function Page({ params: paramsPromise }: Args) {
     limit: 12,
     page: sanitizedPageNumber,
     overrideAccess: false,
+    trash: false, // Exclude trashed posts
   })
 
   return (
@@ -72,32 +74,8 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 }
 
 export async function generateStaticParams() {
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const { totalDocs } = await payload.count({
-      collection: 'posts',
-      overrideAccess: false,
-    })
 
-    const totalPages = Math.ceil(totalDocs / 10)
+  // Skip static generation during Docker build
+  return []
 
-    const pages: { pageNumber: string }[] = []
-
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push({ pageNumber: String(i) })
-    }
-
-    return pages
-  } catch (error) {
-    if (error instanceof Error) {
-      console.warn(
-        'Database not available during build, skipping static generation:',
-        error.message,
-      )
-    } else {
-      console.warn('Database not available during build, skipping static generation:', error)
-    }
-    // Return empty array to allow build to continue
-    return []
-  }
 }

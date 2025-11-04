@@ -1,30 +1,58 @@
-import Link from 'next/link'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+import { Metadata } from 'next'
+import type { Category, Post } from '@/payload-types'
+import ReviewsPageClient from './ReviewsPageClient'
 
-export default function ReviewsPage() {
+export const dynamic = 'force-dynamic'
+export const revalidate = 600
+
+export const metadata: Metadata = {
+  title: 'Product Reviews - HealthScopeDaily',
+  description:
+    'Comprehensive health product reviews and insights organized by category. Find expert reviews on supplements, skincare, and wellness products.',
+  alternates: { canonical: '/reviews' },
+  robots: { index: true, follow: true },
+}
+
+async function getCategories() {
+  const payload = await getPayload({ config: configPromise })
+
+  const categories = await payload.find({
+    collection: 'categories',
+    limit: 100,
+    sort: 'title',
+    depth: 2,
+  })
+
+  return categories.docs as Category[]
+}
+
+async function getPosts() {
+  const payload = await getPayload({ config: configPromise })
+
+  const posts = await payload.find({
+    collection: 'posts',
+    where: {
+      _status: {
+        equals: 'published',
+      },
+    },
+    limit: 100,
+    sort: '-publishedAt',
+    depth: 2,
+    trash: false, // Exclude trashed posts
+  })
+
+  return posts.docs as Post[]
+}
+
+export default async function ReviewsPage() {
+  const [categories, posts] = await Promise.all([getCategories(), getPosts()])
+
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Product Reviews</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            In-depth reviews of health products, supplements, and wellness solutions
-          </p>
-        </div>
-
-        <div className="text-center py-20">
-          <div className="text-6xl text-gray-300 mb-4">⭐</div>
-          <h2 className="text-2xl font-semibold text-gray-600 mb-4">Reviews Coming Soon</h2>
-          <p className="text-gray-500 mb-8">
-            We&apos;re working on detailed product reviews for you.
-          </p>
-          <Link
-            href="/posts"
-            className="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
-          >
-            Read Our Articles
-          </Link>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <ReviewsPageClient categories={categories} posts={posts} />
     </div>
   )
 }

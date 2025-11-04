@@ -19,6 +19,7 @@ async function getFeaturedPosts() {
     limit: 3,
     sort: '-publishedAt',
     depth: 2,
+    trash: false, // Exclude trashed posts
   })
 
   return posts.docs as Post[]

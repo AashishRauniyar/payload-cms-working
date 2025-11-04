@@ -16,41 +16,13 @@ import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import LandingPageServer from '../landing/server'
 
+export const dynamic = 'force-dynamic'
+
 export async function generateStaticParams() {
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const pages = await payload.find({
-      collection: 'pages',
-      draft: false,
-      limit: 1000,
-      overrideAccess: false,
-      pagination: false,
-      select: {
-        slug: true,
-      },
-    })
 
-    const params = pages.docs
-      ?.filter((doc) => {
-        return doc.slug !== 'home'
-      })
-      .map(({ slug }) => {
-        return { slug }
-      })
+  // Skip static generation during Docker build
+  return []
 
-    return params || []
-  } catch (error) {
-    if (error instanceof Error) {
-      console.warn(
-        'Database not available during build, skipping static generation:',
-        error.message,
-      )
-    } else {
-      console.warn('Database not available during build, skipping static generation:', error)
-    }
-    // Return empty array to allow build to continue
-    return []
-  }
 }
 
 type Args = {

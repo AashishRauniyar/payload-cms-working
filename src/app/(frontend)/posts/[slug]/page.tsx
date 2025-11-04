@@ -20,36 +20,14 @@ import DisclaimerBox from '@/components/blog/DisclaimerBox'
 import TableOfContents from '@/components/blog/TableOfContents'
 import AuthorReviewSection from '@/components/blog/AuthorReviewSection'
 import BlogContentEnhancer from '@/components/blog/BlogContentEnhancer'
+import CustomerReviewForm from '@/components/blog/CustomerReviewForm'
 import '../blog-styles.css'
 
+export const dynamic = 'force-dynamic'
+
 export async function generateStaticParams() {
-  try {
-    const payload = await getPayload({ config: configPromise })
-    const posts = await payload.find({
-      collection: 'posts',
-      draft: false,
-      limit: 1000,
-      overrideAccess: false,
-      pagination: false,
-      select: {
-        slug: true,
-      },
-    })
-
-    const params = posts.docs.map(({ slug }) => {
-      return { slug }
-    })
-
-    return params
-  } catch (error) {
-    if (error instanceof Error) {
-      console.warn('Database not available during build, skipping static generation:', error.message)
-    } else {
-      console.warn('Database not available during build, skipping static generation:', error)
-    }
-    // Return empty array to allow build to continue
-    return []
-  }
+  // Skip static generation during Docker build
+  return []
 }
 
 type Args = {
@@ -125,6 +103,10 @@ export default async function Post({ params: paramsPromise }: Args) {
             <BlogContentEnhancer />
             <RichText className="max-w-6xl mx-auto" data={post.content} enableGutter={false} />
           </div>
+          {/* Customer Review Form */}
+          <div className="max-w-6xl mx-auto">
+            <CustomerReviewForm />
+          </div>
           {post.relatedPosts && post.relatedPosts.length > 0 && (
             <RelatedPosts
               className="mt-12 max-w-6xl mx-auto lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
@@ -155,6 +137,7 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
     limit: 1,
     overrideAccess: draft,
     pagination: false,
+    trash: false, // Exclude trashed posts
     where: {
       slug: {
         equals: slug,

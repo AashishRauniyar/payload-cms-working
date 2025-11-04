@@ -1,12 +1,15 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
 
-import sharp from 'sharp' // sharp-import
+// Import sharp from our adapter instead of directly
+import sharp from './utilities/sharpAdapter' // sharp-import
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
+import { BlogCategories } from './collections/BlogCategories'
+import { BlogPosts } from './collections/BlogPosts'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
@@ -61,18 +64,28 @@ export default buildConfig({
   editor: defaultLexical,
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      connectionString:
+        process.env.DATABASE_URI ||
+        'postgresql://placeholder:placeholder@localhost:5432/placeholder',
+      // Build-time connection settings
+      max: process.env.NODE_ENV === 'production' ? 20 : 1,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000,
     },
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Posts, BlogPosts, Media, Categories, BlogCategories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
   ],
-  secret: process.env.PAYLOAD_SECRET,
-  sharp,
+  secret: process.env.PAYLOAD_SECRET || 'fallback-secret-for-build-only-not-secure',
+
+  // Only use sharp if not explicitly disabled
+  ...(process.env.PAYLOAD_DISABLE_SHARP !== 'true' && { sharp }),
+
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

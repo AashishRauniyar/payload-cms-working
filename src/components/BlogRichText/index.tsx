@@ -23,6 +23,8 @@ import { FAQBlock } from '@/blocks/FAQBlock/Component'
 import { CustomCTABlock } from '@/blocks/CustomCTABlock/Component'
 import { RatingTable } from '@/blocks/RatingTable/Component'
 import { ThreeBottles } from '@/blocks/ThreeBottles/Component'
+import { IngredientsBlock } from '@/blocks/IngredientsBlock/Component'
+import { ReviewsBlock } from '@/blocks/ReviewsBlock/Component'
 
 import type {
   BannerBlock as BannerBlockProps,
@@ -33,6 +35,8 @@ import type {
   TableBlock as TableBlockProps,
   RatingTableBlock as RatingTableBlockProps,
   ThreeBottlesBlock as ThreeBottlesBlockProps,
+  IngredientsBlock as IngredientsBlockProps,
+  ReviewsBlock as ReviewsBlockProps,
 } from '@/payload-types'
 
 type NodeTypes =
@@ -47,6 +51,8 @@ type NodeTypes =
       | TableBlockProps
       | RatingTableBlockProps
       | ThreeBottlesBlockProps
+      | IngredientsBlockProps
+      | ReviewsBlockProps
     >
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -69,12 +75,7 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
     ),
     mediaBlock: ({ node }) => (
       <div className="my-8">
-        <MediaBlock
-          imgClassName="m-0"
-          {...node.fields}
-          enableGutter={false}
-          disableInnerContainer={true}
-        />
+        <MediaBlock {...node.fields} className="m-0" />
       </div>
     ),
     code: ({ node }) => (
@@ -95,7 +96,6 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
           prosTitle={node.fields.prosTitle || 'Pros'}
           consTitle={node.fields.consTitle || 'Cons'}
           tableData={node.fields.tableData || ''}
-          style={node.fields.style || 'default'}
           backgroundColor={node.fields.backgroundColor || 'none'}
         />
       </div>
@@ -130,7 +130,6 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
       <div className="my-8">
         <CustomCTABlock
           disableInnerContainer={true}
-          ctaText={node.fields.ctaText || undefined}
           buttonText={node.fields.buttonText || undefined}
           buttonLink={node.fields.buttonLink || '#'}
         />
@@ -144,6 +143,22 @@ const blogJsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters
     threeBottlesBlock: ({ node }: { node: SerializedBlockNode }) => (
       <div className="my-8">
         <ThreeBottles disableInnerContainer={true} {...node.fields} />
+      </div>
+    ),
+    ingredientsBlock: ({ node }: { node: SerializedBlockNode<IngredientsBlockProps> }) => (
+      <div className="my-8">
+        <IngredientsBlock
+          disableInnerContainer={true}
+          title={node.fields.title || undefined}
+          ingredients={node.fields.ingredients || []}
+          layout={node.fields.layout || 'stacked'}
+          backgroundColor={node.fields.backgroundColor || 'none'}
+        />
+      </div>
+    ),
+    reviewsBlock: ({ node }: { node: SerializedBlockNode<ReviewsBlockProps> }) => (
+      <div className="my-8">
+        <ReviewsBlock {...node.fields} />
       </div>
     ),
   },
@@ -161,7 +176,7 @@ export default function BlogRichText(props: Props) {
     <ConvertRichText
       converters={blogJsxConverters}
       className={cn(
-        'blog-richtext', // Using blog-specific class instead of payload-richtext
+        'blog-richtext', 
         {
           container: enableGutter,
           'max-w-none': !enableGutter,

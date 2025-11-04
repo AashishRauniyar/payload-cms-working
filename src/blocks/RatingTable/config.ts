@@ -29,16 +29,16 @@ export const RatingTableBlock: Block = {
       },
     },
     {
-      name: 'overallRating',
+      name: 'customRating',
       type: 'number',
-      label: 'Overall Star Rating',
+      label: 'Star Rating',
       required: true,
-      defaultValue: 4.5,
       min: 0,
       max: 5,
       admin: {
         step: 0.1,
-        description: 'Overall star rating out of 5 stars',
+        description: 'Enter the star rating (0-5) for this product.',
+        placeholder: 'e.g., 3.5',
       },
     },
     {

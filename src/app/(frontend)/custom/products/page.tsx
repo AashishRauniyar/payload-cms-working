@@ -1,12 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+// import configPromise from '@payload-config'
+// import { getPayload } from 'payload'
 import { BrandHighlightsTable } from '@/blocks/BrandHighlightsTable/Component'
 
 // Custom products page using Payload as data source
 export default async function ProductsPage() {
-  const payload = await getPayload({ config: configPromise })
+  // const payload = await getPayload({ config: configPromise })
 
   // You could create a custom 'products' collection in Payload
   // For now, we'll use pages collection as example

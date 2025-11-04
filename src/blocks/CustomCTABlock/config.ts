@@ -9,16 +9,6 @@ export const CustomCTABlock: Block = {
   interfaceName: 'CustomCTABlock',
   fields: [
     {
-      name: 'ctaText',
-      type: 'text',
-      label: 'CTA Text',
-      defaultValue: 'Ready to Transform Your Health?',
-      admin: {
-        description: 'Main headline text for the CTA section',
-      },
-      required: true,
-    },
-    {
       name: 'buttonText',
       type: 'text',
       label: 'Button Text',
