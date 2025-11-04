@@ -31,12 +31,21 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the application using regular build
 ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
-RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then npm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+
+# Inside your builder stage, before build command
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Now run build
+RUN if [ -f yarn.lock ]; then \
+      yarn run build; \
+    elif [ -f package-lock.json ]; then \
+      npm run build; \
+    elif [ -f pnpm-lock.yaml ]; then \
+      npm run build; \
+    else \
+      echo "Lockfile not found." && exit 1; \
+    fi
 
 # Production image, copy all the files and run next
 FROM base AS runner
